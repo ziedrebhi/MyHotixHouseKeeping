@@ -380,8 +380,14 @@ public class FemmeMenage extends FragmentActivity {
                                         "lblMatricule").toString());
                                 femmeMenage.setNom(Femme.getProperty("lblNom")
                                         .toString());
-                                femmeMenage.setPrenom(Femme.getProperty(
-                                        "lblPrenom").toString());
+
+                                if (Femme.getProperty("lblPrenom")
+                                        .toString().equals("anyType{}")) {
+                                    femmeMenage.setPrenom("");
+                                } else {
+                                    femmeMenage.setPrenom(Femme.getProperty(
+                                            "lblPrenom").toString());
+                                }
 
                                 listFM.add(femmeMenage);
                             }
@@ -528,7 +534,7 @@ public class FemmeMenage extends FragmentActivity {
             androidHttpTransport = new HttpTransportSE(getURL(), 5000);
             try {
                 try {
-                    androidHttpTransport.call(SOAP_ACTION, envelope);
+                    androidHttpTransport.call(SOAP_ACTION3, envelope);
                     result = envelope.getResponse().toString();
                 } catch (SocketTimeoutException e) {
                     runOnUiThread(new Runnable() {
