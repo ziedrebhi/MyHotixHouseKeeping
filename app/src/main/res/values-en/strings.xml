@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nom des activités -->
+    <string name="app_name">MyHotix Housekeeping</string>
+    <string name="splash">My Hotix Housekeeping</string>
+    <string name="title_activity_sign_in">Sign In</string>
+
+    <!-- Chaines à traduire -->
+    <string name="load">Loading</string>
+    <string name="login">Login</string>
+    <string name="passwd">Password</string>
+    <string name="ip_serv">Server IP Aderess</string>
+
+    <!-- Boutons -->
+    <string name="cnx">Connexion</string>
+    <string name="room_rack">Room Rack</string>
+    <string name="team">Maintenance Team</string>
+    <string name="objets">Lost and found</string>
+    <string name="clientsA">Expected Check In list</string>
+    <string name="exit">Exit</string>
+    <string name="maintenance">Pannes</string>
+    <!-- Messages Toast et Alert -->
+    <string name="close_app">Do you really want to quit ?</string>
+    <string name="oui">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="connect_data">Required field !</string>
+    <string name="acces_denied">Connexion  problem</string>
+    <string name="msg_acces_denied">You do not have Internet connection.</string>
+    <string name="verify_data">Verify the information you have entered.</string>
+    <string name="new_cnx">Do you want to retry the connection ?</string>
+    <string name="legend">Legend</string>
+    <string name="choix_chb">Select an option</string>
+    <string name="switch_state">Change Status</string>
+    <string name="panne">Claim failure</string>
+    <string name="take_photo">Take photo</string>
+    <string name="menu_etat">Change Status</string>
+    <string name="error_change_status">Failure to change status of the room.</string>
+    <string name="succes_change_status">Status of room changed with success.</string>
+    <string name="succes_panne">Claim of failure successfully sent.</string>
+    <string name="error_panne">Error sending claim of failure.</string>
+
+    <string name="panne_h1">Place</string>
+    <string name="panne_h2">Type out of service</string>
+    <string name="panne_h3">Declared by</string>
+    <string name="panne_h4">Description</string>
+    <string name="refresh">Refresh</string>
+    <string name="totalAP">Total scheduled arrivals</string>
+
+    <string name="tab1">Declare</string>
+    <string name="tab2">List</string>
+    <string name="tab3">Declare</string>
+    <string name="tab4">List Pannes</string>
+    <string name="update">Update</string>
+    <string name="cloture">Closure</string>
+    <string name="updating">Downloading ..</string>
+
+    <string name="declare_ok">Declaration of found object successfully sent.</string>
+    <string name="daclare_not_ok">Error sending declaration of object declaration found.</string>
+
+    <string name="update_ok">Update object found with success.</string>
+    <string name="update_not_ok">Error sending update object found.</string>
+
+    <string name="last_version_ok">You have the last version of MyHotix Check In. </string>
+    <string name="last_version_no">Your application is outdate. Clic "UPDATE" to get and install the last version</string>
+    <string name="autoupdate">Auto Update</string>
+    <string name="version">Version</string>
+
+    <string name="cloture_ok">Closure object found with success .</string>
+    <string name="cloture_not_ok">Error of closure object found.</string>
+    <string name="comment">Comment</string>
+    <string name="duree_trait">Treatment Time :   </string>
+    <string name="hour">   Hour(s)</string>
+    <string name="urgent">Urgent</string>
+    <string name="nom">Name</string>
+    <string name="prenom">First name</string>
+    <string name="desc_panne">Description</string>
+    <string name="recalmer">Claim</string>
+    <string name="trouve">Found by</string>
+    <string name="rendu">Returner to</string>
+    <string name="listeCP">See guest list</string>
+    <string name="dateDeb">Start date : </string>
+    <string name="dateFin">End   date : </string>
+    <string name="valider">Validate</string>
+    <string name="chambre">Room</string>
+    <string name="etatVC">Vacant Clean</string>
+    <string name="etatVD">Vacant Dirty</string>
+    <string name="etatOC">Occupied Clean</string>
+    <string name="etatOD">Occupied Dirty</string>
+    <string name="etatHS">Out Of Order</string>
+    <string name="listeFM">List of housekeepers</string>
+    <string name="reessayer">Try again</string>
+    <string name="foundBy">Found by</string>
+    <string name="renduA">Returner to</string>
+    <string name="declarer">Declare</string>
+    <string name="choix_tech">Choose the technician </string>
+    <string name="image">Picture</string>
+    <string name="image_saved">Picture saved</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="image_saved_not">Picture NOT saved</string>
+    <!-- Navigation Drawer -->
+    <string-array name="nav_drawer_items">
+        <item>Settings</item>
+        <item>Version</item>
+        <item>Exit</item>
+    </string-array>
+    <string name="view">Show</string>
+    <string name="close">Close</string>
+    <array name="nav_drawer_icons">
+        <item>@drawable/parametres</item>
+        <item>@drawable/info</item>
+        <item>@drawable/ico_exit</item>
+    </array>
+    <string name="title_activity_view_panne">Détails Panne</string>
+    <string name="title_activity_view_objet">Détails Objet Trouvé</string>
+</resources>

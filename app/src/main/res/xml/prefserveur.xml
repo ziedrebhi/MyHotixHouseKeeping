@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:defaultValue="41.228.14.111"
+        android:key="serveur"
+        android:summary="41.228.14.111"
+        android:title="IP serveur"></EditTextPreference>
+    <com.hotix.myhotixhousekeeping.utils.Pref
+        android:defaultValue="false"
+        android:key="image"
+        android:summary="@string/image"
+        android:title="@string/image"></com.hotix.myhotixhousekeeping.utils.Pref>
+</PreferenceScreen>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.0\jars\libs\internal_impl-22.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.0_340f4c29a9c9a9c959134206ac2264363a69acd1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies_95d61df95e942710316d6fcfbb653c5a74f9df31.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4477ea44f5ec5ad064022a22691732d7638ff197">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appindexing-8.1.0_892ee2d95f396a5724fae323504cc3371ee28aee.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\android-async-http-1.4.4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="3bae85a076241828810bf8fbcc12e5891d5fc34c">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.4_4be27437cd68c12ffadbff876124adc151a1e46f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="d0dda274b703dd9c5bb056867649d22b4171ae7d">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.1.0_dab370e608ddf10be24c5a5a8a9a7e0c5a60e41c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\gson-2.6.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="f1bc476cc167b18e66c297df599b2377131a8947">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\gson-2.6.2_1c6564042a0eca7e5f401b4853e6418deed43447.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-22.2.0_cfb69180d3a9b900aa36cd42376378e712d57979.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.2.0\support-annotations-22.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\support-annotations-22.2.0_96376f10e7ffeff93884ca587ee327d651d1653c.jar" />
+    </item>
+
+</items>

@@ -1,0 +1,80 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Framelayout to display Fragments -->
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#00a6b0">
+
+            <Button
+                android:id="@+id/connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/motdp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/motdp"
+                android:layout_marginBottom="29dp"
+                android:background="@drawable/custom_btn_beige"
+                android:drawableLeft="@drawable/login"
+                android:text="@string/cnx"
+                android:textColorLink="#e87511" />
+
+            <EditText
+                android:id="@+id/motdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/login"
+                android:layout_alignTop="@+id/image"
+                android:ems="10"
+                android:hint="@string/passwd"
+                android:inputType="textPassword"
+                android:paddingTop="20dp"
+                android:textColor="#000000"
+                android:textColorHint="#000000" />
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="64dp"
+                android:src="@drawable/user_small" />
+
+            <EditText
+                android:id="@+id/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/motdp"
+                android:layout_marginLeft="96dp"
+                android:layout_toRightOf="@+id/image"
+                android:ems="10"
+                android:hint="@string/login"
+                android:textColor="#000000"
+                android:textColorHint="#000000">
+
+            </EditText>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <!-- Listview to display slider menu -->
+    <ListView
+        android:id="@+id/list_slidermenu"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/list_background"
+        android:choiceMode="singleChoice"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" />
+</android.support.v4.widget.DrawerLayout>

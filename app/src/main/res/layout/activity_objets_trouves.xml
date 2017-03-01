@@ -1,0 +1,17 @@
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/viewFlipperOT"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true">
+
+    <fragment
+        android:name="com.myhotixhousekeeping.fragments.TabObjetsTrouves"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:name="com.myhotixhousekeeping.fragments.UpdateObjetTrouves"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</ViewFlipper>

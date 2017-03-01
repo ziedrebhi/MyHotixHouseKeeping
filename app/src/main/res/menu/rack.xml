@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hotix.myhotixhousekeeping.RoomRack">
+
+    <item
+        android:id="@+id/infos_rack"
+        android:icon="@drawable/info"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="" />
+
+</menu>

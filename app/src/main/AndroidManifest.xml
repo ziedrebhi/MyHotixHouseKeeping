@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hotix.myhotixhousekeeping">
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="14" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/housekeeping_icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Splash"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Connexion"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".utils.IPServeur"
+            android:label="Adresse IP du serveur" />
+        <activity
+            android:name=".DashGouvernante"
+            android:label="@string/title_activity_dash_gouvernante" />
+        <activity
+            android:name=".RoomRack"
+            android:label="@string/title_activity_room_rack" />
+        <activity
+            android:name=".DeclarationPanne"
+            android:label="@string/title_activity_declaration_panne" />
+        <activity
+            android:name=".ObjetsTrouves"
+            android:label="@string/title_activity_objets_trouves" />
+        <activity
+            android:name=".UpdateObjetTrouve"
+            android:label="@string/title_activity_update_objet_trouve" />
+        <activity
+            android:name=".FemmeMenage"
+            android:label="@string/title_activity_femme_menage" />
+        <activity
+            android:name=".ListeClientsAP"
+            android:label="@string/title_activity_liste_clients_ap" />
+        <activity
+            android:name=".PannesList"
+            android:label="@string/title_activity_list_pannes" />
+
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".ImageViewActivity" />
+        <activity
+            android:name=".ViewObjetTrouveActivity"
+            android:label="@string/title_activity_view_objet" />
+        <activity
+            android:name=".ViewPanneActivity"
+            android:label="@string/title_activity_view_panne"></activity>
+    </application>
+
+</manifest>
