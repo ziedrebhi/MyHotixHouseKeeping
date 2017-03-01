@@ -8,7 +8,7 @@
         android:layout_height="64dp"
         android:layout_gravity="center"
         android:layout_weight="0.37"
-        android:background="#07bfca"
+        android:background="@color/colorPrimary"
         android:gravity="center">
 
         <TextView

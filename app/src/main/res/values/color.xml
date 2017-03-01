@@ -7,4 +7,17 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
 
+    <color name="colorPrimary">#07bfca</color>
+    <color name="colorPrimaryDark">#0d9ca4</color>
+
+    <color name="colorAccent">#045f64</color>
+    <color name="colorPrimaryLeger">#0ed8e4</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorPrimaryHeader">#ff1271</color>
+    <color name="blue_pressed">#07bfca</color>
+    <color name="blue_normal">#07858c</color>
+    <color name="colorHint">#999999</color>
+    <color name="spinner_base_color">#44000000</color>
+    <color name="disabled_color">#44000000</color>
+    <color name="error_color">#E7492E</color>
 </resources>

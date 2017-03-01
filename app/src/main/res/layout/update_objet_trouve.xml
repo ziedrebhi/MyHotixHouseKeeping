@@ -22,7 +22,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_margin="10dp"
-                android:background="#07bfca"
+                android:background="@color/colorPrimary"
                 android:gravity="center">
 
                 <TextView
@@ -90,7 +90,7 @@
                 android:layout_width="70dp"
                 android:layout_height="fill_parent"
                 android:layout_margin="10dp"
-                android:background="#07bfca"
+                android:background="@color/colorPrimary"
                 android:gravity="center">
 
                 <TextView
@@ -134,7 +134,7 @@
                 android:layout_width="70dp"
                 android:layout_height="fill_parent"
                 android:layout_margin="10dp"
-                android:background="#07bfca"
+                android:background="@color/colorPrimary"
                 android:gravity="center">
 
                 <TextView
@@ -178,7 +178,7 @@
                 android:layout_width="70dp"
                 android:layout_height="fill_parent"
                 android:layout_margin="10dp"
-                android:background="#07bfca"
+                android:background="@color/colorPrimary"
                 android:gravity="center">
 
                 <TextView
@@ -227,7 +227,7 @@
                 android:layout_width="70dp"
                 android:layout_height="fill_parent"
                 android:layout_margin="10dp"
-                android:background="#07bfca"
+                android:background="@color/colorPrimary"
                 android:gravity="center">
 
                 <TextView
@@ -274,7 +274,7 @@
                 android:id="@+id/btn_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_btn_beige"
+                android:background="@drawable/blue_btn_drawable"
                 android:drawableLeft="@drawable/upload"
                 android:text="@string/update"
                 android:textStyle="bold" />

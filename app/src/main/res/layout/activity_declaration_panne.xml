@@ -13,7 +13,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_weight="0.37"
-            android:background="#07bfca"
+            android:background="@color/colorPrimary"
             android:gravity="center">
 
             <TextView
@@ -49,7 +49,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_weight="0.37"
-            android:background="#07bfca"
+            android:background="@color/colorPrimary"
             android:gravity="center">
 
             <TextView
@@ -134,7 +134,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_weight="0.37"
-            android:background="#07bfca"
+            android:background="@color/colorPrimary"
             android:gravity="center">
 
             <TextView
@@ -176,7 +176,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_weight="0.37"
-            android:background="#07bfca"
+            android:background="@color/colorPrimary"
             android:gravity="center">
 
             <TextView
@@ -213,7 +213,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_weight="0.37"
-            android:background="#07bfca"
+            android:background="@color/colorPrimary"
             android:gravity="center">
 
             <TextView
@@ -256,7 +256,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
-                android:background="@drawable/custom_btn_beige"
+                android:background="@drawable/blue_btn_drawable"
                 android:drawableLeft="@drawable/maintenance"
                 android:text="@string/recalmer" />
         </LinearLayout>
