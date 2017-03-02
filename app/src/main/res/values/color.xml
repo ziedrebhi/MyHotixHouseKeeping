@@ -13,6 +13,7 @@
     <color name="colorAccent">#045f64</color>
     <color name="colorPrimaryLeger">#0ed8e4</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorGrey">#e4e4e4</color>
     <color name="colorPrimaryHeader">#ff1271</color>
     <color name="blue_pressed">#07bfca</color>
     <color name="blue_normal">#07858c</color>

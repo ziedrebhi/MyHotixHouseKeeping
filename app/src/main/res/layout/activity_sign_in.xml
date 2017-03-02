@@ -41,7 +41,7 @@
                 android:ems="10"
                 android:hint="@string/login"
                 android:textColor="@color/colorWhite"
-                android:textColorHint="@color/colorWhite">
+                android:textColorHint="@color/colorGrey">
 
             </EditText>
 
@@ -56,7 +56,7 @@
                 android:hint="@string/passwd"
                 android:inputType="textPassword"
                 android:textColor="@color/colorWhite"
-                android:textColorHint="@color/colorWhite">
+                android:textColorHint="@color/colorGrey">
 
             </EditText>
 

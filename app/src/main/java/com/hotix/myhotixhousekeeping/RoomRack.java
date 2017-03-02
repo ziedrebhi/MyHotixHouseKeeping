@@ -54,6 +54,7 @@ public class RoomRack extends Activity {
     public final String METHOD_NAME2 = "ChangerProduitStaut";
     public final String SOAP_ACTION3 = "http://tempuri.org/GetListEtagesHotel";
     public final String METHOD_NAME3 = "GetListEtagesHotel";
+    public final String TAG = "RoomRack";
     AlertDialog.Builder builderMenu, legende, builderMenuEtat, builderHS;
     TextView header, room_number;
     View v;
@@ -465,11 +466,12 @@ public class RoomRack extends Activity {
 
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 15000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION, envelope);
                     response = (SoapObject) envelope.getResponse();
+                    Log.i(TAG, response.toString());
                 } catch (SocketTimeoutException e) {
                     runOnUiThread(new Runnable() {
 
@@ -605,6 +607,7 @@ public class RoomRack extends Activity {
                 try {
                     androidHttpTransport.call(SOAP_ACTION2, envelope);
                     result = envelope.getResponse().toString();
+                    Log.i(TAG, result.toString());
                 } catch (SocketTimeoutException e) {
                     runOnUiThread(new Runnable() {
 
@@ -665,6 +668,7 @@ public class RoomRack extends Activity {
                 try {
                     androidHttpTransport.call(SOAP_ACTION3, envelope);
                     response = (SoapObject) envelope.getResponse();
+                    Log.i(TAG, response.toString());
                 } catch (SocketTimeoutException e) {
                     runOnUiThread(new Runnable() {
 

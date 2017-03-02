@@ -12,7 +12,26 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="#00a6b0">
+            android:background="@drawable/pic_royal_1">
+
+            <View
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:alpha="0.2"
+                android:background="#000000" />
+
+            <Button
+                android:id="@+id/connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/motdp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/motdp"
+                android:layout_marginBottom="94dp"
+                android:background="@drawable/blue_btn_drawable"
+                android:text="@string/cnx" />
 
             <EditText
                 android:id="@+id/login"
@@ -22,8 +41,8 @@
                 android:layout_centerHorizontal="true"
                 android:ems="10"
                 android:hint="@string/login"
-                android:textColor="#000000"
-                android:textColorHint="#000000">
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite">
 
             </EditText>
 
@@ -31,38 +50,26 @@
                 android:id="@+id/motdp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_above="@+id/connect"
                 android:layout_alignLeft="@+id/login"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="40dp"
                 android:ems="10"
                 android:hint="@string/passwd"
                 android:inputType="textPassword"
-                android:textColor="#000000"
-                android:textColorHint="#000000">
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite">
 
             </EditText>
 
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/imagecuser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/login"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="42dp"
-                android:src="@drawable/user_large" />
-
-            <Button
-                android:id="@+id/connect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/motdp"
-                android:layout_alignRight="@+id/motdp"
-                android:layout_below="@+id/motdp"
-                android:layout_marginTop="41dp"
-                android:background="@drawable/custom_btn_beige"
-                android:drawableLeft="@drawable/login"
-                android:text="@string/cnx"
-                android:textColorLink="#e87511" />
+                android:layout_marginTop="80dp"
+                android:src="@drawable/housekeeping_icon" />
 
         </RelativeLayout>
     </FrameLayout>
@@ -70,7 +77,7 @@
     <!-- Listview to display slider menu -->
     <ListView
         android:id="@+id/list_slidermenu"
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/list_background"

@@ -70,13 +70,19 @@
 
         <Button
             android:id="@+id/btn_affecterFM"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_gravity="center"
             android:background="@drawable/blue_btn_drawable"
-            android:drawableLeft="@drawable/tick"
-            android:text="@string/valider" />
+            android:drawableLeft="@drawable/upload"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="@string/valider"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

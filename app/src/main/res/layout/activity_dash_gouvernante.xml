@@ -17,15 +17,10 @@
             style="@style/HomeButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_vertical|center"
             android:layout_weight="1"
             android:drawableTop="@drawable/rack_room"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+
             android:text="@string/room_rack" />
 
         <Button
@@ -36,12 +31,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:drawableTop="@drawable/femme_menage"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+
             android:text="@string/team" />
 
     </LinearLayout>
@@ -60,12 +50,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:drawableTop="@drawable/objet_trouv"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+
             android:text="@string/objets" />
 
         <Button
@@ -76,12 +61,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:drawableTop="@drawable/arrivee_prev"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+
             android:text="@string/clientsA" />
 
     </LinearLayout>
@@ -99,12 +79,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_maintenance"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+
             android:text="@string/maintenance" />
 
         <Button
@@ -113,12 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+
             android:text="" />
 
 
