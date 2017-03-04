@@ -30,7 +30,8 @@
                 android:layout_alignRight="@+id/motdp"
                 android:layout_marginBottom="94dp"
                 android:background="@drawable/blue_btn_drawable"
-                android:text="@string/cnx" />
+                android:text="@string/cnx"
+                android:textColor="@android:color/white" />
 
             <EditText
                 android:id="@+id/login"

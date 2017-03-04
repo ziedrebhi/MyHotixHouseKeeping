@@ -93,7 +93,9 @@
         <item>Quitter</item>
     </string-array>
     <string name="version">Version</string>
-
+    <string name="pas_pannes">Pas de Pannes ! Excellent </string>
+    <string name="pas_ob">Pas d\'Objets Trouvés !</string>
+    <string name="creer">Créer</string>
     <array name="nav_drawer_icons">
         <item>@drawable/parametres</item>
         <item>@drawable/info</item>
@@ -119,4 +121,13 @@
     <string name="title_activity_list_pannes">Liste des Pannes</string>
     <string name="title_activity_view_panne">Détails Panne</string>
     <string name="title_activity_view_objet">Détails Objet Trouvé</string>
+
+    <string name="libreP">Libre Propre</string>
+    <string name="libreS">Libre Sale</string>
+    <string name="OccP">Occupé Propre</string>
+    <string name="OccS">Occupé Sale</string>
+    <string name="Dep">Départ Attendu</string>
+    <string name="DayUse">Day Use</string>
+    <string name="att">Attribuée</string>
+    <string name="hs">Hors Service</string>
 </resources>

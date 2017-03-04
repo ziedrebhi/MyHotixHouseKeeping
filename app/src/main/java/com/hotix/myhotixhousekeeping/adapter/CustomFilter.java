@@ -52,7 +52,7 @@ public class CustomFilter extends BaseAdapter {
         }
         CheckBox cbxView = (CheckBox) grid.findViewById(R.id.cbxEtage);
         cbxView.setText(String.valueOf(listEtage.get(position).getLBLETAGE()));
-
+        cbxView.setChecked(listEtage.get(position).getCHECKED());
         cbxView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override

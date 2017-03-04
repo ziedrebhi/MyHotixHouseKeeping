@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="nav_drawer_icons">
+        <item>@drawable/parametres</item>
+        <item>@drawable/info</item>
+        <item>@drawable/ico_exit</item>
+    </array>
+    <string-array name="nav_drawer_items">
+        <item>Settings</item>
+        <item>Version</item>
+        <item>Exit</item>
+    </string-array>
+    <color name="counter_text_bg">#626262</color>
+    <color name="counter_text_color">#c5c4c4</color>
+    <color name="list_background">#303030</color>
+    <color name="list_background_pressed">#992416</color>
+    <color name="list_divider">#272727</color>
+    <color name="list_item_title">#fff</color>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="corner_radius">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="layer_padding">1dp</dimen>
+    <dimen name="profile_height">75dp</dimen>
+    <dimen name="profile_width">75dp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="title_height">45dip</dimen>
+    <string name="DayUse">Day Use</string>
+    <string name="Dep">Départ Attendu</string>
+    <string name="OccP">Occupé Propre</string>
+    <string name="OccS">Occupé Sale</string>
+    <string name="acces_denied">Connexion  problem</string>
+    <string name="app_name">MyHotix Housekeeping</string>
+    <string name="att">Attribuée</string>
+    <string name="autoupdate">Auto Update</string>
+    <string name="cancel">Cancel</string>
+    <string name="chambre">Room</string>
+    <string name="choix_chb">Select an option</string>
+    <string name="choix_tech">Choose the technician </string>
+    <string name="clientsA">Expected Check In list</string>
+    <string name="close">Close</string>
+    <string name="close_app">Do you really want to quit ?</string>
+    <string name="cloture">Closure</string>
+    <string name="cloture_not_ok">Error of closure object found.</string>
+    <string name="cloture_ok">Closure object found with success .</string>
+    <string name="cnx">Connexion</string>
+    <string name="comment">Comment</string>
+    <string name="connect_data">Required field !</string>
+    <string name="creer">Create</string>
+    <string name="daclare_not_ok">Error sending declaration of object declaration found.</string>
+    <string name="dateDeb">Start date : </string>
+    <string name="dateFin">End   date : </string>
+    <string name="declare_ok">Declaration of found object successfully sent.</string>
+    <string name="declarer">Declare</string>
+    <string name="desc_panne">Description</string>
+    <string name="duree_trait">Treatment Time :   </string>
+    <string name="error_change_status">Failure to change status of the room.</string>
+    <string name="error_panne">Error sending claim of failure.</string>
+    <string name="etatHS">Out Of Order</string>
+    <string name="etatOC">Occupied Clean</string>
+    <string name="etatOD">Occupied Dirty</string>
+    <string name="etatVC">Vacant Clean</string>
+    <string name="etatVD">Vacant Dirty</string>
+    <string name="exit">Exit</string>
+    <string name="foundBy">Found by</string>
+    <string name="hide">Hide</string>
+    <string name="hour">   Hour(s)</string>
+    <string name="hs">Hors Service</string>
+    <string name="image">Picture</string>
+    <string name="image_saved">Picture saved</string>
+    <string name="image_saved_not">Picture NOT saved</string>
+    <string name="ip_serv">Server IP Aderess</string>
+    <string name="last_version_no">Your application is outdate. Clic "UPDATE" to get and install the last version</string>
+    <string name="last_version_ok">You have the last version of MyHotix Check In. </string>
+    <string name="legend">Legend</string>
+    <string name="libreP">Libre Propre</string>
+    <string name="libreS">Libre Sale</string>
+    <string name="listeCP">See guest list</string>
+    <string name="listeFM">List of housekeepers</string>
+    <string name="load">Loading</string>
+    <string name="login">Login</string>
+    <string name="maintenance">Pannes</string>
+    <string name="menu_etat">Change Status</string>
+    <string name="msg_acces_denied">You do not have Internet connection.</string>
+    <string name="new_cnx">Do you want to retry the connection ?</string>
+    <string name="nom">Name</string>
+    <string name="objets">Lost and found</string>
+    <string name="oui">Yes</string>
+    <string name="panne">Claim failure</string>
+    <string name="panne_h1">Place</string>
+    <string name="panne_h2">Type out of service</string>
+    <string name="panne_h3">Declared by</string>
+    <string name="panne_h4">Description</string>
+    <string name="pas_ob">Pas d\'Objets Trouvés !</string>
+    <string name="pas_pannes">Pas de Pannes ! Excellent </string>
+    <string name="passwd">Password</string>
+    <string name="prenom">First name</string>
+    <string name="recalmer">Claim</string>
+    <string name="reessayer">Try again</string>
+    <string name="refresh">Refresh</string>
+    <string name="rendu">Returner to</string>
+    <string name="renduA">Returner to</string>
+    <string name="room_rack">Room Rack</string>
+    <string name="show">Show</string>
+    <string name="splash">My Hotix Housekeeping</string>
+    <string name="succes_change_status">Status of room changed with success.</string>
+    <string name="succes_panne">Claim of failure successfully sent.</string>
+    <string name="switch_state">Change Status</string>
+    <string name="tab1">Declare</string>
+    <string name="tab2">List</string>
+    <string name="tab3">Declare</string>
+    <string name="tab4">List Pannes</string>
+    <string name="take_photo">Take photo</string>
+    <string name="team">Maintenance Team</string>
+    <string name="title_activity_sign_in">Sign In</string>
+    <string name="title_activity_view_objet">Détails Objet Trouvé</string>
+    <string name="title_activity_view_panne">Détails Panne</string>
+    <string name="totalAP">Total scheduled arrivals</string>
+    <string name="trouve">Found by</string>
+    <string name="update">Update</string>
+    <string name="update_not_ok">Error sending update object found.</string>
+    <string name="update_ok">Update object found with success.</string>
+    <string name="updating">Downloading ..</string>
+    <string name="urgent">Urgent</string>
+    <string name="valider">Validate</string>
+    <string name="verify_data">Verify the information you have entered.</string>
+    <string name="version">Version</string>
+    <string name="view">Show</string>
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        
+    </style>
+    <style name="CustomProgressDialog" parent="@android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleStyle">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+    <style name="HomeButton">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:background">@null</item>
+    </style>
+</resources>

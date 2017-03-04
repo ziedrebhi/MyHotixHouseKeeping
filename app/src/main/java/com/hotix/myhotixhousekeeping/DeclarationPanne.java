@@ -76,6 +76,8 @@ public class DeclarationPanne extends Activity {
     CustomProgressDialog progressDialog;
     TextView btnViewImage;
     int typePanneId;
+    int idActivite = 0;
+    String NumChb = "-1";
     private Uri fileUri;
 
     private static File getOutputMediaFile(int type) {
@@ -188,9 +190,14 @@ public class DeclarationPanne extends Activity {
         Bundle extras = getIntent().getExtras();
         num_chb = extras.getInt("num_chb");
         prodId = extras.getInt("prod_id");
+        idActivite = extras.getInt("Activite");
         login = extras.getString("login");
-        numCHB.setFocusable(false);
-        numCHB.setText(String.valueOf(num_chb));
+        if (num_chb == -1) {
+            // numCHB.setFocusable(true);
+        } else {
+            numCHB.setFocusable(false);
+            numCHB.setText(String.valueOf(num_chb));
+        }
         dureeTraitement.setText("0");
 
         AsyncCallWS ws = new AsyncCallWS();
@@ -203,7 +210,9 @@ public class DeclarationPanne extends Activity {
                 if (ChapmsRequis()) {
                     TypePanne tech = (TypePanne) spinner.getSelectedItem();
                     typePanneId = tech.getIdPanne();
-
+                    if (num_chb == -1) {
+                        NumChb = numCHB.getText().toString();
+                    }
                     AsyncReclamerPanne wsPanne = new AsyncReclamerPanne();
                     wsPanne.execute();
                 }
@@ -238,11 +247,17 @@ public class DeclarationPanne extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(), RoomRack.class);
-        i.putExtra("login", login);
-        startActivity(i);
-        finish();
-
+        if (idActivite == 1) {
+            Intent i = new Intent(getApplicationContext(), PannesList.class);
+            i.putExtra("login", login);
+            startActivity(i);
+            finish();
+        } else {
+            Intent i = new Intent(getApplicationContext(), RoomRack.class);
+            i.putExtra("login", login);
+            startActivity(i);
+            finish();
+        }
         super.onBackPressed();
     }
 
@@ -274,9 +289,15 @@ public class DeclarationPanne extends Activity {
                 toast.setDuration(Toast.LENGTH_LONG);
                 toast.setView(layout);
                 toast.show();
-                Intent i = new Intent(getApplicationContext(), RoomRack.class);
-                i.putExtra("login", login);
-                startActivity(i);
+                if (idActivite == 1) {
+                    Intent i = new Intent(getApplicationContext(), PannesList.class);
+                    i.putExtra("login", login);
+                    startActivity(i);
+                } else {
+                    Intent i = new Intent(getApplicationContext(), RoomRack.class);
+                    i.putExtra("login", login);
+                    startActivity(i);
+                }
                 finish();
             } else {
                 LayoutInflater inflater = getLayoutInflater();
@@ -577,8 +598,12 @@ public class DeclarationPanne extends Activity {
 
             PropertyInfo pi_lieu = new PropertyInfo();
             pi_lieu.setName("lieu");
-            pi_lieu.setValue(num_chb);
-            Log.i("lieu => ", Integer.toString(num_chb));
+            if (num_chb == -1) {
+                pi_lieu.setValue(NumChb);
+            } else {
+                pi_lieu.setValue(num_chb);
+            }
+            //Log.i("lieu => ", Integer.toString(num_chb));
             pi_lieu.setType(String.class);
             request.addProperty(pi_lieu);
 

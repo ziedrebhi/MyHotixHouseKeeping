@@ -422,12 +422,17 @@
 
                             <Button
                                 android:id="@+id/refresh_liste"
-                                style="@style/HomeButton"
-                                android:layout_width="wrap_content"
+
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:drawableTop="@drawable/srefresh"
-                                android:text="@string/refresh" />
+                                android:layout_margin="3dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/blue_btn_drawable"
+                                android:drawableTop="@drawable/sync"
+                                android:padding="2dp"
+                                android:text="@string/refresh"
+                                android:textColor="@android:color/white" />
 
                         </LinearLayout>
 
@@ -443,6 +448,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></ListView>
 
+                        <TextView
+                            android:id="@+id/emptyMsg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:drawableLeft="@drawable/ic_notif"
+                            android:gravity="center"
+                            android:padding="30dp"
+                            android:text="@string/pas_ob"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                 </LinearLayout>

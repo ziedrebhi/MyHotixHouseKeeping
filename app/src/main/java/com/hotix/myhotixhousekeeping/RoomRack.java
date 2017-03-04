@@ -651,7 +651,16 @@ public class RoomRack extends Activity {
         protected void onPostExecute(ArrayList<Etage> listEtage) {
             progressDialog.dismiss();
             gridFilter.setAdapter(new CustomFilter(RoomRack.this, listEtage));
+            strlistEtage = ";-1;";
+            for (int i = 0; i < listEtage.size(); i++) {
+                if (listEtage.get(i).getCHECKED() == true) {
+                    strlistEtage = strlistEtage
+                            + listEtage.get(i).getIDETAGE() + ";";
+                }
+            }
 
+            AsyncCallWS task = new AsyncCallWS();
+            task.execute();
             super.onPostExecute(listEtage);
         }
 
@@ -711,6 +720,7 @@ public class RoomRack extends Activity {
                                 etage.setCHECKED(false);
                                 listEtage.add(etage);
                             }
+                            listEtage.get(0).setCHECKED(true);
                         }
                     });
                 }

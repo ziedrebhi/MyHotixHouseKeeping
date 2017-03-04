@@ -6,7 +6,7 @@
     <string name="action_settings">Ajustes</string>
     <string name="splash">My Hotix Housekeeping</string>
     <string name="title_activity_sign_in">Registrarse</string>
-
+    <string name="creer">Créer</string>
     <!-- Boutons -->
     <string name="cnx">Iniciar sesión</string>
     <string name="room_rack">Room Rack</string>
@@ -14,6 +14,16 @@
     <string name="objets">Objetos perdidos</string>
     <string name="exit">Deje</string>
     <string name="maintenance">Fracasos</string>
+    <string name="pas_pannes">Pas de Pannes ! Excellent </string>
+    <string name="pas_ob">Pas d\'Objets Trouvés !</string>
+    <string name="libreP">Libre Propre</string>
+    <string name="libreS">Libre Sale</string>
+    <string name="OccP">Occupé Propre</string>
+    <string name="OccS">Occupé Sale</string>
+    <string name="Dep">Départ Attendu</string>
+    <string name="DayUse">Day Use</string>
+    <string name="att">Attribuée</string>
+    <string name="hs">Hors Service</string>
     <!-- Chaines à traduire -->
     <string name="load">Cargando</string>
     <string name="login">Login</string>

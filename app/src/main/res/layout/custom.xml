@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="11dp"
             android:drawableTop="@drawable/vac_clean"
-            android:text="Vacant Clean"
+            android:text="@string/libreP"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="6dp"
             android:drawableTop="@drawable/vac_dirty"
-            android:text="Vacant Dirty"
+            android:text="@string/libreS"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/occ_clean"
-            android:text="Occupied Clean"
+            android:text="@string/OccP"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:drawableTop="@drawable/occ_dirty"
-            android:text="Occupied Dirty"
+            android:text="@string/OccS"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:drawableTop="@drawable/attributed"
-            android:text="Attributed"
+            android:text="@string/att"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/day_use"
-            android:text="Day Use"
+            android:text="@string/DayUse"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:drawableTop="@drawable/expect_dep"
-            android:text="Expected Attributed"
+            android:text="@string/Dep"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:drawableTop="@drawable/out_of_order"
-            android:text="Out Of Order"
+            android:text="@string/hs"
             android:textColor="#000000"
             android:textStyle="bold" />
 

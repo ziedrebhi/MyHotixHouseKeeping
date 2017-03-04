@@ -13,13 +13,22 @@
     <string name="clientsA">Arrivée(s) prévue(s)</string>
     <string name="exit">Quitter</string>
     <string name="maintenance">Pannes</string>
-
+    <string name="creer">Créer</string>
     <!-- Chaines à traduire -->
     <string name="load">Chargement</string>
     <string name="login">Login</string>
     <string name="passwd">Mot de passe</string>
     <string name="ip_serv">Adresse IP du serveur</string>
-
+    <string name="pas_pannes">Pas de Pannes ! Excellent </string>
+    <string name="pas_ob">Pas d\'Objets Trouvés !</string>
+    <string name="libreP">Libre Propre</string>
+    <string name="libreS">Libre Sale</string>
+    <string name="OccP">Occupé Propre</string>
+    <string name="OccS">Occupé Sale</string>
+    <string name="Dep">Départ Attendu</string>
+    <string name="DayUse">Day Use</string>
+    <string name="att">Attribuée</string>
+    <string name="hs">Hors Service</string>
     <!-- Messages Toast et Alert -->
     <string name="close_app">Voulez-vous vraiment quitter ?</string>
     <string name="oui">Oui</string>

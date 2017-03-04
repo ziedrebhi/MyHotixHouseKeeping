@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 public class UpdateChecker {
@@ -73,11 +74,12 @@ public class UpdateChecker {
         if (isOnline()) {
             if (haveValidContext) {
                 int versionCode = getVersionCode();
-                Log.i("VersionCode", String.valueOf(versionCode));
+                Log.i("Version Code Local", String.valueOf(versionCode));
                 int readCode = 0;
                 if (versionCode >= 0) {
                     try {
                         readCode = Integer.parseInt(readFile(url));
+                        Log.i("Version Code Server", String.valueOf(versionCode));
                         // Check if update is available.
                         if (readCode > versionCode) {
                             updateAvailable = true; //We have an update available
@@ -261,8 +263,13 @@ public class UpdateChecker {
         InputStream inputStream;
         try {
             Log.i("log", url);
-            inputStream = new URL(url).openStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            //inputStream = new URL(url).openStream();
+            URL url2 = new URL(url);
+            URLConnection con = url2.openConnection();
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            InputStream in = con.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             result = bufferedReader.readLine();
             return result;
         } catch (MalformedURLException e) {

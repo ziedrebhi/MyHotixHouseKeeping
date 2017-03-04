@@ -80,7 +80,7 @@ public class PannesList extends Activity {
     CustomProgressDialog progressDialog;
     TabHost view;
     EditText dateDebut, dateFin;
-    Button actualiser;
+    Button actualiser, create;
     String login, dateExtra;
     int[] Tab;
     ListView lvOT;
@@ -89,7 +89,7 @@ public class PannesList extends Activity {
     List<String> techs;
     ArrayList<TypePanne> listTech;
     AlertDialog.Builder builderMenu;
-    TextView header, room_number;
+    TextView header, room_number, emptyMsg;
     View v;
     int panneId, technicienId;
     String comment;
@@ -150,15 +150,14 @@ public class PannesList extends Activity {
         progressDialog = new CustomProgressDialog(this, R.drawable.loading);
         dateDebut = (EditText) findViewById(R.id.dateDeb);
         dateFin = (EditText) findViewById(R.id.dateFin);
-
+        emptyMsg = (TextView) findViewById(R.id.emptyMsg);
         actualiser = (Button) findViewById(R.id.refresh_liste);
-    }
-
-    @Override
-    protected void onResume() {
+        create = (Button) findViewById(R.id.refresh_liste2);
+        emptyMsg.setVisibility(View.GONE);
         progressDialog = new CustomProgressDialog(this, R.drawable.loading);
         Intent in = getIntent();
         dateExtra = in.getStringExtra("dateFront");
+        //Log.i("Zied Date Front ", dateExtra);
         Tab = new int[3];
         Tab = getDateFront(dateExtra);
 
@@ -175,8 +174,17 @@ public class PannesList extends Activity {
         date_selected1 = String.valueOf(d2) + "/" + String.valueOf(m2) + "/"
                 + String.valueOf(y2);
 
-        dateDebut.setText(date_selected);
-        dateFin.setText(date_selected1);
+
+        Calendar cal = Calendar.getInstance();
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        // Log.i("Date Zied", date.toString());
+        dateDebut.setText(String.valueOf(day) + "/" + String.valueOf(month + 1) + "/"
+                + String.valueOf(year));
+        dateFin.setText(String.valueOf(day) + "/" + String.valueOf(month + 1) + "/"
+                + String.valueOf(year));
 
         dateDebut.setOnClickListener(new OnClickListener() {
             @Override
@@ -208,6 +216,25 @@ public class PannesList extends Activity {
                 }
             }
         });
+        create.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),
+                        DeclarationPanne.class);
+                i.putExtra("prod_id", -1);
+                i.putExtra("num_chb", -1);
+                i.putExtra("Activite", 1);
+                i.putExtra("login", login);
+                startActivity(i);
+                finish();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
 
         if (!ControleDate()) {
             ShowToast();
@@ -654,11 +681,15 @@ public class PannesList extends Activity {
             listPanne = new ArrayList<Panne>();
             progressDialog.show();
             super.onPreExecute();
+            Log.i("AsyncCallWS", "onPreExecute");
         }
 
         protected void onPostExecute(ArrayList<Panne> listPanne) {
             lvOT.setAdapter(new PanneAdapter(getApplicationContext(),
                     listPanne));
+            if (listPanne.size() == 0) {
+                emptyMsg.setVisibility(View.VISIBLE);
+            } else emptyMsg.setVisibility(View.GONE);
             androidHttpTransport.reset();
             progressDialog.dismiss();
             super.onPostExecute(listPanne);
@@ -829,6 +860,7 @@ public class PannesList extends Activity {
             displayPannesSpinner();
             androidHttpTransport.reset();
             super.onPostExecute(listTech);
+            Log.i("AsyncCallWSListTech", "onPreExecute");
         }
 
         protected ArrayList<TypePanne> doInBackground(String... params) {

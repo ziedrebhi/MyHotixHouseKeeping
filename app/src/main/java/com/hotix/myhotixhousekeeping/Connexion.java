@@ -500,9 +500,11 @@ public class Connexion extends Activity implements
                 checker.checkForUpdateByVersionCode("http://" + serveur + "/Android/versionHouseKeeping.txt");
 
                 if (checker.isUpdateAvailable()) {
-                    Log.i("Update", "True");
+                    Log.i("CheckVersionApp Update", "True");
                     lastVersion = false;
 
+                } else {
+                    Log.i("CheckVersionApp Update", "False");
                 }
             }
             return lastVersion;
@@ -527,7 +529,7 @@ public class Connexion extends Activity implements
     protected void onResume() {
         super.onResume();
 
-        Boolean autoupdate = true;
+        Boolean autoupdate = false;
         if (isOnline()) {
             Log.i("AUTO UPDATE", "Online");
             if (autoupdate) {

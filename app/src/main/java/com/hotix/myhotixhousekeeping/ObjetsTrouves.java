@@ -101,7 +101,7 @@ public class ObjetsTrouves extends FragmentActivity implements
     ArrayList<ObjetCloture> listeOC;
     String nameImage;
     TextView btnImTextView;
-    TextView btnViewImage;
+    TextView btnViewImage, emptyMsg;
     private Uri fileUri;
     private int mSelectedRow = 0;
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -216,6 +216,8 @@ public class ObjetsTrouves extends FragmentActivity implements
         declarer = (Button) findViewById(R.id.btn_declarer);
         actualiser = (Button) findViewById(R.id.refresh_liste);
         btnViewImage = (TextView) findViewById(R.id.imageSaved);
+        emptyMsg = (TextView) findViewById(R.id.emptyMsg);
+        emptyMsg.setVisibility(View.GONE);
         btnViewImage.setVisibility(View.GONE);
         SpannableString string = new SpannableString(getResources().getString(R.string.image_saved));
         string.setSpan(new UnderlineSpan(), 0, string.length(), 0);
@@ -256,30 +258,6 @@ public class ObjetsTrouves extends FragmentActivity implements
                 dialog.show();
             }
         });
-    }
-
-    public Bitmap getImageFromSD() {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                IMAGE_DIRECTORY_NAME);
-        String photoPath = mediaStorageDir.getPath() + "/" + nameImage;
-        Log.i("Camera ", "Path image " + photoPath);
-        Bitmap icon = BitmapFactory.decodeFile(photoPath, options);
-        return icon;
-    }
-
-    private void addTab(String tag, String title, int icon, int content) {
-        TabSpec spec = view.newTabSpec(tag);
-        spec.setIndicator(title, getResources().getDrawable(icon));
-        spec.setContent(content);
-        view.addTab(spec);
-    }
-
-    @Override
-    protected void onResume() {
 
         Intent in = getIntent();
         dateExtra = in.getStringExtra("dateFront");
@@ -298,9 +276,16 @@ public class ObjetsTrouves extends FragmentActivity implements
         d2 = Tab[0];
         date_selected1 = String.valueOf(d2) + "/" + String.valueOf(m2) + "/"
                 + String.valueOf(y2);
+        Calendar cal = Calendar.getInstance();
 
-        dateDebut.setText(date_selected);
-        dateFin.setText(date_selected1);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        dateDebut.setText(String.valueOf(day) + "/" + String.valueOf(month + 1) + "/"
+                + String.valueOf(year));
+        dateFin.setText(String.valueOf(day) + "/" + String.valueOf(month + 1) + "/"
+                + String.valueOf(year));
 
         dateDebut.setOnClickListener(new OnClickListener() {
             @Override
@@ -417,6 +402,31 @@ public class ObjetsTrouves extends FragmentActivity implements
                 mQuickAction.show(view);
             }
         });
+
+    }
+
+    public Bitmap getImageFromSD() {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                IMAGE_DIRECTORY_NAME);
+        String photoPath = mediaStorageDir.getPath() + "/" + nameImage;
+        Log.i("Camera ", "Path image " + photoPath);
+        Bitmap icon = BitmapFactory.decodeFile(photoPath, options);
+        return icon;
+    }
+
+    private void addTab(String tag, String title, int icon, int content) {
+        TabSpec spec = view.newTabSpec(tag);
+        spec.setIndicator(title, getResources().getDrawable(icon));
+        spec.setContent(content);
+        view.addTab(spec);
+    }
+
+    @Override
+    protected void onResume() {
 
         super.onResume();
     }
@@ -853,11 +863,20 @@ public class ObjetsTrouves extends FragmentActivity implements
     public class AsyncDeclareObjetWS extends AsyncTask<String, String, String> {
         String result = "False";
         HttpTransportSE androidHttpTransport;
+        String prodNum, Desc, Nom, Prenom, RNom, RPrenom, Lieu, Comment;
 
         @Override
         protected void onPreExecute() {
             progressDialog.setCancelable(true);
             progressDialog.show();
+            prodNum = lieu.getText().toString();
+            Desc = description.getText().toString();
+            Nom = nom.getText().toString();
+            Prenom = prenom.getText().toString();
+            RNom = renduNom.getText().toString();
+            RPrenom = renduPrenom.getText().toString();
+            Comment = comment.getText().toString();
+            Lieu = lieu.getText().toString();
             super.onPreExecute();
         }
 
@@ -869,43 +888,43 @@ public class ObjetsTrouves extends FragmentActivity implements
 
             PropertyInfo pi_prodNum = new PropertyInfo();
             pi_prodNum.setName("prodNum");
-            pi_prodNum.setValue(lieu.getText().toString());
+            pi_prodNum.setValue(prodNum);
             pi_prodNum.setType(String.class);
             request.addProperty(pi_prodNum);
 
             PropertyInfo objTrouveDesc = new PropertyInfo();
             objTrouveDesc.setName("objTrouveDesc");
-            objTrouveDesc.setValue(description.getText().toString());
+            objTrouveDesc.setValue(Desc);
             objTrouveDesc.setType(String.class);
             request.addProperty(objTrouveDesc);
 
             PropertyInfo objTrouveNom = new PropertyInfo();
             objTrouveNom.setName("objTrouveNom");
-            objTrouveNom.setValue(nom.getText().toString());
+            objTrouveNom.setValue(Nom);
             objTrouveNom.setType(String.class);
             request.addProperty(objTrouveNom);
 
             PropertyInfo objTrouvePrenom = new PropertyInfo();
             objTrouvePrenom.setName("objTrouvePrenom");
-            objTrouvePrenom.setValue(prenom.getText().toString());
+            objTrouvePrenom.setValue(Prenom);
             objTrouvePrenom.setType(String.class);
             request.addProperty(objTrouvePrenom);
 
             PropertyInfo objRenduTrouveNom = new PropertyInfo();
             objRenduTrouveNom.setName("objTrouveRenduNom");
-            objRenduTrouveNom.setValue(renduNom.getText().toString());
+            objRenduTrouveNom.setValue(RNom);
             objRenduTrouveNom.setType(String.class);
             request.addProperty(objRenduTrouveNom);
 
             PropertyInfo objRenduTrouvePrenom = new PropertyInfo();
             objRenduTrouvePrenom.setName("objTrouveRenduPrenom");
-            objRenduTrouvePrenom.setValue(renduPrenom.getText().toString());
+            objRenduTrouvePrenom.setValue(RPrenom);
             objRenduTrouvePrenom.setType(String.class);
             request.addProperty(objRenduTrouvePrenom);
 
             PropertyInfo objTrouveLieu = new PropertyInfo();
             objTrouveLieu.setName("objTrouveLieu");
-            objTrouveLieu.setValue(lieu.getText().toString());
+            objTrouveLieu.setValue(Lieu);
             objTrouveLieu.setType(String.class);
             request.addProperty(objTrouveLieu);
 
@@ -917,33 +936,35 @@ public class ObjetsTrouves extends FragmentActivity implements
 
             PropertyInfo pi_comment = new PropertyInfo();
             pi_comment.setName("comment");
-            if (comment.getText().toString().equals("")) {
+            if (Comment.equals("")) {
                 pi_comment.setValue("");
             } else {
-                pi_comment.setValue(comment.getText().toString());
+                pi_comment.setValue(Comment);
             }
 
             pi_comment.setType(String.class);
             request.addProperty(pi_comment);
-            PropertyInfo pi_image = new PropertyInfo();
-            pi_image.setName("ImageByteArray");
             if (getAuthoriseImageSend()) {
-                Bitmap img = getImageFromSD();
-                if (img != null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    img.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    String temp = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                    pi_image.setValue(temp);
-                    Log.i("ImageByteArray => ", temp);
+                PropertyInfo pi_image = new PropertyInfo();
+                pi_image.setName("ImageByteArray");
+                if (getAuthoriseImageSend()) {
+                    Bitmap img = getImageFromSD();
+                    if (img != null) {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        img.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        String temp = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                        pi_image.setValue(temp);
+                        Log.i("ImageByteArray => ", temp);
+                    } else {
+                        pi_image.setValue(null);
+                    }
                 } else {
                     pi_image.setValue(null);
                 }
-            } else {
-                pi_image.setValue(null);
+                pi_image.setType(String.class);
+                request.addProperty(pi_image);
             }
-            pi_image.setType(String.class);
-            request.addProperty(pi_image);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
             androidHttpTransport = new HttpTransportSE(getURL(), 5000);
@@ -1067,6 +1088,11 @@ public class ObjetsTrouves extends FragmentActivity implements
         protected void onPostExecute(ArrayList<ObjetCloture> listeOC) {
             lvOT.setAdapter(new ObjetClotureAdapter(getApplicationContext(),
                     listeOC));
+            if (listeOC.size() == 0) {
+                emptyMsg.setVisibility(View.VISIBLE);
+            } else {
+                emptyMsg.setVisibility(View.GONE);
+            }
             androidHttpTransport.reset();
             progressDialog.dismiss();
             super.onPostExecute(listeOC);
