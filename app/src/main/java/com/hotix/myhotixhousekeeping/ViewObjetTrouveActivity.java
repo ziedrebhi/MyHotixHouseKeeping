@@ -35,6 +35,7 @@ public class ViewObjetTrouveActivity extends Activity {
     CustomProgressDialog progressDialog;
     TextView imgView;
     Bitmap bitmap;
+    LinearLayout imageLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class ViewObjetTrouveActivity extends Activity {
         btn_update = (Button) findViewById(R.id.btn_update);
         progressDialog = new CustomProgressDialog(this, R.drawable.loading);
         imgView = (TextView) findViewById(R.id.textViewImaage);
+        imageLayout = (LinearLayout) findViewById(R.id.imageLayout);
         imgView.setVisibility(View.GONE);
         SpannableString string = new SpannableString(getResources().getString(R.string.image_saved));
         string.setSpan(new UnderlineSpan(), 0, string.length(), 0);
@@ -151,10 +153,31 @@ public class ViewObjetTrouveActivity extends Activity {
             } else {
                 imgView.setVisibility(View.VISIBLE);
             }
+
+
+            if (getAuthoriseImageSend()) {
+                imageLayout.setVisibility(View.VISIBLE);
+            } else {
+                imageLayout.setVisibility(View.GONE);
+
+            }
             super.onResume();
         } catch (Exception ex) {
             Log.e("Exception", ex.toString());
         }
+    }
+
+    public boolean getAuthoriseImageSend() {
+        boolean authoriseImage = false;
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(this);
+            authoriseImage = sp.getBoolean("image", false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return authoriseImage;
     }
 
     public String getURL() {

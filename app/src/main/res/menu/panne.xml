@@ -6,7 +6,7 @@
         android:id="@+id/photo_panne"
         android:icon="@drawable/camera"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="" />
 
 </menu>

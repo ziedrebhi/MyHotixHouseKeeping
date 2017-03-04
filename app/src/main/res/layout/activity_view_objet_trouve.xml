@@ -275,6 +275,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/imageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -304,6 +305,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/imageLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -348,6 +350,7 @@
                 android:background="@drawable/blue_btn_drawable"
                 android:drawableLeft="@drawable/upload"
                 android:text="@string/close"
+                android:textColor="@color/colorWhite"
                 android:textStyle="bold" />
 
         </LinearLayout>

@@ -78,6 +78,7 @@ public class DeclarationPanne extends Activity {
     int typePanneId;
     int idActivite = 0;
     String NumChb = "-1";
+    LinearLayout LinearImageTxt, LinearImageValue;
     private Uri fileUri;
 
     private static File getOutputMediaFile(int type) {
@@ -114,6 +115,9 @@ public class DeclarationPanne extends Activity {
 
         listTypePanne = new ArrayList<TypePanne>();
         spinner = (Spinner) findViewById(R.id.spTypePanne);
+        LinearImageTxt = (LinearLayout) findViewById(R.id.linearImageTxt);
+        LinearImageValue = (LinearLayout) findViewById(R.id.linearImageValue);
+
         types = new ArrayList<String>();
         numCHB = (EditText) findViewById(R.id.numCHB);
         dureeTraitement = (EditText) findViewById(R.id.dureeTraitement);
@@ -199,7 +203,14 @@ public class DeclarationPanne extends Activity {
             numCHB.setText(String.valueOf(num_chb));
         }
         dureeTraitement.setText("0");
+        if (!getAuthoriseImageSend()) {
+            LinearImageValue.setVisibility(View.GONE);
+            LinearImageTxt.setVisibility(View.GONE);
 
+        } else {
+            LinearImageValue.setVisibility(View.VISIBLE);
+            LinearImageTxt.setVisibility(View.VISIBLE);
+        }
         AsyncCallWS ws = new AsyncCallWS();
         ws.execute();
 
@@ -225,6 +236,13 @@ public class DeclarationPanne extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.panne, menu);
+        if (getAuthoriseImageSend()) {
+            MenuItem item = menu.findItem(R.id.photo_panne);
+            item.setVisible(true);
+        } else {
+            MenuItem item = menu.findItem(R.id.photo_panne);
+            item.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

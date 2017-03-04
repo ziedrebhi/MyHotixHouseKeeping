@@ -102,6 +102,8 @@ public class ObjetsTrouves extends FragmentActivity implements
     String nameImage;
     TextView btnImTextView;
     TextView btnViewImage, emptyMsg;
+    LinearLayout imageLayout;
+    String prodNum, Desc, Nom, Prenom, RNom, RPrenom, Lieu, Comment;
     private Uri fileUri;
     private int mSelectedRow = 0;
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -222,6 +224,7 @@ public class ObjetsTrouves extends FragmentActivity implements
         SpannableString string = new SpannableString(getResources().getString(R.string.image_saved));
         string.setSpan(new UnderlineSpan(), 0, string.length(), 0);
         btnViewImage.setText(string);
+        imageLayout = (LinearLayout) findViewById(R.id.imageLi);
         btnViewImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -310,6 +313,15 @@ public class ObjetsTrouves extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 if (ChapmsRequis()) {
+                    prodNum = lieu.getText().toString();
+                    Desc = description.getText().toString();
+                    Nom = nom.getText().toString();
+                    Prenom = prenom.getText().toString();
+                    RNom = renduNom.getText().toString();
+                    RPrenom = renduPrenom.getText().toString();
+                    Comment = comment.getText().toString();
+                    Lieu = lieu.getText().toString();
+                    Log.i("Data", prodNum + Desc + Nom + Prenom + RNom + RPrenom + Comment + Lieu);
                     AsyncDeclareObjetWS ws = new AsyncDeclareObjetWS();
                     ws.execute();
                 }
@@ -323,6 +335,7 @@ public class ObjetsTrouves extends FragmentActivity implements
                 if (!ControleDate()) {
                     ShowToast();
                 } else {
+
                     AsyncCallWS ws = new AsyncCallWS();
                     ws.execute();
                 }
@@ -428,6 +441,12 @@ public class ObjetsTrouves extends FragmentActivity implements
     @Override
     protected void onResume() {
 
+        if (getAuthoriseImageSend()) {
+            imageLayout.setVisibility(View.VISIBLE);
+
+        } else {
+            imageLayout.setVisibility(View.GONE);
+        }
         super.onResume();
     }
 
@@ -670,8 +689,19 @@ public class ObjetsTrouves extends FragmentActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.panne, menu);
+        if (getAuthoriseImageSend()) {
+            MenuItem item = menu.findItem(R.id.photo_panne);
+            item.setVisible(true);
+        } else {
+            MenuItem item = menu.findItem(R.id.photo_panne);
+            item.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
+
+    /*
+     * Capturing Camera Image will lauch camera app requrest image capture
+     */
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -689,10 +719,6 @@ public class ObjetsTrouves extends FragmentActivity implements
 
         return super.onMenuItemSelected(featureId, item);
     }
-
-    /*
-     * Capturing Camera Image will lauch camera app requrest image capture
-     */
 
     @Override
     public void onBackPressed() {
@@ -863,20 +889,12 @@ public class ObjetsTrouves extends FragmentActivity implements
     public class AsyncDeclareObjetWS extends AsyncTask<String, String, String> {
         String result = "False";
         HttpTransportSE androidHttpTransport;
-        String prodNum, Desc, Nom, Prenom, RNom, RPrenom, Lieu, Comment;
 
         @Override
         protected void onPreExecute() {
             progressDialog.setCancelable(true);
             progressDialog.show();
-            prodNum = lieu.getText().toString();
-            Desc = description.getText().toString();
-            Nom = nom.getText().toString();
-            Prenom = prenom.getText().toString();
-            RNom = renduNom.getText().toString();
-            RPrenom = renduPrenom.getText().toString();
-            Comment = comment.getText().toString();
-            Lieu = lieu.getText().toString();
+
             super.onPreExecute();
         }
 
@@ -888,7 +906,7 @@ public class ObjetsTrouves extends FragmentActivity implements
 
             PropertyInfo pi_prodNum = new PropertyInfo();
             pi_prodNum.setName("prodNum");
-            pi_prodNum.setValue(prodNum);
+            pi_prodNum.setValue(null);
             pi_prodNum.setType(String.class);
             request.addProperty(pi_prodNum);
 
@@ -910,6 +928,12 @@ public class ObjetsTrouves extends FragmentActivity implements
             objTrouvePrenom.setType(String.class);
             request.addProperty(objTrouvePrenom);
 
+            PropertyInfo objTrouveLieu = new PropertyInfo();
+            objTrouveLieu.setName("objTrouveLieu");
+            objTrouveLieu.setValue(Lieu);
+            objTrouveLieu.setType(String.class);
+            request.addProperty(objTrouveLieu);
+
             PropertyInfo objRenduTrouveNom = new PropertyInfo();
             objRenduTrouveNom.setName("objTrouveRenduNom");
             objRenduTrouveNom.setValue(RNom);
@@ -922,11 +946,6 @@ public class ObjetsTrouves extends FragmentActivity implements
             objRenduTrouvePrenom.setType(String.class);
             request.addProperty(objRenduTrouvePrenom);
 
-            PropertyInfo objTrouveLieu = new PropertyInfo();
-            objTrouveLieu.setName("objTrouveLieu");
-            objTrouveLieu.setValue(Lieu);
-            objTrouveLieu.setType(String.class);
-            request.addProperty(objTrouveLieu);
 
             PropertyInfo pi_login = new PropertyInfo();
             pi_login.setName("login");
@@ -944,26 +963,27 @@ public class ObjetsTrouves extends FragmentActivity implements
 
             pi_comment.setType(String.class);
             request.addProperty(pi_comment);
+
+
+            PropertyInfo pi_image = new PropertyInfo();
+            pi_image.setName("ImageByteArray");
             if (getAuthoriseImageSend()) {
-                PropertyInfo pi_image = new PropertyInfo();
-                pi_image.setName("ImageByteArray");
-                if (getAuthoriseImageSend()) {
-                    Bitmap img = getImageFromSD();
-                    if (img != null) {
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        img.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
-                        String temp = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                        pi_image.setValue(temp);
-                        Log.i("ImageByteArray => ", temp);
-                    } else {
-                        pi_image.setValue(null);
-                    }
+                Bitmap img = getImageFromSD();
+                if (img != null) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    img.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    String temp = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    pi_image.setValue(temp);
+                    Log.i("ImageByteArray => ", temp);
                 } else {
                     pi_image.setValue(null);
                 }
+
                 pi_image.setType(String.class);
                 request.addProperty(pi_image);
+            } else {
+                pi_image.setValue(null);
             }
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
@@ -973,6 +993,7 @@ public class ObjetsTrouves extends FragmentActivity implements
                     androidHttpTransport.call(SOAP_ACTION, envelope);
                     result = envelope.getResponse().toString();
                 } catch (SocketTimeoutException e) {
+                    Log.e("Erreur", e.toString());
                     runOnUiThread(new Runnable() {
 
                         @Override

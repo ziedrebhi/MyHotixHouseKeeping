@@ -3,9 +3,11 @@ package com.hotix.myhotixhousekeeping;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Base64;
@@ -31,6 +33,20 @@ public class ViewPanneActivity extends Activity {
     int dureeP;
     Boolean isUrgent = false;
     Bitmap bitmap;
+    LinearLayout linearImage;
+
+    public boolean getAuthoriseImageSend() {
+        boolean authoriseImage = false;
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(this);
+            authoriseImage = sp.getBoolean("image", false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return authoriseImage;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +57,7 @@ public class ViewPanneActivity extends Activity {
         prenom = (EditText) findViewById(R.id.prenom);
         duree = (EditText) findViewById(R.id.dureeT);
         urg = (CheckBox) findViewById(R.id.cbxUrgent);
-
+        linearImage = (LinearLayout) findViewById(R.id.LinearLayoutImage);
         duree.setEnabled(false);
         nom.setEnabled(false);
         prenom.setEnabled(false);
@@ -155,6 +171,11 @@ public class ViewPanneActivity extends Activity {
             imgView.setVisibility(View.GONE);
         } else {
             imgView.setVisibility(View.VISIBLE);
+        }
+        if (getAuthoriseImageSend()) {
+            linearImage.setVisibility(View.VISIBLE);
+        } else {
+            linearImage.setVisibility(View.GONE);
         }
         super.onResume();
     }
