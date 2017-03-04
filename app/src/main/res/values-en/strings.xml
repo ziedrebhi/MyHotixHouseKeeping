@@ -11,8 +11,8 @@
     <string name="passwd">Password</string>
     <string name="ip_serv">Server IP Aderess</string>
     <string name="creer">Create</string>
-    <string name="pas_pannes">Pas de Pannes ! Excellent </string>
-    <string name="pas_ob">Pas d\'Objets Trouvés !</string>
+    <string name="pas_pannes">No Pannes ! Excellent </string>
+    <string name="pas_ob">No Items found !</string>
     <string name="libreP">Libre Propre</string>
     <string name="libreS">Libre Sale</string>
     <string name="OccP">Occupé Propre</string>
@@ -21,6 +21,7 @@
     <string name="DayUse">Day Use</string>
     <string name="att">Attribuée</string>
     <string name="hs">Hors Service</string>
+
     <!-- Boutons -->
     <string name="cnx">Connexion</string>
     <string name="room_rack">Room Rack</string>
@@ -121,6 +122,7 @@
         <item>@drawable/info</item>
         <item>@drawable/ico_exit</item>
     </array>
-    <string name="title_activity_view_panne">Détails Panne</string>
-    <string name="title_activity_view_objet">Détails Objet Trouvé</string>
+    <string name="title_activity_view_panne">Details Panne</string>
+    <string name="title_activity_view_objet">Details Item found</string>
+
 </resources>

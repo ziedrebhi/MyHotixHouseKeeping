@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Nom des activités -->
     <string name="app_name">MyHotix Housekeeping</string>
     <string name="splash">My Hotix Housekeeping</string>
-    <string name="title_activity_sign_in">Connexion</string>
+    <string name="title_activity_sign_in">Sign In</string>
 
     <!-- Boutons -->
     <string name="cnx">Connexion</string>
@@ -13,22 +14,13 @@
     <string name="clientsA">Arrivée(s) prévue(s)</string>
     <string name="exit">Quitter</string>
     <string name="maintenance">Pannes</string>
-    <string name="creer">Créer</string>
+
     <!-- Chaines à traduire -->
     <string name="load">Chargement</string>
     <string name="login">Login</string>
     <string name="passwd">Mot de passe</string>
     <string name="ip_serv">Adresse IP du serveur</string>
-    <string name="pas_pannes">Pas de Pannes ! Excellent </string>
-    <string name="pas_ob">Pas d\'Objets Trouvés !</string>
-    <string name="libreP">Libre Propre</string>
-    <string name="libreS">Libre Sale</string>
-    <string name="OccP">Occupé Propre</string>
-    <string name="OccS">Occupé Sale</string>
-    <string name="Dep">Départ Attendu</string>
-    <string name="DayUse">Day Use</string>
-    <string name="att">Attribuée</string>
-    <string name="hs">Hors Service</string>
+
     <!-- Messages Toast et Alert -->
     <string name="close_app">Voulez-vous vraiment quitter ?</string>
     <string name="oui">Oui</string>
@@ -52,24 +44,16 @@
     <string name="panne_h2">Type hors service</string>
     <string name="panne_h3">Déclarée par</string>
     <string name="panne_h4">Description</string>
-    <string name="refresh">Actualiser</string>
-    <string name="totalAP">Total arrivées prévues</string>
-    <string name="dateDeb">Date début : </string>
-    <string name="dateFin">Date &#160;&#160;fin : </string>
-
     <string name="tab1">Déclarer</string>
     <string name="tab2">Objets trouvés</string>
     <string name="tab3">Déclarer</string>
     <string name="tab4">Liste Pannes</string>
     <string name="update">Mise à jour</string>
     <string name="cloture">Cloture</string>
-
     <string name="declare_ok">Déclaration d\'objet trouvé envoyée avec succès.</string>
     <string name="daclare_not_ok">Erreur d\'envoi de déclaration d\'objet trouvé.</string>
-
     <string name="update_ok">Mise à jour d\'objet trouvé avec succès.</string>
     <string name="update_not_ok">Erreur d\'envoi de mise à jour d\'objet trouvé.</string>
-
     <string name="cloture_ok">Cloture d\'objet trouvé avec succès.</string>
     <string name="cloture_not_ok">Erreur de cloture d\'objet trouvé.</string>
     <string name="comment">Commentaire</string>
@@ -78,13 +62,15 @@
     <string name="urgent">Urgent</string>
     <string name="nom">Nom</string>
     <string name="prenom">Prénom</string>
-    <string name="updating">Téléchargement ..</string>
-
     <string name="desc_panne">Description</string>
     <string name="recalmer">Réclamer</string>
     <string name="trouve">Trouvé par</string>
     <string name="rendu">Rendu à</string>
     <string name="listeCP">Voir liste clients</string>
+    <string name="refresh">Actualiser</string>
+    <string name="totalAP">Total arrivées prévues</string>
+    <string name="dateDeb">Date début : </string>
+    <string name="dateFin">Date &#160;&#160;fin : </string>
     <string name="valider">Valider</string>
     <string name="chambre">Chambre</string>
     <string name="etatVC">Libre propre</string>
@@ -97,10 +83,7 @@
     <string name="foundBy">Trouvé par</string>
     <string name="renduA">Rendu à</string>
     <string name="declarer">Déclarer</string>
-    <string name="last_version_ok">Vous avez la dernière version. L\'application est à jour</string>
-    <string name="last_version_no">Vous n\'avez  pas la dernière version. Cliquer sur "OK" pour la mettre à jour</string>
-
-    <string name="version">Version</string>
+    <string name="updating">Téléchargement ..</string>
 
     <string name="choix_tech">Choississez le technicien</string>
     <!-- Navigation Drawer -->
@@ -109,18 +92,42 @@
         <item>Version</item>
         <item>Quitter</item>
     </string-array>
-    <string name="image_saved">Image enregistrée</string>
-    <string name="image_saved_not">Image non enregistrée</string>
-    <string name="image">Image</string>
+    <string name="version">Version</string>
+    <string name="pas_pannes">Pas de Pannes ! Excellent </string>
+    <string name="pas_ob">Pas d\'Objets Trouvés !</string>
+    <string name="creer">Créer</string>
     <array name="nav_drawer_icons">
         <item>@drawable/parametres</item>
         <item>@drawable/info</item>
         <item>@drawable/ico_exit</item>
     </array>
-    <string name="view">Afficher</string>
-    <string name="close">Fermer</string>
-    <string name="title_activity_view_panne">Détails Panne</string>
-    <string name="title_activity_view_objet">Détails Objet Trouvé</string>
+    <string name="last_version_ok">Vous avez la dernière version. L\'application est à jour</string>
+    <string name="last_version_no">Vous n\'avez  pas la dernière version. Cliquer sur "OK" pour la mettre à jour</string>
     <string name="show">Affiché</string>
     <string name="hide">Caché</string>
+    <string name="image">Image</string>
+    <string name="view">Afficher</string>
+    <string name="close">Fermer</string>
+    <string name="image_saved">Image enregistrée</string>
+    <string name="image_saved_not">Image non enregistrée</string>
+    <string name="title_activity_connexion">Connexion</string>
+    <string name="title_activity_dash_gouvernante">Gouvernante</string>
+    <string name="title_activity_room_rack">Room Rack</string>
+    <string name="title_activity_declaration_panne">Déclaration Panne</string>
+    <string name="title_activity_objets_trouves">Objets Trouvés</string>
+    <string name="title_activity_update_objet_trouve">Mise à jour Objet Trouvé</string>
+    <string name="title_activity_femme_menage">Affectation femme de menage</string>
+    <string name="title_activity_liste_clients_ap">Liste d\'arrivée(s) prévue(s)</string>
+    <string name="title_activity_list_pannes">Liste des Pannes</string>
+    <string name="title_activity_view_panne">Détails Panne</string>
+    <string name="title_activity_view_objet">Détails Objet Trouvé</string>
+
+    <string name="libreP">Libre Propre</string>
+    <string name="libreS">Libre Sale</string>
+    <string name="OccP">Occupé Propre</string>
+    <string name="OccS">Occupé Sale</string>
+    <string name="Dep">Départ Attendu</string>
+    <string name="DayUse">Day Use</string>
+    <string name="att">Attribuée</string>
+    <string name="hs">Hors Service</string>
 </resources>

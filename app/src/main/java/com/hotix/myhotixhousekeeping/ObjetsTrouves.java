@@ -312,7 +312,7 @@ public class ObjetsTrouves extends FragmentActivity implements
 
             @Override
             public void onClick(View v) {
-                if (ChapmsRequis()) {
+                if (ChampsRequis()) {
                     prodNum = lieu.getText().toString();
                     Desc = description.getText().toString();
                     Nom = nom.getText().toString();
@@ -555,26 +555,26 @@ public class ObjetsTrouves extends FragmentActivity implements
         t.show();
     }
 
-    private boolean ChapmsRequis() {
+    private boolean ChampsRequis() {
         if (lieu.getText().toString().length() == 0) {
-            lieu.setError("Chapms  requis");
+            lieu.setError("Champs  requis");
         }
         if (description.getText().toString().length() == 0) {
-            description.setError("Chapms  requis");
+            description.setError("Champs  requis");
         }
         if (nom.getText().toString().length() == 0) {
-            nom.setError("Chapms  requis");
+            nom.setError("Champs  requis");
         }
         if (prenom.getText().toString().length() == 0) {
-            prenom.setError("Chapms  requis");
+            prenom.setError("Champs  requis");
         }
 
         if (renduNom.getText().toString().length() == 0) {
-            renduNom.setError("Chapms  requis");
+            renduNom.setError("Champs  requis");
         }
 
         if (renduPrenom.getText().toString().length() == 0) {
-            renduPrenom.setError("Chapms  requis");
+            renduPrenom.setError("Champs  requis");
         }
 
         if (lieu.getText().toString().length() == 0
@@ -892,9 +892,9 @@ public class ObjetsTrouves extends FragmentActivity implements
 
         @Override
         protected void onPreExecute() {
-            progressDialog.setCancelable(true);
+            progressDialog.setCancelable(false);
             progressDialog.show();
-
+            Log.i("Here", "AsyncDeclareObjetWS");
             super.onPreExecute();
         }
 
@@ -980,11 +980,12 @@ public class ObjetsTrouves extends FragmentActivity implements
                     pi_image.setValue(null);
                 }
 
-                pi_image.setType(String.class);
-                request.addProperty(pi_image);
+
             } else {
                 pi_image.setValue(null);
             }
+            pi_image.setType(String.class);
+            request.addProperty(pi_image);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
             androidHttpTransport = new HttpTransportSE(getURL(), 5000);

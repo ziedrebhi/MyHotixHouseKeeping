@@ -353,7 +353,7 @@ public class DeclarationPanne extends Activity {
 
     private void openProg() {
         try {
-            progressDialog.setCancelable(true);
+            progressDialog.setCancelable(false);
             progressDialog.show();
         } catch (Exception e) {
             e.printStackTrace();

@@ -529,7 +529,7 @@ public class Connexion extends Activity implements
     protected void onResume() {
         super.onResume();
 
-        Boolean autoupdate = false;
+        Boolean autoupdate = true;
         if (isOnline()) {
             Log.i("AUTO UPDATE", "Online");
             if (autoupdate) {
