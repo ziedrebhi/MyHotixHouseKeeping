@@ -988,7 +988,7 @@ public class ObjetsTrouves extends FragmentActivity implements
             request.addProperty(pi_image);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION, envelope);
@@ -1054,7 +1054,7 @@ public class ObjetsTrouves extends FragmentActivity implements
 
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION3, envelope);
@@ -1140,7 +1140,7 @@ public class ObjetsTrouves extends FragmentActivity implements
             request.addProperty(pi_dateFin);
 
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION2, envelope);

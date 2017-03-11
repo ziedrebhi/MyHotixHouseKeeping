@@ -184,7 +184,7 @@ public class DashGouvernante extends Activity implements OnClickListener {
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(getURL());
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 androidHttpTransport.call(SOAP_ACTION, envelope);
                 response = envelope.getResponse().toString();

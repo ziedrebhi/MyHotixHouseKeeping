@@ -636,7 +636,7 @@ public class Connexion extends Activity implements
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION, envelope);

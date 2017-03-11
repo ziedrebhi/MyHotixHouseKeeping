@@ -526,7 +526,7 @@ public class DeclarationPanne extends Activity {
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL());
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 androidHttpTransport.call(SOAP_ACTION, envelope);
                 final SoapObject response = (SoapObject) envelope.getResponse();
@@ -678,7 +678,7 @@ public class DeclarationPanne extends Activity {
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
 
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION2, envelope);

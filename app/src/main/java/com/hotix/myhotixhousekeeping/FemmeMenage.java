@@ -70,6 +70,11 @@ public class FemmeMenage extends FragmentActivity {
         btnFM = (Button) findViewById(R.id.btn_affecterFM);
         btn_up = (Button) findViewById(R.id.btn_up);
         btn_down = (Button) findViewById(R.id.btn_down);
+        float scalefactor = getResources().getDisplayMetrics().density * 100;
+        int number = getWindowManager().getDefaultDisplay().getWidth();
+        int columns = (int) ((float) number / (float) scalefactor);
+        gridNonAff.setNumColumns(columns);
+        gridAff.setNumColumns(columns);
 
     }
 
@@ -336,7 +341,7 @@ public class FemmeMenage extends FragmentActivity {
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION, envelope);
@@ -439,7 +444,7 @@ public class FemmeMenage extends FragmentActivity {
 
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION2, envelope);
@@ -531,7 +536,7 @@ public class FemmeMenage extends FragmentActivity {
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION3, envelope);

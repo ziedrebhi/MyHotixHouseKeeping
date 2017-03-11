@@ -628,7 +628,7 @@ public class PannesList extends Activity {
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
 
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     Log.i("AsyncClotureObjetWS", envelope.toString());
@@ -717,7 +717,7 @@ public class PannesList extends Activity {
             request.addProperty(pi_dateFin);
 
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION2, envelope);
@@ -870,7 +870,7 @@ public class PannesList extends Activity {
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL());
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 androidHttpTransport.call(SOAP_ACTION1, envelope);
                 final SoapObject response = (SoapObject) envelope.getResponse();

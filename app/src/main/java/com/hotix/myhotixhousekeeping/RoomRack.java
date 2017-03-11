@@ -81,6 +81,10 @@ public class RoomRack extends Activity {
         setContentView(R.layout.activity_room_rack);
         grid = (GridView) findViewById(R.id.grid);
         gridFilter = (GridView) findViewById(R.id.gridFilter);
+        float scalefactor = getResources().getDisplayMetrics().density * 100;
+        int number = getWindowManager().getDefaultDisplay().getWidth();
+        int columns = (int) ((float) number / (float) scalefactor);
+        grid.setNumColumns(columns);
         refresh = (Button) findViewById(R.id.refresh_room_rack);
         if ((listEtage == null)) {
             strlistEtage = ";-1;";
@@ -466,7 +470,7 @@ public class RoomRack extends Activity {
 
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 15000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION, envelope);
@@ -602,7 +606,7 @@ public class RoomRack extends Activity {
 
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION2, envelope);
@@ -672,7 +676,7 @@ public class RoomRack extends Activity {
 
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION3, envelope);

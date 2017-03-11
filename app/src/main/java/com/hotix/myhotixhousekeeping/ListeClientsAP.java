@@ -357,7 +357,7 @@ public class ListeClientsAP extends FragmentActivity {
             request.addProperty(pi_dateFin);
 
             envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 5000);
+            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
             try {
                 try {
                     androidHttpTransport.call(SOAP_ACTION, envelope);
