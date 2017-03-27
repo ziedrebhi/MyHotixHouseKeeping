@@ -8,15 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hotix.myhotixhousekeeping.R;
-import com.hotix.myhotixhousekeeping.model.Room;
+import com.hotix.myhotixhousekeeping.entities.RackRoomData;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CustomGrid extends BaseAdapter {
-    ArrayList<Room> listRoom;
+    List<RackRoomData> listRoom;
     private Context mContext;
 
-    public CustomGrid(Context c, ArrayList<Room> listRoom) {
+    public CustomGrid(Context c, List<RackRoomData> listRoom) {
         mContext = c;
         this.listRoom = listRoom;
     }
@@ -53,7 +53,7 @@ public class CustomGrid extends BaseAdapter {
 
         switch (listRoom.get(position).getStatutId()) {
             case 1:
-                if (listRoom.get(position).getAttributed()) {
+                if (listRoom.get(position).isIsAttributed()) {
                     if (listRoom.get(position).getStatutId() == 1)
                         textView.setBackgroundResource(R.drawable.attributed);
                     else
@@ -63,7 +63,7 @@ public class CustomGrid extends BaseAdapter {
                 }
                 break;
             case 2:
-                if (listRoom.get(position).getAttributed()) {
+                if (listRoom.get(position).isIsAttributed()) {
                     if (listRoom.get(position).getStatutId() == 1)
                         textView.setBackgroundResource(R.drawable.attributed);
                     else
@@ -73,7 +73,7 @@ public class CustomGrid extends BaseAdapter {
                 }
                 break;
             case 3:
-                if (listRoom.get(position).getAttributed()) {
+                if (listRoom.get(position).isIsAttributed()) {
                     if (listRoom.get(position).getStatutId() == 1)
                         textView.setBackgroundResource(R.drawable.attributed);
                     else
@@ -83,7 +83,7 @@ public class CustomGrid extends BaseAdapter {
                 }
                 break;
             case 4:
-                if (listRoom.get(position).getAttributed()) {
+                if (listRoom.get(position).isIsAttributed()) {
                     if (listRoom.get(position).getStatutId() == 1)
                         textView.setBackgroundResource(R.drawable.attributed);
                     else
@@ -93,7 +93,7 @@ public class CustomGrid extends BaseAdapter {
                 }
                 break;
             case 5:
-                if (listRoom.get(position).getAttributed()) {
+                if (listRoom.get(position).isIsAttributed()) {
                     if (listRoom.get(position).getStatutId() == 1)
                         textView.setBackgroundResource(R.drawable.attributed);
                     else
@@ -103,7 +103,7 @@ public class CustomGrid extends BaseAdapter {
                 }
                 break;
             case 6:
-                if (listRoom.get(position).getAttributed()) {
+                if (listRoom.get(position).isIsAttributed()) {
                     if (listRoom.get(position).getStatutId() == 1)
                         textView.setBackgroundResource(R.drawable.attributed);
                     else
@@ -113,7 +113,7 @@ public class CustomGrid extends BaseAdapter {
                 }
                 break;
             case 7:
-                if (listRoom.get(position).getAttributed()) {
+                if (listRoom.get(position).isIsAttributed()) {
                     if (listRoom.get(position).getStatutId() == 1)
                         textView.setBackgroundResource(R.drawable.attributed);
                     else

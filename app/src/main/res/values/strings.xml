@@ -1,0 +1,14 @@
+<resources>
+    <string name="dateFin"></string>
+    <string name="dateDeb"></string>
+    <string name="Dep"></string>
+    <string name="title_activity_prevision"></string>
+    <string name="msg_panne_create_error"></string>
+    <string name="title_activity_femme_menage"></string>
+    <string name="prev_reste"></string>
+    <string name="libreS"></string>
+    <string name="msg_connecting_expired_pwd"></string>
+    <string name="hs"></string>
+    <string name="msg_connecting_error"></string>
+    <string name="msg_connecting_error_srv"></string>
+</resources>

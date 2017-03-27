@@ -2,9 +2,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:defaultValue="41.228.14.111"
+
         android:key="serveur"
-        android:summary="41.228.14.111"
+        android:summary="Not Configured"
         android:title="IP serveur"></EditTextPreference>
     <com.hotix.myhotixhousekeeping.utils.Pref
         android:defaultValue="false"

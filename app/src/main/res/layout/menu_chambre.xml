@@ -55,10 +55,17 @@
             android:layout_weight="0.37">
 
             <RadioButton
-                android:id="@+id/radioEtat"
+                android:id="@+id/radioCViewGuests"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                android:text="@string/see_guests" />
+
+            <RadioButton
+                android:id="@+id/radioEtat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
                 android:text="@string/switch_state" />
 
             <RadioButton
@@ -66,6 +73,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/panne" />
+
+            <RadioButton
+                android:id="@+id/radioEtatLieu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/etat_lieu" />
+
         </RadioGroup>
 
     </LinearLayout>

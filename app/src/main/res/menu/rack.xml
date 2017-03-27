@@ -4,7 +4,13 @@
 
     <item
         android:id="@+id/infos_rack"
-        android:icon="@drawable/info"
+        android:icon="@drawable/info_legende"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="" />
+    <item
+        android:id="@+id/mouchard_rack"
+        android:icon="@drawable/history"
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="" />

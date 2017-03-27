@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Nom des activités -->
     <string name="app_name">MyHotix Housekeeping</string>
     <string name="splash">My Hotix Housekeeping</string>
     <string name="title_activity_sign_in">Sign In</string>
-
-    <!-- Chaines à traduire -->
     <string name="load">Loading</string>
     <string name="login">Login</string>
     <string name="passwd">Password</string>
@@ -13,29 +10,27 @@
     <string name="creer">Create</string>
     <string name="pas_pannes">No Pannes ! Excellent </string>
     <string name="pas_ob">No Items found !</string>
-    <string name="libreP">Libre Propre</string>
-    <string name="libreS">Libre Sale</string>
-    <string name="OccP">Occupé Propre</string>
-    <string name="OccS">Occupé Sale</string>
-    <string name="Dep">Départ Attendu</string>
+    <string name="libreP">Vacant Clean</string>
+    <string name="libreS">Vacant Dirty</string>
+    <string name="OccP">Occupied Clean</string>
+    <string name="OccS">Occupied dirty</string>
+    <string name="Dep">Expected Departure</string>
     <string name="DayUse">Day Use</string>
-    <string name="att">Attribuée</string>
-    <string name="hs">Hors Service</string>
-
-    <!-- Boutons -->
-    <string name="cnx">Connexion</string>
+    <string name="att">Attributed</string>
+    <string name="hs">Out of Service</string>
+    <string name="guests">Guests</string>
+    <string name="cnx">Log In</string>
     <string name="room_rack">Room Rack</string>
     <string name="team">Maintenance Team</string>
     <string name="objets">Lost and found</string>
     <string name="clientsA">Expected Check In list</string>
     <string name="exit">Exit</string>
     <string name="maintenance">Pannes</string>
-    <!-- Messages Toast et Alert -->
     <string name="close_app">Do you really want to quit ?</string>
     <string name="oui">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="connect_data">Required field !</string>
-    <string name="acces_denied">Connexion  problem</string>
+    <string name="acces_denied">Connection problem</string>
     <string name="msg_acces_denied">You do not have Internet connection.</string>
     <string name="verify_data">Verify the information you have entered.</string>
     <string name="new_cnx">Do you want to retry the connection ?</string>
@@ -49,14 +44,12 @@
     <string name="succes_change_status">Status of room changed with success.</string>
     <string name="succes_panne">Claim of failure successfully sent.</string>
     <string name="error_panne">Error sending claim of failure.</string>
-
     <string name="panne_h1">Place</string>
     <string name="panne_h2">Type out of service</string>
     <string name="panne_h3">Declared by</string>
     <string name="panne_h4">Description</string>
     <string name="refresh">Refresh</string>
     <string name="totalAP">Total scheduled arrivals</string>
-
     <string name="tab1">Declare</string>
     <string name="tab2">List</string>
     <string name="tab3">Declare</string>
@@ -64,18 +57,14 @@
     <string name="update">Update</string>
     <string name="cloture">Closure</string>
     <string name="updating">Downloading ..</string>
-
     <string name="declare_ok">Declaration of found object successfully sent.</string>
     <string name="daclare_not_ok">Error sending declaration of object declaration found.</string>
-
     <string name="update_ok">Update object found with success.</string>
     <string name="update_not_ok">Error sending update object found.</string>
-
     <string name="last_version_ok">You have the last version of MyHotix Check In. </string>
     <string name="last_version_no">Your application is outdate. Clic "UPDATE" to get and install the last version</string>
     <string name="autoupdate">Auto Update</string>
     <string name="version">Version</string>
-
     <string name="cloture_ok">Closure object found with success .</string>
     <string name="cloture_not_ok">Error of closure object found.</string>
     <string name="comment">Comment</string>
@@ -90,7 +79,7 @@
     <string name="rendu">Returner to</string>
     <string name="listeCP">See guest list</string>
     <string name="dateDeb">Start date : </string>
-    <string name="dateFin">End   date : </string>
+    <string name="dateFin">"End  date : "</string>
     <string name="valider">Validate</string>
     <string name="chambre">Room</string>
     <string name="etatVC">Vacant Clean</string>
@@ -109,7 +98,6 @@
     <string name="show">Show</string>
     <string name="hide">Hide</string>
     <string name="image_saved_not">Picture NOT saved</string>
-    <!-- Navigation Drawer -->
     <string-array name="nav_drawer_items">
         <item>Settings</item>
         <item>Version</item>
@@ -118,11 +106,72 @@
     <string name="view">Show</string>
     <string name="close">Close</string>
     <array name="nav_drawer_icons">
-        <item>@drawable/parametres</item>
-        <item>@drawable/info</item>
-        <item>@drawable/ico_exit</item>
+        <item>@drawable/setting</item>
+        <item>@drawable/info_legende</item>
+        <item>@drawable/log_out</item>
     </array>
     <string name="title_activity_view_panne">Details Panne</string>
     <string name="title_activity_view_objet">Details Item found</string>
-
+    <string name="OK">OK</string>
+    <string name="configurer">Configure</string>
+    <string name="comment_requis">Please write a comment.</string>
+    <string name="msg_affect_ko">Problem of Assignment !</string>
+    <string name="msg_affect_ok">Successful assignment</string>
+    <string name="msg_change_etat_cannot">Changement d\'état non autorisé.</string>
+    <string name="msg_change_etat_error">Unauthorized state change.</string>
+    <string name="msg_change_etat_error_srv">Error changing status !</string>
+    <string name="msg_connecting">Logging In...</string>
+    <string name="msg_connecting_error">Connection error</string>
+    <string name="msg_connecting_error_srv">Server Connection Error !</string>
+    <string name="msg_connecting_expired_pwd">Expired Password</string>
+    <string name="msg_connecting_not_active">Inactive user</string>
+    <string name="msg_connecting_not_authorised">User Not Allowed</string>
+    <string name="msg_connecting_not_found">User does not exist</string>
+    <string name="msg_connecting_wrong_pwd">Wrong password</string>
+    <string name="msg_empty_affect">The list of rooms to be allocated is empty.</string>
+    <string name="msg_error_date">Wrong Dates! Check interval</string>
+    <string name="msg_loading">Loading ...</string>
+    <string name="msg_loading_error">Error Loading Data!</string>
+    <string name="msg_objet_cloture_error">Problem of closing of the found object!</string>
+    <string name="title_activity_update_objet_trouve">Update Object Found</string>
+    <string name="title_activity_room_rack">Room Rack</string>
+    <string name="title_activity_prevision">Occupancy Rate</string>
+    <string name="title_activity_objets_trouves">Lost &amp; Found List</string>
+    <string name="msg_objet_cloture_ok">Successfully closed object</string>
+    <string name="msg_objet_create_error">Problem creating the object!</string>
+    <string name="msg_objet_create_ok">Object successfully created</string>
+    <string name="msg_panne_cloture_error">Problem of closing the breakdown!</string>
+    <string name="msg_panne_cloture_ok">Successfully closed</string>
+    <string name="msg_panne_create_error">Problem of creating the breakdown!</string>
+    <string name="msg_panne_create_ok">Breakdown successfully created</string>
+    <string name="msg_srv_configuration">Server not configured!</string>
+    <string name="title_activity_connexion">Log In</string>
+    <string name="title_activity_dash_gouvernante">Home</string>
+    <string name="title_activity_declaration_panne">Create Breakdown</string>
+    <string name="title_activity_femme_menage">Assignment of Housekeepers</string>
+    <string name="title_activity_list_pannes">List of Failures</string>
+    <string name="title_activity_liste_clients_ap">List of scheduled Arrivals</string>
+    <string name="prev_arrivee">Arrivals</string>
+    <string name="prev_depart">Departures</string>
+    <string name="prev_reste">Rest</string>
+    <string name="prev_taux">Rate Occupancy per room</string>
+    <string name="all">All</string>
+    <string name="title_activity_mouchard">Trace</string>
+    <string name="pas_mouchard">No events ! </string>
+    <string name="see_guests">See Guests</string>
+    <string name="etat_lieu">State of place</string>
+    <string name="etat_lieu_ok">Valid</string>
+    <string name="etat_lieu_ko">Not Valid</string>
+    <string name="etat_lieu_update_ok">Successful operation !</string>
+    <string name="etat_lieu_update_ko">Operation failed !</string>
+    <string name="etat_lieu_tv">TV</string>
+    <string name="etat_lieu_bar">Mini-Bar</string>
+    <string name="etat_lieu_serv">Towels</string>
+    <string name="prev_recouche">Recouche</string>
+    <string name="date">Date</string>
+    <string name="prev_taux_lit">Rate Occupancy per Pax</string>
+    <string name="capactite">Capacité</string>
+    <string name="chb">Room</string>
+    <string name="pax">PAX</string>
+    <string name="total">Total</string>
 </resources>

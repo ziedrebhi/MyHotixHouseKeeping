@@ -1,68 +1,73 @@
 package com.hotix.myhotixhousekeeping;
 
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.fragments.flipviewer.AnimationFactory;
 import com.fragments.flipviewer.AnimationFactory.FlipDirection;
 import com.hotix.myhotixhousekeeping.adapter.CustomAffect;
 import com.hotix.myhotixhousekeeping.adapter.FemmeMenageAdapter;
-import com.hotix.myhotixhousekeeping.model.FMenage;
-import com.hotix.myhotixhousekeeping.model.RoomFM;
+import com.hotix.myhotixhousekeeping.entities.AffectationFMData;
+import com.hotix.myhotixhousekeeping.entities.AffectationFMModel;
+import com.hotix.myhotixhousekeeping.entities.FemmesMenage;
+import com.hotix.myhotixhousekeeping.entities.SuccessModel;
 import com.hotix.myhotixhousekeeping.utils.CustomProgressDialog;
+import com.hotix.myhotixhousekeeping.utils.UserInfoModel;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
-import java.net.SocketTimeoutException;
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FemmeMenage extends FragmentActivity {
 
     static int fmId;
-    public final String NAMESPACE = "http://tempuri.org/";
-    public final String SOAP_ACTION = "http://tempuri.org/GetListeFemmesMenage";
-    public final String METHOD_NAME = "GetListeFemmesMenage";
-    public final String SOAP_ACTION2 = "http://tempuri.org/GetListeAffectionFM";
-    public final String METHOD_NAME2 = "GetListeAffectionFM";
-    public final String SOAP_ACTION3 = "http://tempuri.org/AffectationFemmeMenage";
-    public final String METHOD_NAME3 = "AffectationFemmeMenage";
+
     CustomProgressDialog progressDialog;
-    ArrayList<FMenage> listFM;
-    ArrayList<RoomFM> listRoom, listRoomNA, listRoomA;
+    List<FemmesMenage> listFM;
+    List<AffectationFMData> listRoom, listRoomNA, listRoomA;
     ListView lvFM;
     ViewAnimator viewAnimator;
     GridView gridAff, gridNonAff;
     Button btnFM, btn_up, btn_down;
     MenuItem item;
+    /*
+ * Get RackRoom
+ */
+    String TAG = this.getClass().getSimpleName();
+    String EtageId = "-1";
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_femme_menage);
+        pd = new ProgressDialog(getApplicationContext());
         lvFM = (ListView) findViewById(R.id.listFM);
         viewAnimator = (ViewAnimator) this.findViewById(R.id.viewFlipperFM);
         gridAff = (GridView) findViewById(R.id.gridAffect);
@@ -76,29 +81,37 @@ public class FemmeMenage extends FragmentActivity {
         gridNonAff.setNumColumns(columns);
         gridAff.setNumColumns(columns);
 
+        listFM = UserInfoModel.getInstance().getUser().getData().getFemmesMenage();
+        lvFM.setAdapter(new FemmeMenageAdapter(getApplicationContext(),
+                listFM));
     }
 
     @Override
     protected void onResume() {
         progressDialog = new CustomProgressDialog(this, R.drawable.loading);
 
-        ListeFMWS ws = new ListeFMWS();
-        ws.execute();
-
-        listRoomA = new ArrayList<RoomFM>();
-        listRoomNA = new ArrayList<RoomFM>();
+        listRoomA = new ArrayList<AffectationFMData>();
+        listRoomNA = new ArrayList<AffectationFMData>();
+        listRoom = new ArrayList<AffectationFMData>();
+        displayRoomGrid();
 
         lvFM.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                fmId = listFM.get(position).getIdFM();
+                fmId = listFM.get(position).getId();
                 AnimationFactory.flipTransition(viewAnimator,
                         FlipDirection.RIGHT_LEFT);
                 item.setVisible(true);
-                ListeAffWS ws = new ListeAffWS();
-                ws.execute();
+                if (isConnected()) {
+                    new HttpRequestTaskRackRoom().execute();
+
+                } else {
+                    ShowAlert(getResources().getString(R.string.acces_denied));
+                }
+              /*  ListeAffWS ws = new ListeAffWS();
+                ws.execute();*/
             }
         });
 
@@ -107,7 +120,7 @@ public class FemmeMenage extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                RoomFM rfm = new RoomFM();
+                AffectationFMData rfm = new AffectationFMData();
                 rfm = listRoomNA.get(position);
                 CustomAffect CA = new CustomAffect(getApplicationContext(),
                         listRoomA);
@@ -128,7 +141,7 @@ public class FemmeMenage extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                RoomFM rfm = new RoomFM();
+                AffectationFMData rfm = new AffectationFMData();
                 rfm = listRoomA.get(position);
                 CustomAffect CA = new CustomAffect(getApplicationContext(),
                         listRoomA);
@@ -149,14 +162,13 @@ public class FemmeMenage extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 if (listRoomA.size() > 0) {
-                    AffectationWS af = new AffectationWS();
-                    af.execute();
+                    if (isConnected()) {
+                        new HttpRequestTaskAffect().execute();
+                    } else {
+                        ShowAlert(getResources().getString(R.string.acces_denied));
+                    }
                 } else {
-                    Toast t = Toast.makeText(getApplicationContext(),
-                            "La liste des chambres à affecter est vide.",
-                            Toast.LENGTH_LONG);
-                    t.setGravity(Gravity.CENTER, 0, 0);
-                    t.show();
+                    ShowAlert(getResources().getString(R.string.msg_empty_affect));
                 }
 
             }
@@ -166,7 +178,7 @@ public class FemmeMenage extends FragmentActivity {
 
             @Override
             public void onClick(View v) {
-                RoomFM rfm = new RoomFM();
+                AffectationFMData rfm = new AffectationFMData();
                 CustomAffect CA = new CustomAffect(getApplicationContext(),
                         listRoomA);
                 CustomAffect CNA = new CustomAffect(getApplicationContext(),
@@ -187,7 +199,7 @@ public class FemmeMenage extends FragmentActivity {
 
             @Override
             public void onClick(View v) {
-                RoomFM rfm = new RoomFM();
+                AffectationFMData rfm = new AffectationFMData();
                 CustomAffect CA = new CustomAffect(getApplicationContext(),
                         listRoomA);
                 CustomAffect CNA = new CustomAffect(getApplicationContext(),
@@ -228,58 +240,14 @@ public class FemmeMenage extends FragmentActivity {
         return super.onMenuItemSelected(featureId, item);
     }
 
-    private void MessageErreurServeur() {
-        Toast t = Toast
-                .makeText(
-                        getApplicationContext(),
-                        "Erreur de connexion au serveur ! \n Veuillez réessayer s'il vous plait.",
-                        Toast.LENGTH_LONG);
-        t.setGravity(Gravity.CENTER, 0, 0);
-        t.show();
-    }
-
-    private void AffectatoinResa(Boolean b) {
-        if (b) {
-            LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.custom_toast,
-                    (ViewGroup) findViewById(R.id.custom_toast_layout_id));
-
-            TextView text = (TextView) layout.findViewById(R.id.textResult);
-            text.setText("Succés d'affectation de femme de ménage.");
-
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
-            Intent i = new Intent(getApplicationContext(), FemmeMenage.class);
-            startActivity(i);
-            finish();
-        } else {
-            LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.custom_error,
-                    (ViewGroup) findViewById(R.id.custom_toast_echec));
-
-            TextView text = (TextView) layout.findViewById(R.id.textError);
-            text.setText("Echec d'affectation de femme de ménage.");
-
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
-            AnimationFactory.flipTransition(viewAnimator,
-                    FlipDirection.LEFT_RIGHT);
-        }
-    }
-
     // Afficher le Gridview
     private void displayRoomGrid() {
-        listRoomNA = new ArrayList<RoomFM>();
-        listRoomA = new ArrayList<RoomFM>();
+        listRoomNA = new ArrayList<AffectationFMData>();
+        listRoomA = new ArrayList<AffectationFMData>();
+
         for (int i = 0; i < listRoom.size(); i++) {
 
-            if (listRoom.get(i).getEtat() == 1) {
+            if (listRoom.get(i).getId() == fmId) {
                 listRoomA.add(listRoom.get(i));
             } else {
                 listRoomNA.add(listRoom.get(i));
@@ -299,7 +267,7 @@ public class FemmeMenage extends FragmentActivity {
         String chaine = "";
         for (int i = 0; i < listRoomA.size(); i++) {
             chaine = chaine + String.valueOf(listRoomA.get(i).getTypeHebId())
-                    + "," + String.valueOf(listRoomA.get(i).getTypeProdId())
+                    + "," + String.valueOf(listRoomA.get(i).getTypeProd())
                     + "," + String.valueOf(listRoomA.get(i).getProdId()) + ";";
         }
         return chaine.substring(0, chaine.length() - 1);
@@ -314,264 +282,202 @@ public class FemmeMenage extends FragmentActivity {
         return URL;
     }
 
-    public class ListeFMWS extends
-            AsyncTask<String, String, ArrayList<FMenage>> {
-        SoapObject response = null;
-        HttpTransportSE androidHttpTransport;
-
-        @Override
-        protected void onPreExecute() {
-            openProg();
-            listFM = new ArrayList<FMenage>();
-            super.onPreExecute();
-        }
-
-        protected void onPostExecute(ArrayList<FMenage> listFM) {
-            lvFM.setAdapter(new FemmeMenageAdapter(getApplicationContext(),
-                    listFM));
-            androidHttpTransport.reset();
-            progressDialog.dismiss();
-            super.onPostExecute(listFM);
-        }
-
-        protected ArrayList<FMenage> doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
-            try {
-                try {
-                    androidHttpTransport.call(SOAP_ACTION, envelope);
-                    response = (SoapObject) envelope.getResponse();
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
-
-                }
-                if (response != null) {
-                    progressDialog.dismiss();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FMenage femmeMenage;
-                            SoapObject Femmes = new SoapObject();
-                            SoapObject Femme = new SoapObject();
-
-                            Femmes = (SoapObject) response.getProperty(0);
-                            if (Femmes.toString().equals("anyType{}")) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Impossible de charger les femmes de ménage  ! ",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                            for (int i = 0; i < Femmes.getPropertyCount(); i++) {
-
-                                Femme = (SoapObject) Femmes.getProperty(i);
-
-                                femmeMenage = new FMenage();
-                                femmeMenage.setIdFM(Integer
-                                        .parseInt(Femme.getProperty(
-                                                "lblIdEmploye").toString()));
-                                femmeMenage.setMatricule(Femme.getProperty(
-                                        "lblMatricule").toString());
-                                femmeMenage.setNom(Femme.getProperty("lblNom")
-                                        .toString());
-
-                                if (Femme.getProperty("lblPrenom")
-                                        .toString().equals("anyType{}")) {
-                                    femmeMenage.setPrenom("");
-                                } else {
-                                    femmeMenage.setPrenom(Femme.getProperty(
-                                            "lblPrenom").toString());
-                                }
-
-                                listFM.add(femmeMenage);
-                            }
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return listFM;
-        }
+    public String getURLAPI() {
+        String URL = null;
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        URL = sp.getString("serveur", "");
+        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+        return URL;
     }
 
-    // Chaine affectation femme de ménage
-
-    public class ListeAffWS extends
-            AsyncTask<String, String, ArrayList<RoomFM>> {
-        SoapObject response = null;
-        HttpTransportSE androidHttpTransport;
-
-        @Override
-        protected void onPreExecute() {
-            listRoom = new ArrayList<RoomFM>();
-            openProg();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<RoomFM> listRoom) {
-            displayRoomGrid();
-            progressDialog.dismiss();
-            androidHttpTransport.reset();
-            super.onPostExecute(listRoom);
-        }
-
-        protected ArrayList<RoomFM> doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME2);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-
-            PropertyInfo pi_fmId = new PropertyInfo();
-            pi_fmId.setName("empID");
-            pi_fmId.setValue(fmId);
-            Log.i("ID IMP", fmId + "");
-            pi_fmId.setType(Integer.class);
-            request.addProperty(pi_fmId);
-
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
-            try {
-                try {
-                    androidHttpTransport.call(SOAP_ACTION2, envelope);
-                    response = (SoapObject) envelope.getResponse();
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
-
-                }
-                if (response != null) {
-                    progressDialog.dismiss();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i("response", response.toString());
-                            RoomFM room;
-                            SoapObject Rooms = new SoapObject();
-                            SoapObject Rooom = new SoapObject();
-
-                            Rooms = (SoapObject) response.getProperty(0);
-                            for (int i = 0; i < Rooms.getPropertyCount(); i++) {
-                                Rooom = (SoapObject) Rooms.getProperty(i);
-                                room = new RoomFM();
-
-                                room.setEtat(Integer.parseInt(Rooom
-                                        .getProperty("ETAT").toString()));
-                                room.setEmpId(Integer.parseInt(Rooom
-                                        .getProperty("EMPID").toString()));
-                                room.setProdId(Integer.parseInt(Rooom
-                                        .getProperty("PRODID").toString()));
-                                room.setStatutId(Integer.parseInt(Rooom
-                                        .getProperty("STATUTID").toString()));
-                                room.setTypeHebId(Integer.parseInt(Rooom
-                                        .getProperty("TYPEHEBID").toString()));
-                                room.setTypeProdId(Integer.parseInt(Rooom
-                                        .getProperty("TYPEPRODID").toString()));
-                                room.setProdNum(Integer.parseInt(Rooom
-                                        .getProperty("PRODNUM").toString()));
-                                room.setAttributed(Boolean.parseBoolean(Rooom
-                                        .getProperty("ATTRIBUTED").toString()));
-
-                                listRoom.add(room);
-                            }
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return listRoom;
-        }
+    private void showProgressDialog(int i) {
+        pd = new ProgressDialog(this);
+        if (i == 1)
+            pd.setMessage(getResources().getString(R.string.msg_connecting));
+        else
+            pd.setMessage(getResources().getString(R.string.msg_loading));
+        pd.setCancelable(false);
+        pd.show();
     }
 
-    public class AffectationWS extends AsyncTask<String, String, String> {
-        HttpTransportSE androidHttpTransport;
-        String result = "False";
-
-        @Override
-        protected void onPreExecute() {
-            openProg();
-            super.onPreExecute();
-        }
-
-        protected String doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME3);
-
-            PropertyInfo pi_intEmployeId = new PropertyInfo();
-            pi_intEmployeId.setName("intEmployeId");
-            pi_intEmployeId.setValue(fmId);
-            pi_intEmployeId.setType(Integer.class);
-            request.addProperty(pi_intEmployeId);
-
-            PropertyInfo pi_chaine_affectation = new PropertyInfo();
-            pi_chaine_affectation.setName("chaine_affectation");
-            pi_chaine_affectation.setValue(GetChaineAffection());
-            pi_chaine_affectation.setType(String.class);
-            request.addProperty(pi_chaine_affectation);
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
-            try {
-                try {
-                    androidHttpTransport.call(SOAP_ACTION3, envelope);
-                    result = envelope.getResponse().toString();
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
-
-                }
-
-                runOnUiThread(new Runnable() {
+    private void ShowAlert(String s) {
+        AlertDialog.Builder adConnexion = new AlertDialog.Builder(this);
+        // adConnexion.setTitle(getResources().getString(R.string.acces_denied));
+        adConnexion.setMessage(s);
+        //adConnexion.setIcon(R.drawable.offline);
+        adConnexion.setNeutralButton(getResources().getString(R.string.close),
+                new DialogInterface.OnClickListener() {
 
                     @Override
-                    public void run() {
-                        AffectatoinResa(Boolean.parseBoolean(result));
+                    public void onClick(DialogInterface dialog, int which) {
                     }
                 });
+        adConnexion.show();
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
+    private class HttpRequestTaskRackRoom extends AsyncTask<Void, Void, AffectationFMModel> {
+        AffectationFMModel response = null;
+        String etageId;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog(2);
+
+            etageId = EtageId;
+
+
+        }
+
+        @Override
+        protected AffectationFMModel doInBackground(Void... params) {
+            try {
+                final String url = getURLAPI() + "GetListAffectionFM?EmployeId=" + 1;
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.setErrorHandler(new MyErrorHandler());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                try {
+                    response = restTemplate.getForObject(url, AffectationFMModel.class);
+                    Log.i(TAG, response.toString());
+                } catch (IOError error) {
+                    Log.e(TAG + " IOError", error.getMessage(), error);
+                } catch (Exception ex) {
+                    Log.e(TAG + " Exception 1", ex.getMessage(), ex);
+
+                }
+
+                return response;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(AffectationFMModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    // Ok
+                    listRoom = response.getData();
+                    displayRoomGrid();
+
+                } else {
+                    // Error
+                    ShowAlert(getResources().getString(R.string.msg_loading_error));
+                }
+
+            } else
+
+            {
+                ShowAlert(getResources().getString(R.string.msg_loading_error));
+            }
+
+
+        }
+    }
+
+
+    private class HttpRequestTaskAffect extends AsyncTask<Void, Void, SuccessModel> {
+        SuccessModel response = null;
+
+        String chaine_affectation = "";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog(2);
+            chaine_affectation = GetChaineAffection();
+
+        }
+
+        @Override
+        protected SuccessModel doInBackground(Void... params) {
+            try {
+                final String url = getURLAPI() + "AffectationFemmeMenage?EmployeId=" + fmId +
+                        "&chaine_affectation=" + chaine_affectation;
+                Log.i(TAG, url.toString());
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.setErrorHandler(new MyErrorHandler());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                try {
+                    response = restTemplate.getForObject(url, SuccessModel.class);
+                    Log.i(TAG, response.toString());
+                } catch (IOError error) {
+                    Log.e(TAG + " IOError", error.getMessage(), error);
+                } catch (Exception ex) {
+                    Log.e(TAG + " Exception 1", ex.getMessage(), ex);
+
+                }
+
+                return response;
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+
             }
 
             return null;
         }
 
-        protected void onPostExecute(Long result) {
-            progressDialog.dismiss();
-            androidHttpTransport.reset();
+        @Override
+        protected void onPostExecute(SuccessModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    // Ok
+                    ShowAlert(getResources().getString(R.string.msg_affect_ok));
+                    //finish();
+                } else {
+                    // Error
+                    ShowAlert(getResources().getString(R.string.msg_affect_ko));
+                }
+
+            } else
+
+            {
+                ShowAlert(getResources().getString(R.string.msg_connecting_error));
+            }
+
+
+        }
+    }
+
+    public class MyErrorHandler implements ResponseErrorHandler {
+        @Override
+        public void handleError(ClientHttpResponse response) throws IOException {
+            // your error handling here
+            final String code = String.valueOf(response.getRawStatusCode());
+            Log.i("ResponseErrorHandler", "handleError: " + String.valueOf(response.getRawStatusCode()));
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    ShowAlert(getResources().getString(R.string.msg_connecting_error_srv) + "\n(" + code + ")");
+                }
+            });
         }
 
+        @Override
+        public boolean hasError(ClientHttpResponse response) throws IOException {
+            boolean hasError = false;
+            Log.i("ResponseErrorHandler", "hasError: " + String.valueOf(response.getRawStatusCode()));
+            int rawStatusCode = response.getRawStatusCode();
+            if (rawStatusCode != 200) {
+                hasError = true;
+            }
+            return hasError;
+        }
     }
+
 }

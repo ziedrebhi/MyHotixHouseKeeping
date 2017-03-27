@@ -557,24 +557,24 @@ public class ObjetsTrouves extends FragmentActivity implements
 
     private boolean ChampsRequis() {
         if (lieu.getText().toString().length() == 0) {
-            lieu.setError("Champs  requis");
+            lieu.setError(getResources().getString(R.string.connect_data));
         }
         if (description.getText().toString().length() == 0) {
-            description.setError("Champs  requis");
+            description.setError(getResources().getString(R.string.connect_data));
         }
         if (nom.getText().toString().length() == 0) {
-            nom.setError("Champs  requis");
+            nom.setError(getResources().getString(R.string.connect_data));
         }
         if (prenom.getText().toString().length() == 0) {
-            prenom.setError("Champs  requis");
+            prenom.setError(getResources().getString(R.string.connect_data));
         }
 
         if (renduNom.getText().toString().length() == 0) {
-            renduNom.setError("Champs  requis");
+            renduNom.setError(getResources().getString(R.string.connect_data));
         }
 
         if (renduPrenom.getText().toString().length() == 0) {
-            renduPrenom.setError("Champs  requis");
+            renduPrenom.setError(getResources().getString(R.string.connect_data));
         }
 
         if (lieu.getText().toString().length() == 0
@@ -599,7 +599,7 @@ public class ObjetsTrouves extends FragmentActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return authoriseImage;
+        return false;
     }
 
     private void MessageErreurServeur() {

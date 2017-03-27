@@ -8,15 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hotix.myhotixhousekeeping.R;
-import com.hotix.myhotixhousekeeping.model.FMenage;
+import com.hotix.myhotixhousekeeping.entities.FemmesMenage;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class FemmeMenageAdapter extends BaseAdapter {
-    ArrayList<FMenage> listFM;
+    List<FemmesMenage> listFM;
     LayoutInflater layoutInflater;
 
-    public FemmeMenageAdapter(Context context, ArrayList<FMenage> listFM) {
+    public FemmeMenageAdapter(Context context, List<FemmesMenage> listFM) {
         this.listFM = listFM;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -48,8 +48,7 @@ public class FemmeMenageAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.nomView.setText(listFM.get(position).getNom() + " "
-                + listFM.get(position).getPrenom());
+        holder.nomView.setText(listFM.get(position).getName());
         return convertView;
     }
 

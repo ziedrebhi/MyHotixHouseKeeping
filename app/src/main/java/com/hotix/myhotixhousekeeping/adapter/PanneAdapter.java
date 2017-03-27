@@ -8,15 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hotix.myhotixhousekeeping.R;
-import com.hotix.myhotixhousekeeping.model.Panne;
+import com.hotix.myhotixhousekeeping.entities.PanneData;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PanneAdapter extends BaseAdapter {
-    ArrayList<Panne> listOC;
+    List<PanneData> listOC;
     LayoutInflater layoutInflater;
 
-    public PanneAdapter(Context context, ArrayList<Panne> listOC) {
+    public PanneAdapter(Context context, List<PanneData> listOC) {
         this.listOC = listOC;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -50,7 +50,7 @@ public class PanneAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.lieuView.setText("Lieu : " + listOC.get(position).getLieuPanne());
+        holder.lieuView.setText("Lieu : " + listOC.get(position).getLieu());
         holder.descView.setText("Description : " + listOC.get(position).getDescription());
         holder.dateView.setText("Date : " + listOC.get(position).getDate());
         return convertView;

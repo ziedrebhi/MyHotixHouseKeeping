@@ -45,7 +45,7 @@
             android:name=".DeclarationPanne"
             android:label="@string/title_activity_declaration_panne" />
         <activity
-            android:name=".ObjetsTrouves"
+            android:name=".ObjetsTrouveListActivity"
             android:label="@string/title_activity_objets_trouves" />
         <activity
             android:name=".UpdateObjetTrouve"
@@ -57,7 +57,7 @@
             android:name=".ListeClientsAP"
             android:label="@string/title_activity_liste_clients_ap" />
         <activity
-            android:name=".PannesList"
+            android:name=".PannesListActivity"
             android:label="@string/title_activity_list_pannes" />
 
         <!--
@@ -74,7 +74,19 @@
             android:label="@string/title_activity_view_objet" />
         <activity
             android:name=".ViewPanneActivity"
-            android:label="@string/title_activity_view_panne"></activity>
+            android:label="@string/title_activity_view_panne" />
+        <activity
+            android:name=".DeclarationObjetTrouve"
+            android:label="@string/title_activity_objets_trouves" />
+        <activity
+            android:name=".MouchardRackListActivity"
+            android:label="@string/title_activity_mouchard" />
+        <activity
+            android:name=".prevision.ListViewMultiChartActivity"
+            android:label="@string/title_activity_prevision" />
+        <activity
+            android:name=".prevision.PrevisionTableActivity"
+            android:label="@string/title_activity_prevision" />
     </application>
 
 </manifest>

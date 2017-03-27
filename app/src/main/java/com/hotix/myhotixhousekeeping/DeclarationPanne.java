@@ -2,12 +2,16 @@ package com.hotix.myhotixhousekeeping;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,9 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,18 +38,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hotix.myhotixhousekeeping.model.TypePanne;
+import com.hotix.myhotixhousekeeping.adapter.CustomAdapterSpinnerTypePanne;
+import com.hotix.myhotixhousekeeping.entities.SuccessModel;
+import com.hotix.myhotixhousekeeping.entities.TypesPanne;
 import com.hotix.myhotixhousekeeping.utils.CustomProgressDialog;
+import com.hotix.myhotixhousekeeping.utils.UserInfoModel;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.SocketTimeoutException;
+import java.io.IOError;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,16 +63,11 @@ public class DeclarationPanne extends Activity {
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final String IMAGE_DIRECTORY_NAME = "MY_HOTIX_HOUSEKEEPING";
-    static int num_chb;
+    static String num_chb;
     static String NameFile = "";
-    public final String NAMESPACE = "http://tempuri.org/";
-    public final String SOAP_ACTION = "http://tempuri.org/GetListeTypesPannes";
-    public final String METHOD_NAME = "GetListeTypesPannes";
-    public final String SOAP_ACTION2 = "http://tempuri.org/ReclamerPanne";
-    public final String METHOD_NAME2 = "ReclamerPanne";
     Spinner spinner;
     List<String> types;
-    ArrayList<TypePanne> listTypePanne;
+    List<TypesPanne> listTypePanne;
     EditText numCHB, dureeTraitement, nomDeclaration, prenomDeclaration, description;
     CheckBox urgent;
     int prodId;
@@ -76,10 +76,17 @@ public class DeclarationPanne extends Activity {
     CustomProgressDialog progressDialog;
     TextView btnViewImage;
     int typePanneId;
-    int idActivite = 0;
     String NumChb = "-1";
     LinearLayout LinearImageTxt, LinearImageValue;
+    List<com.hotix.myhotixhousekeeping.entities.TypesPanne> etages;
+    Boolean isNew = true;
+    /*
+    Recalmer Panne
+     */
+    String TAG = this.getClass().getSimpleName();
+    ProgressDialog pd;
     private Uri fileUri;
+    private CustomAdapterSpinnerTypePanne adapterEtages;
 
     private static File getOutputMediaFile(int type) {
 
@@ -112,11 +119,15 @@ public class DeclarationPanne extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_declaration_panne);
-
-        listTypePanne = new ArrayList<TypePanne>();
+        pd = new ProgressDialog(DeclarationPanne.this);
+        listTypePanne = new ArrayList<TypesPanne>();
         spinner = (Spinner) findViewById(R.id.spTypePanne);
         LinearImageTxt = (LinearLayout) findViewById(R.id.linearImageTxt);
         LinearImageValue = (LinearLayout) findViewById(R.id.linearImageValue);
+        etages = UserInfoModel.getInstance().getUser().getData().getTypesPanne();
+        adapterEtages = new CustomAdapterSpinnerTypePanne(DeclarationPanne.this,
+                android.R.layout.simple_dropdown_item_1line, etages);
+        spinner.setAdapter(adapterEtages);
 
         types = new ArrayList<String>();
         numCHB = (EditText) findViewById(R.id.numCHB);
@@ -192,11 +203,11 @@ public class DeclarationPanne extends Activity {
         progressDialog = new CustomProgressDialog(this, R.drawable.loading);
 
         Bundle extras = getIntent().getExtras();
-        num_chb = extras.getInt("num_chb");
+        num_chb = extras.getString("num_chb");
         prodId = extras.getInt("prod_id");
-        idActivite = extras.getInt("Activite");
+        isNew = extras.getBoolean("room");
         login = extras.getString("login");
-        if (num_chb == -1) {
+        if (prodId == -1) {
             // numCHB.setFocusable(true);
         } else {
             numCHB.setFocusable(false);
@@ -211,21 +222,21 @@ public class DeclarationPanne extends Activity {
             LinearImageValue.setVisibility(View.VISIBLE);
             LinearImageTxt.setVisibility(View.VISIBLE);
         }
-        AsyncCallWS ws = new AsyncCallWS();
-        ws.execute();
+
 
         btnReclamer.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 if (ChapmsRequis()) {
-                    TypePanne tech = (TypePanne) spinner.getSelectedItem();
-                    typePanneId = tech.getIdPanne();
-                    if (num_chb == -1) {
+                    TypesPanne tech = (TypesPanne) spinner.getSelectedItem();
+                    typePanneId = tech.getId();
+                    if (prodId == -1) {
                         NumChb = numCHB.getText().toString();
                     }
-                    AsyncReclamerPanne wsPanne = new AsyncReclamerPanne();
-                    wsPanne.execute();
+                    if (isConnected())
+                        new HttpRequestTaskReclamPanne().execute();
+                    else ShowAlert(getResources().getString(R.string.acces_denied));
                 }
             }
         });
@@ -265,114 +276,11 @@ public class DeclarationPanne extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (idActivite == 1) {
-            Intent i = new Intent(getApplicationContext(), PannesList.class);
-            i.putExtra("login", login);
-            startActivity(i);
-            finish();
-        } else {
-            Intent i = new Intent(getApplicationContext(), RoomRack.class);
-            i.putExtra("login", login);
-            startActivity(i);
-            finish();
-        }
+
+        finish();
+        overridePendingTransition(R.anim.move_left_in_activity, R.anim.move_right_out_activity);
         super.onBackPressed();
     }
-
-    private void MessageErreurServeur() {
-        try {
-            Toast t = Toast.makeText(
-                    getApplicationContext(),
-                    "Erreur de connexion au serveur ! \n Veuillez réessayer s'il vous plait.",
-                    Toast.LENGTH_LONG);
-            t.setGravity(Gravity.CENTER, 0, 0);
-            t.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void ResaReclamation(Boolean success) {
-        try {
-            if (success) {
-                LayoutInflater inflater = getLayoutInflater();
-                View layout = inflater.inflate(R.layout.custom_toast,
-                        (ViewGroup) findViewById(R.id.custom_toast_layout_id));
-
-                TextView text = (TextView) layout.findViewById(R.id.textResult);
-                text.setText(getResources().getString(R.string.succes_panne));
-
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(layout);
-                toast.show();
-                if (idActivite == 1) {
-                    Intent i = new Intent(getApplicationContext(), PannesList.class);
-                    i.putExtra("login", login);
-                    startActivity(i);
-                } else {
-                    Intent i = new Intent(getApplicationContext(), RoomRack.class);
-                    i.putExtra("login", login);
-                    startActivity(i);
-                }
-                finish();
-            } else {
-                LayoutInflater inflater = getLayoutInflater();
-                View layout = inflater.inflate(R.layout.custom_error,
-                        (ViewGroup) findViewById(R.id.custom_toast_echec));
-
-                TextView text = (TextView) layout.findViewById(R.id.textError);
-                text.setText(getResources().getString(R.string.error_panne));
-
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(layout);
-                toast.show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void displayPannesSpinner() {
-        try {
-            for (int i = 0; i < listTypePanne.size(); i++) {
-                types.add(listTypePanne.get(i).getNomPanne());
-            }
-            ArrayAdapter<TypePanne> dataAdapter = new ArrayAdapter<TypePanne>(this,
-                    android.R.layout.simple_spinner_item, listTypePanne);
-            dataAdapter
-                    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(dataAdapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void openProg() {
-        try {
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getURL() {
-        String URL = null;
-        try {
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(this);
-            URL = sp.getString("serveur", "");
-            URL = "http://" + URL + "/hngwebsetup/WebService/HNGHousekeeping.asmx";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return URL;
-    }
-
 
     public boolean getAuthoriseImageSend() {
         boolean authoriseImage = false;
@@ -384,7 +292,7 @@ public class DeclarationPanne extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return authoriseImage;
+        return false;
     }
 
     /**
@@ -487,22 +395,26 @@ public class DeclarationPanne extends Activity {
 
     private boolean ChapmsRequis() {
         if (dureeTraitement.getText().toString().length() == 0) {
-            dureeTraitement.setError("Chapms  requis");
+            dureeTraitement.setError(getResources().getString(R.string.connect_data));
         }
         if (nomDeclaration.getText().toString().length() == 0) {
-            nomDeclaration.setError("Chapms  requis");
+            nomDeclaration.setError(getResources().getString(R.string.connect_data));
         }
         if (prenomDeclaration.getText().toString().length() == 0) {
-            prenomDeclaration.setError("Chapms  requis");
+            prenomDeclaration.setError(getResources().getString(R.string.connect_data));
+        }
+        if (numCHB.getText().toString().length() == 0) {
+            numCHB.setError(getResources().getString(R.string.connect_data));
         }
 
         if (description.getText().toString().length() == 0) {
-            description.setError("Chapms  requis");
+            description.setError(getResources().getString(R.string.connect_data));
         }
 
         if (dureeTraitement.getText().toString().length() == 0
                 || nomDeclaration.getText().toString().length() == 0
                 || prenomDeclaration.getText().toString().length() == 0
+                || numCHB.getText().toString().length() == 0
                 || description.getText().toString().length() == 0) {
             return false;
         } else {
@@ -510,152 +422,71 @@ public class DeclarationPanne extends Activity {
         }
     }
 
-    public class AsyncCallWS extends AsyncTask<String, String, ArrayList<TypePanne>> {
-        HttpTransportSE androidHttpTransport;
-
-        protected void onPostExecute(ArrayList<TypePanne> listTypePanne) {
-            displayPannesSpinner();
-            androidHttpTransport.reset();
-            super.onPostExecute(listTypePanne);
-        }
-
-        protected ArrayList<TypePanne> doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
-            try {
-                androidHttpTransport.call(SOAP_ACTION, envelope);
-                final SoapObject response = (SoapObject) envelope.getResponse();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TypePanne typePanne;
-                        SoapObject Pannes = new SoapObject();
-                        SoapObject Panne = new SoapObject();
-
-                        Pannes = (SoapObject) response.getProperty(0);
-                        for (int i = 0; i < Pannes.getPropertyCount(); i++) {
-
-                            Panne = (SoapObject) Pannes.getProperty(i);
-
-                            typePanne = new TypePanne();
-                            typePanne.setIdPanne(Integer.parseInt(Panne
-                                    .getProperty("IdTypePanne").toString()));
-                            typePanne.setNomPanne(Panne.getProperty(
-                                    "lblDescription").toString());
-
-                            listTypePanne.add(typePanne);
-                        }
-                    }
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return listTypePanne;
-        }
+    private void showProgressDialog(int i) {
+        if (i == 1)
+            pd.setMessage(getResources().getString(R.string.msg_connecting));
+        else
+            pd.setMessage(getResources().getString(R.string.msg_loading));
+        pd.setCancelable(false);
+        pd.show();
     }
 
-    public class AsyncReclamerPanne extends AsyncTask<String, String, String> {
-        HttpTransportSE androidHttpTransport;
-        String result = "False";
+    private void ShowAlert(String s) {
+        AlertDialog.Builder adConnexion = new AlertDialog.Builder(this);
+        // adConnexion.setTitle(getResources().getString(R.string.acces_denied));
+        adConnexion.setMessage(s);
+        //adConnexion.setIcon(R.drawable.offline);
+        adConnexion.setNeutralButton(getResources().getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        adConnexion.show();
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
+    public String getURLAPI() {
+        String URL = null;
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        URL = sp.getString("serveur", "");
+        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+        return URL;
+    }
+
+    private void showToast(String s) {
+        Toast t = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG);
+        t.setGravity(Gravity.BOTTOM, 0, 0);
+        t.show();
+    }
+
+    private class HttpRequestTaskReclamPanne extends AsyncTask<Void, Void, SuccessModel> {
+        SuccessModel response = null;
+        Boolean isUrgent;
+        int dureeTr;
+        String nom, prenom, NumeroChb, Description, image;
 
         @Override
         protected void onPreExecute() {
-            openProg();
             super.onPreExecute();
-        }
+            showProgressDialog(2);
 
-        @Override
-        protected void onPostExecute(String result) {
-            progressDialog.dismiss();
-            androidHttpTransport.reset();
-            super.onPostExecute(result);
-        }
+            isUrgent = urgent.isChecked();
 
-        protected String doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME2);
-
-            PropertyInfo pi_prodId = new PropertyInfo();
-            pi_prodId.setName("prodId");
-            pi_prodId.setValue(prodId);
-            Log.i("prodId => ", Integer.toString(prodId));
-            pi_prodId.setType(Integer.class);
-            request.addProperty(pi_prodId);
-
-            PropertyInfo pi_typePanneId = new PropertyInfo();
-            pi_typePanneId.setName("typePanneId");
-            pi_typePanneId.setValue(typePanneId);
-            Log.i("typePanneId => ", Integer.toString(typePanneId));
-            pi_typePanneId.setType(Integer.class);
-            request.addProperty(pi_typePanneId);
-
-            PropertyInfo pi_urgent = new PropertyInfo();
-            pi_urgent.setName("urgent");
-            if (urgent.isChecked()) {
-                pi_urgent.setValue(true);
-            } else {
-                pi_urgent.setValue(false);
-            }
-            Log.i("urgent => ", pi_urgent.getValue().toString());
-            pi_urgent.setType(Boolean.class);
-            request.addProperty(pi_urgent);
-
-            PropertyInfo pi_duree = new PropertyInfo();
-            pi_duree.setName("duree");
-            pi_duree.setValue(Integer.parseInt(dureeTraitement.getText().toString()));
-            Log.i("duree => ", dureeTraitement.getText().toString());
-            pi_duree.setType(String.class);
-            request.addProperty(pi_duree);
-
-            PropertyInfo pi_lieu = new PropertyInfo();
-            pi_lieu.setName("lieu");
-            if (num_chb == -1) {
-                pi_lieu.setValue(NumChb);
-            } else {
-                pi_lieu.setValue(num_chb);
-            }
-            //Log.i("lieu => ", Integer.toString(num_chb));
-            pi_lieu.setType(String.class);
-            request.addProperty(pi_lieu);
-
-            PropertyInfo pi_nom = new PropertyInfo();
-            pi_nom.setName("nom");
-            pi_nom.setValue(nomDeclaration.getText().toString());
-            Log.i("nom => ", nomDeclaration.getText().toString());
-            pi_nom.setType(String.class);
-            request.addProperty(pi_nom);
-
-            PropertyInfo pi_prenom = new PropertyInfo();
-            pi_prenom.setName("prenom");
-            pi_prenom.setValue(prenomDeclaration.getText().toString());
-            Log.i("prenom => ", prenomDeclaration.getText().toString());
-            pi_prenom.setType(String.class);
-            request.addProperty(pi_prenom);
-
-            PropertyInfo pi_user_login = new PropertyInfo();
-            pi_user_login.setName("user_login");
-            pi_user_login.setValue(login);
-            Log.i("user_login => ", login);
-            pi_user_login.setType(String.class);
-            request.addProperty(pi_user_login);
-
-            PropertyInfo pi_comment = new PropertyInfo();
-            pi_comment.setName("comment");
-            pi_comment.setValue(description.getText().toString());
-            Log.i("comment => ", description.getText().toString());
-            pi_comment.setType(String.class);
-            request.addProperty(pi_comment);
-
-            PropertyInfo pi_image = new PropertyInfo();
-            pi_image.setName("ImageByteArray");
-
+            dureeTr = Integer.parseInt(dureeTraitement.getText().toString());
+            Description = description.getText().toString();
+            nom = nomDeclaration.getText().toString();
+            prenom = prenomDeclaration.getText().toString();
             if (getAuthoriseImageSend()) {
                 Bitmap img = getImageFromSD();
                 if (img != null) {
@@ -663,49 +494,103 @@ public class DeclarationPanne extends Activity {
                     img.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     String temp = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                    pi_image.setValue(temp);
+                    image = temp;
                     Log.i("ImageByteArray => ", temp);
                 } else {
-                    pi_image.setValue(null);
+                    image = "";
                 }
             } else {
-                pi_image.setValue(null);
+                image = "";
             }
-            pi_image.setType(String.class);
-            request.addProperty(pi_image);
 
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
+            NumeroChb = numCHB.getText().toString();
 
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
+        }
+
+        @Override
+        protected SuccessModel doInBackground(Void... params) {
             try {
+                final String url = getURLAPI() + "ReclamePanne?" +
+                        "prodId=" + ((isNew) ? prodId : "-1") +
+                        "&typePanneId=" + typePanneId +
+                        "&urgent=" + isUrgent +
+                        "&duree=" + dureeTr +
+                        "&lieu=" + ((isNew) ? "-1" : NumeroChb) +
+                        "&nom=" + nom +
+                        "&prenom=" + prenom +
+                        "&user_login=" + UserInfoModel.getInstance().getLogin() +
+                        "&comment=" + Description +
+                        "&ImageByteArray=" + image;
+                Log.i(TAG, url.toString());
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.setErrorHandler(new MyErrorHandler());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 try {
-                    androidHttpTransport.call(SOAP_ACTION2, envelope);
-                    result = envelope.getResponse().toString();
-                    Log.i("result ======> ", result);
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
+                    response = restTemplate.getForObject(url, SuccessModel.class);
+                    Log.i(TAG, response.toString());
+                } catch (IOError error) {
+                    Log.e(TAG + " IOError", error.getMessage(), error);
+                } catch (Exception ex) {
+                    Log.e(TAG + " Exception 1", ex.getMessage(), ex);
 
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ResaReclamation(Boolean.parseBoolean(result));
-                    }
-                });
+
+                return response;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
 
             }
+
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(SuccessModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    // Ok
+                    ShowAlert(getResources().getString(R.string.msg_panne_create_ok));
+                    finish();
+                } else {
+                    // Error
+                    ShowAlert(getResources().getString(R.string.msg_panne_create_error));
+                }
+
+            } else
+
+            {
+                ShowAlert(getResources().getString(R.string.msg_connecting_error));
+            }
+
+
+        }
+    }
+
+    public class MyErrorHandler implements ResponseErrorHandler {
+        @Override
+        public void handleError(ClientHttpResponse response) throws IOException {
+            // your error handling here
+            final String code = String.valueOf(response.getRawStatusCode());
+            Log.i("ResponseErrorHandler", "handleError: " + String.valueOf(response.getRawStatusCode()));
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    ShowAlert(getResources().getString(R.string.msg_connecting_error_srv) + "\n(" + code + ")");
+                }
+            });
+        }
+
+        @Override
+        public boolean hasError(ClientHttpResponse response) throws IOException {
+            boolean hasError = false;
+            Log.i("ResponseErrorHandler", "hasError: " + String.valueOf(response.getRawStatusCode()));
+            int rawStatusCode = response.getRawStatusCode();
+            if (rawStatusCode != 200) {
+                hasError = true;
+            }
+            return hasError;
         }
     }
 }

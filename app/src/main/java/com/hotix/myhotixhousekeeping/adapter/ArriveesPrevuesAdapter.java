@@ -8,16 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hotix.myhotixhousekeeping.R;
-import com.hotix.myhotixhousekeeping.model.ClientPrevue;
+import com.hotix.myhotixhousekeeping.entities.ArriveePrevuData;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ArriveesPrevuesAdapter extends BaseAdapter {
-    ArrayList<ClientPrevue> listCP;
+    List<ArriveePrevuData> listCP;
     LayoutInflater layoutInflater;
 
     public ArriveesPrevuesAdapter(Context context,
-                                  ArrayList<ClientPrevue> listCP) {
+                                  List<ArriveePrevuData> listCP) {
         this.listCP = listCP;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -52,9 +52,8 @@ public class ArriveesPrevuesAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.nomView.setText(listCP.get(position).getPRENOM() + " "
-                + listCP.get(position).getNOM());
-        holder.roomView.setText("Chambre : " + listCP.get(position).getROOM());
+        holder.nomView.setText(listCP.get(position).getClient());
+        holder.roomView.setText("Chambre : " + listCP.get(position).getRoom());
         return convertView;
     }
 

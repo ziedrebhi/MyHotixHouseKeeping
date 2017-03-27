@@ -177,7 +177,7 @@ public class ViewObjetTrouveActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return authoriseImage;
+        return false;
     }
 
     public String getURL() {

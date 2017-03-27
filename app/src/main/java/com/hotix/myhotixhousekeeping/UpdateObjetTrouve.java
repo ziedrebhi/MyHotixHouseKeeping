@@ -1,36 +1,28 @@
 package com.hotix.myhotixhousekeeping;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hotix.myhotixhousekeeping.entities.SuccessModel;
 import com.hotix.myhotixhousekeeping.utils.CustomProgressDialog;
+import com.hotix.myhotixhousekeeping.utils.UserInfoModel;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
-import java.net.SocketTimeoutException;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 public class UpdateObjetTrouve extends Activity {
-    public final String NAMESPACE = "http://tempuri.org/";
-    public final String SOAP_ACTION = "http://tempuri.org/UpdateObjetTrouves";
-    public final String METHOD_NAME = "UpdateObjetTrouves";
+
     String lieu, Nom, Prenom, RNom, RPrenom, commentaire, description, login,
             dateExtra;
     int idOT;
@@ -38,12 +30,14 @@ public class UpdateObjetTrouve extends Activity {
             renduPrenom;
     Button btn_update;
     CustomProgressDialog progressDialog;
+    String TAG = this.getClass().getSimpleName();
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_objet_trouve);
-
+        pd = new ProgressDialog(UpdateObjetTrouve.this);
         lieuUpdate = (EditText) findViewById(R.id.lieu);
         descriptionUpdate = (EditText) findViewById(R.id.description);
         comment = (EditText) findViewById(R.id.comment);
@@ -53,6 +47,7 @@ public class UpdateObjetTrouve extends Activity {
         renduPrenom = (EditText) findViewById(R.id.prenomRendu);
         btn_update = (Button) findViewById(R.id.btn_update);
         progressDialog = new CustomProgressDialog(this, R.drawable.loading);
+        lieuUpdate.setEnabled(false);
     }
 
     @Override
@@ -88,8 +83,7 @@ public class UpdateObjetTrouve extends Activity {
                 @Override
                 public void onClick(View v) {
                     if (ChapmsRequis()) {
-                        AsyncUpdateObjetWS ws = new AsyncUpdateObjetWS();
-                        ws.execute();
+                        new HttpRequestTaskClotureOT().execute();
                     }
                 }
             });
@@ -97,53 +91,6 @@ public class UpdateObjetTrouve extends Activity {
             super.onResume();
         } catch (Exception ex) {
             Log.e("Exception", ex.toString());
-        }
-    }
-
-    private void MessageErreurServeur() {
-        Toast t = Toast
-                .makeText(
-                        getApplicationContext(),
-                        "Erreur de connexion au serveur ! \n Veuillez réessayer s'il vous plait.",
-                        Toast.LENGTH_LONG);
-        t.setGravity(Gravity.CENTER, 0, 0);
-        t.show();
-    }
-
-    public void ShowEtatMessage(Boolean b) {
-
-        if (b) {
-            LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.custom_toast,
-                    (ViewGroup) findViewById(R.id.custom_toast_layout_id));
-
-            TextView text = (TextView) layout.findViewById(R.id.textResult);
-            text.setText(getResources().getString(R.string.update_ok));
-
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
-            Intent i = new Intent(getApplicationContext(), ObjetsTrouves.class);
-            i.putExtra("login", login);
-            i.putExtra("dateFront", dateExtra);
-            startActivity(i);
-            finish();
-        } else {
-            LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.custom_error,
-                    (ViewGroup) findViewById(R.id.custom_toast_echec));
-
-            TextView text = (TextView) layout.findViewById(R.id.textError);
-            text.setText(getResources().getString(R.string.update_not_ok));
-
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
-
         }
     }
 
@@ -171,129 +118,88 @@ public class UpdateObjetTrouve extends Activity {
         }
     }
 
-    public String getURL() {
+    public String getURLAPI() {
         String URL = null;
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(this);
         URL = sp.getString("serveur", "");
-        URL = "http://" + URL + "/hngwebsetup/WebService/HNGHousekeeping.asmx";
+        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
         return URL;
     }
 
-    public class AsyncUpdateObjetWS extends AsyncTask<String, String, String> {
-        HttpTransportSE androidHttpTransport;
-        String result = "False";
+    private void showToast(String s) {
+        Toast t = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG);
+        t.setGravity(Gravity.BOTTOM, 0, 0);
+        t.show();
+    }
+
+
+    private class HttpRequestTaskClotureOT extends AsyncTask<Void, Void, SuccessModel> {
+        SuccessModel response = null;
+
+        String prodNum, objTrouveDesc, objTrouveNom, objTrouvePrenom,
+                objTrouveLieu, objTrouveRenduNom, objTrouveRenduPrenom,
+                commentaire, ImageByteArray;
 
         @Override
         protected void onPreExecute() {
-            progressDialog.setCancelable(true);
-            progressDialog.show();
             super.onPreExecute();
+            pd.setMessage("Loading ...");
+            pd.setCancelable(false);
+            pd.show();
+            login = UserInfoModel.getInstance().getLogin().toString();
+            commentaire = comment.getText().toString();
+            objTrouveDesc = descriptionUpdate.getText().toString();
+            objTrouveNom = nom.getText().toString();
+            objTrouvePrenom = prenom.getText().toString();
+            objTrouveRenduNom = renduNom.getText().toString();
+            objTrouveRenduPrenom = renduPrenom.getText().toString();
+            objTrouveLieu = lieuUpdate.getText().toString();
+
         }
 
-        protected String doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-
-            PropertyInfo pi_prodNum = new PropertyInfo();
-            pi_prodNum.setName("prodNum");
-            pi_prodNum.setValue(lieuUpdate.getText().toString());
-            pi_prodNum.setType(String.class);
-            request.addProperty(pi_prodNum);
-
-            PropertyInfo pi_objTrouveId = new PropertyInfo();
-            pi_objTrouveId.setName("objTrouveId");
-            pi_objTrouveId.setValue(idOT);
-            pi_objTrouveId.setType(Integer.class);
-            request.addProperty(pi_objTrouveId);
-
-            PropertyInfo objTrouveDesc = new PropertyInfo();
-            objTrouveDesc.setName("objTrouveDesc");
-            objTrouveDesc.setValue(descriptionUpdate.getText().toString());
-            objTrouveDesc.setType(String.class);
-            request.addProperty(objTrouveDesc);
-
-            PropertyInfo objTrouveNom = new PropertyInfo();
-            objTrouveNom.setName("objTrouveNom");
-            objTrouveNom.setValue(nom.getText().toString());
-            objTrouveNom.setType(String.class);
-            request.addProperty(objTrouveNom);
-
-            PropertyInfo objTrouvePrenom = new PropertyInfo();
-            objTrouvePrenom.setName("objTrouvePrenom");
-            objTrouvePrenom.setValue(prenom.getText().toString());
-            objTrouvePrenom.setType(String.class);
-            request.addProperty(objTrouvePrenom);
-
-            PropertyInfo objRenduTrouveNom = new PropertyInfo();
-            objRenduTrouveNom.setName("objTrouveRenduNom");
-            objRenduTrouveNom.setValue(renduNom.getText().toString());
-            objRenduTrouveNom.setType(String.class);
-            request.addProperty(objRenduTrouveNom);
-
-            PropertyInfo objRenduTrouvePrenom = new PropertyInfo();
-            objRenduTrouvePrenom.setName("objTrouveRenduPrenom");
-            objRenduTrouvePrenom.setValue(renduPrenom.getText().toString());
-            objRenduTrouvePrenom.setType(String.class);
-            request.addProperty(objRenduTrouvePrenom);
-
-            PropertyInfo objTrouveLieu = new PropertyInfo();
-            objTrouveLieu.setName("objTrouveLieu");
-            objTrouveLieu.setValue(lieuUpdate.getText().toString());
-            objTrouveLieu.setType(String.class);
-            request.addProperty(objTrouveLieu);
-
-            PropertyInfo pi_login = new PropertyInfo();
-            pi_login.setName("login");
-            pi_login.setValue(login);
-            pi_login.setType(String.class);
-            request.addProperty(pi_login);
-
-            PropertyInfo pi_comment = new PropertyInfo();
-            pi_comment.setName("comment");
-            pi_comment.setValue(comment.getText().toString());
-            pi_comment.setType(String.class);
-            request.addProperty(pi_comment);
-
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
+        @Override
+        protected SuccessModel doInBackground(Void... params) {
             try {
-                try {
-                    androidHttpTransport.call(SOAP_ACTION, envelope);
-                    result = envelope.getResponse().toString();
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
-
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowEtatMessage(Boolean.parseBoolean(result));
-                    }
-                });
-
+                final String url = getURLAPI() + "UpdateObjetTrouves?" +
+                        "prodNum=" + "";
+                Log.i(TAG, url.toString());
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                response = restTemplate.getForObject(url, SuccessModel.class);
+                Log.i(TAG, response.toString());
+                return response;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
+                showToast("Error");
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(SuccessModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    // Ok
 
-            super.onPostExecute(result);
+                    //showToast("Ok")finish();
+
+                } else {
+                    // Error
+                    showToast("Error");
+
+                }
+
+            } else
+
+            {
+                showToast("Error");
+            }
+
+
         }
     }
+
 }

@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 14
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "com.hotix.myhotixhousekeeping"
         minSdkVersion 14
         targetSdkVersion 14
-        versionCode 4
-        versionName '3.0.1'
+        versionCode 5
+        versionName '3.0.2'
     }
     buildTypes {
         release {
@@ -16,14 +16,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+    }
     productFlavors {
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.0'
     compile files('libs/ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar')
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile files('libs/android-async-http-1.4.4.jar')
     compile files('libs/gson-2.6.2.jar')
+    compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
 }

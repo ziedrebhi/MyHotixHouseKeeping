@@ -2,9 +2,9 @@ package com.hotix.myhotixhousekeeping;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -16,10 +16,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.MessageQueue;
-import android.os.MessageQueue.IdleHandler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -36,18 +32,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hotix.myhotixhousekeeping.adapter.NavDrawerListAdapter;
+import com.hotix.myhotixhousekeeping.entities.LoginModel;
 import com.hotix.myhotixhousekeeping.model.NavDrawerItem;
 import com.hotix.myhotixhousekeeping.utils.CustomProgressDialog;
 import com.hotix.myhotixhousekeeping.utils.IPServeur;
 import com.hotix.myhotixhousekeeping.utils.UpdateChecker;
+import com.hotix.myhotixhousekeeping.utils.UserInfoModel;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
-import java.net.SocketTimeoutException;
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,11 +53,6 @@ import java.util.TimerTask;
 public class Connexion extends Activity implements
         android.view.View.OnClickListener {
 
-    private static int nbEssais = 1;
-    public final String NAMESPACE = "http://tempuri.org/";
-    public final String SOAP_ACTION = "http://tempuri.org/Authentifier";
-    public final String METHOD_NAME = "Authentifier";
-    public Handler mHandler;
     int time = 20;
     Timer t;
     TimerTask task;
@@ -73,6 +66,11 @@ public class Connexion extends Activity implements
     // Update
     UpdateChecker checker;
     SharedPreferences pref;
+    /*
+     * Login
+     */
+    String TAG = this.getClass().getSimpleName();
+    ProgressDialog pd;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -95,16 +93,15 @@ public class Connexion extends Activity implements
         login = (EditText) findViewById(R.id.login);
         password = (EditText) findViewById(R.id.motdp);
         connexion = (Button) findViewById(R.id.connect);
-        progressDialog = new CustomProgressDialog(this, R.drawable.loading);
+
         connexion.setOnClickListener(this);
-        progressDialog = new CustomProgressDialog(this, R.drawable.loading);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         navMenuIcons = getResources()
                 .obtainTypedArray(R.array.nav_drawer_icons);
 
-        startTimer();
 
         mTitle = mDrawerTitle = getTitle();
         navDrawerItems = new ArrayList<NavDrawerItem>();
@@ -136,7 +133,7 @@ public class Connexion extends Activity implements
                 invalidateOptionsMenu();
             }
         };
-
+        pd = new ProgressDialog(Connexion.this);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         checker = new UpdateChecker(this, true);
     }
@@ -198,7 +195,7 @@ public class Connexion extends Activity implements
                 }
 
                 alertDialogBuilder2.setCancelable(false);
-                alertDialogBuilder2.setPositiveButton("OK",
+                alertDialogBuilder2.setPositiveButton(getResources().getString(R.string.OK),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 //ResetFields();
@@ -244,32 +241,6 @@ public class Connexion extends Activity implements
         adc.show();
     }
 
-    private void DialogCloseApp() {
-        ad = new AlertDialog.Builder(this);
-        ad.setIcon(R.drawable.alert);
-        ad.setTitle("Attention !");
-        ad.setMessage(getResources().getString(R.string.close_app));
-        ad.setPositiveButton(getResources().getString(R.string.oui),
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-
-                    }
-                });
-
-        ad.setNegativeButton(getResources().getString(R.string.cancel),
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        ad.show();
-    }
-
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -293,20 +264,7 @@ public class Connexion extends Activity implements
 
         if (isConnected()) // S'il y a connexion
         {
-            // Test champs requis
-        /*	if (login.getText().toString().trim().equals("")
-                    && password.getText().toString().equals("")) {
-				login.setError(getResources().getString(R.string.connect_data));
-				password.setError(getResources().getString(
-						R.string.connect_data));
-			}
 
-			else if (!login.getText().toString().trim().equals("")
-					&& password.getText().toString().equals("")) {
-				password.setError(getResources().getString(
-						R.string.connect_data));
-			}
-*/
 
             if (login.getText().toString().trim().equals("")) {
                 login.setError(getResources().getString(R.string.connect_data));
@@ -314,174 +272,15 @@ public class Connexion extends Activity implements
 
             // Appel web service d'autentification
             else {
-                AsyncCallWS ws = new AsyncCallWS();
+                HttpRequestTaskLogin ws = new HttpRequestTaskLogin();
                 ws.execute();
             }
         } else // S'il n'y a pas de connexion
         {
-            AlertConnexionInternet();
+            ShowAlert(getResources().getString(
+                    R.string.msg_acces_denied));
         }
 
-    }
-
-    private void AlertConnexionInternet() {
-        AlertDialog.Builder adConnexion = new AlertDialog.Builder(this);
-        adConnexion.setTitle(getResources().getString(R.string.acces_denied));
-        adConnexion.setMessage(getResources().getString(
-                R.string.msg_acces_denied));
-        adConnexion.setIcon(R.drawable.offline);
-        adConnexion.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        adConnexion.show();
-    }
-
-    public void ConnexionResa(Boolean b) {
-        if (b) {
-            progressDialog.dismiss();
-            Intent i = new Intent(this, DashGouvernante.class);
-            i.putExtra("login", login.getText().toString());
-            login.setText("");
-            password.setText("");
-            this.startActivity(i);
-
-        } else {
-            AccessDeniedAlert();
-        }
-    }
-
-    private void AccessDeniedAlert() {
-        ad = new AlertDialog.Builder(this);
-        progressDialog.dismiss();
-        ad.setIcon(R.drawable.error);
-        ad.setTitle(getResources().getString(R.string.acces_denied));
-        ad.setMessage(getResources().getString(R.string.verify_data));
-        ad.setNeutralButton("OK", new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                password.setText("");
-            }
-        });
-        ad.show();
-    }
-
-    public boolean isConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        }
-        return false;
-    }
-
-    private void openProg() {
-        progressDialog.setCancelable(true);
-        progressDialog.show();
-    }
-
-    private void openDialogConnexion() {
-        progressDialog.dismiss();
-        adc = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        v = inflater.inflate(R.layout.new_connexion, null);
-        adc.setView(v);
-        header = (TextView) v.findViewById(R.id.textHeader);
-        Typeface font = Typeface.createFromAsset(getAssets(), "thirsty.otf");
-        header.setTypeface(font);
-        adc.setPositiveButton(getResources().getString(R.string.oui),
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        AsyncCallWS ws = new AsyncCallWS();
-                        ws.execute();
-                    }
-                });
-
-        adc.setNegativeButton(getResources().getString(R.string.cancel),
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        nbEssais = 1;
-                    }
-                });
-
-        adc.show();
-    }
-
-    private void openDialogFinale() {
-        progressDialog.dismiss();
-        adf = new AlertDialog.Builder(this);
-        adf.setIcon(R.drawable.error);
-        adf.setMessage("Connexion échouée.");
-        adf.setNeutralButton("OK", new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                nbEssais = 1;
-            }
-        });
-        adf.show();
-    }
-
-    private void NewConnection() {
-        if (nbEssais == 2) {
-            openDialogConnexion();
-        } else if (nbEssais == 3) {
-            openDialogConnexion();
-        } else {
-            openDialogFinale();
-            nbEssais = 1;
-        }
-    }
-
-    public void aboutLooper() {
-        Thread th = new Thread() {
-            public void run() {
-                Looper.prepare();
-                MessageQueue queue = Looper.myQueue();
-                queue.addIdleHandler(new IdleHandler() {
-                    int mReqCount = 0;
-
-                    @Override
-                    public boolean queueIdle() {
-                        if (++mReqCount == 2) {
-
-                            return false;
-                        } else
-                            return true;
-                    }
-                });
-                progressDialog.dismiss();
-                NewConnection();
-                Looper.loop();
-            }
-        };
-        th.start();
-    }
-
-    public void startTimer() {
-        t = new Timer();
-        task = new TimerTask() {
-
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (time > 0)
-                            time -= 1;
-                    }
-                });
-            }
-        };
-        t.scheduleAtFixedRate(task, 0, 1000);
     }
 
     @Override
@@ -528,7 +327,25 @@ public class Connexion extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String serveur = (pref.getString("serveur", ""));
+        if (serveur.equals("")) {
 
+            AlertDialog.Builder adConnexion = new AlertDialog.Builder(this);
+
+            adConnexion.setMessage(getResources().getString(R.string.msg_srv_configuration));
+
+            adConnexion.setNeutralButton(getResources().getString(R.string.configurer),
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(getApplicationContext(), IPServeur.class);
+                            startActivity(i);
+                        }
+                    });
+            adConnexion.show();
+        }
         Boolean autoupdate = true;
         if (isOnline()) {
             Log.i("AUTO UPDATE", "Online");
@@ -588,6 +405,45 @@ public class Connexion extends Activity implements
         return URL;
     }
 
+    public String getURLAPI() {
+        String URL = null;
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        URL = sp.getString("serveur", "");
+        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+        return URL;
+    }
+
+    private void showProgressDialog() {
+        pd.setMessage(getResources().getString(R.string.msg_connecting));
+        pd.setCancelable(false);
+        pd.show();
+    }
+
+    private void ShowAlert(String s) {
+        AlertDialog.Builder adConnexion = new AlertDialog.Builder(this);
+        // adConnexion.setTitle(getResources().getString(R.string.acces_denied));
+        adConnexion.setMessage(s);
+        //adConnexion.setIcon(R.drawable.offline);
+        adConnexion.setNeutralButton(getResources().getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        adConnexion.show();
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
     private class SlideMenuClickListener implements
             ListView.OnItemClickListener {
         @Override
@@ -597,84 +453,136 @@ public class Connexion extends Activity implements
         }
     }
 
-    public class AsyncCallWS extends AsyncTask<String, String, String> {
-        String result;
-        HttpTransportSE androidHttpTransport;
+    private class HttpRequestTaskLogin extends AsyncTask<Void, Void, LoginModel> {
+        LoginModel response = null;
+        String Login, Password;
 
         @Override
         protected void onPreExecute() {
-            openProg();
-            nbEssais++;
             super.onPreExecute();
+            showProgressDialog();
+            Login = login.getText().toString().trim();
+            Password = password.getText().toString().trim();
+
         }
 
-        protected String doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-
-            // Les paramètres
-            PropertyInfo type = new PropertyInfo();
-            type.setName("type");
-            type.setValue("M");
-            type.setType(String.class);
-            request.addProperty(type);
-
-            PropertyInfo logval = new PropertyInfo();
-            logval.setName("login");
-            logval.setValue(login.getText().toString().trim());
-            logval.setType(String.class);
-            request.addProperty(logval);
-
-            PropertyInfo passval = new PropertyInfo();
-            passval.setName("password");
-            passval.setValue(password.getText().toString());
-            passval.setType(String.class);
-            request.addProperty(passval);
-
-            // Paramètres d'appel du web service 'Authentitfier'
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
+        @Override
+        protected LoginModel doInBackground(Void... params) {
             try {
+                final String url = getURLAPI() + "login?login=" + Login
+                        + "&password=" + Password;
+                RestTemplate restTemplate = new RestTemplate();
+
+                restTemplate.setErrorHandler(new MyErrorHandler());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 try {
-                    androidHttpTransport.call(SOAP_ACTION, envelope);
-                    result = envelope.getResponse().toString();
-                } catch (SocketTimeoutException e) {
+                    response = restTemplate.getForObject(url, LoginModel.class);
+                    Log.i(TAG, response.toString());
+                } catch (IOError error) {
+                    Log.e(TAG + " IOError", error.getMessage(), error);
+                } catch (Exception ex) {
+                    Log.e(TAG + " Exception 1", ex.getMessage(), ex);
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
-                            progressDialog.dismiss();
-                            androidHttpTransport.reset();
-                            NewConnection();
+                            ShowAlert(getResources().getString(R.string.msg_connecting_error_srv));
                         }
                     });
 
                 }
-                if (result != null) {
-                    runOnUiThread(new Runnable() {
+                UserInfoModel.getInstance().setUser(response);
+                UserInfoModel.getInstance().setLogin(Login);
 
-                        @Override
-                        public void run() {
-                            ConnexionResa(Boolean.parseBoolean(result));
-                        }
-                    });
-                }
+                return response;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG + " Exception 2", e.getMessage(), e);
+
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            progressDialog.dismiss();
-            //androidHttpTransport.reset();
-            super.onPostExecute(result);
+        protected void onPostExecute(LoginModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    int error = response.getData().getError();
+
+
+                    if (error != -1) {
+                        // Connexion failed
+                        switch (error) {
+                            case 0: // not authorised
+                                ShowAlert(getResources().getString(R.string.msg_connecting_not_authorised));
+                                login.setError(getResources().getString(R.string.msg_connecting_not_authorised));
+
+                                break;
+                            case 1: // not actif
+                                ShowAlert(getResources().getString(R.string.msg_connecting_not_active));
+                                login.setError(getResources().getString(R.string.msg_connecting_not_active));
+
+                                break;
+                            case 2: // expired
+                                ShowAlert(getResources().getString(R.string.msg_connecting_expired_pwd));
+                                password.setError(getResources().getString(R.string.msg_connecting_expired_pwd));
+
+                                break;
+                            case 3: // error password
+                                ShowAlert(getResources().getString(R.string.msg_connecting_wrong_pwd));
+                                password.setError(getResources().getString(R.string.msg_connecting_wrong_pwd));
+
+                                break;
+                            case 4: // unknow user
+                                ShowAlert(getResources().getString(R.string.msg_connecting_not_found));
+                                login.setError(getResources().getString(R.string.msg_connecting_not_found));
+
+                                break;
+                            case 5: // unknown
+                                ShowAlert(getResources().getString(R.string.msg_connecting_error));
+
+                                break;
+                        }
+                    } else {
+                        // connexion OK
+                        Intent i = new Intent(getApplicationContext(), DashGouvernante.class);
+                        i.putExtra("login", login.getText().toString());
+                        startActivity(i);
+                    }
+                } else {
+                    ShowAlert(getResources().getString(R.string.msg_connecting_error));
+                }
+            }
         }
 
+
+    }
+
+    public class MyErrorHandler implements ResponseErrorHandler {
+        @Override
+        public void handleError(ClientHttpResponse response) throws IOException {
+            // your error handling here
+            final String code = String.valueOf(response.getRawStatusCode());
+            Log.i("ResponseErrorHandler", "handleError: " + String.valueOf(response.getRawStatusCode()));
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    ShowAlert(getResources().getString(R.string.msg_connecting_error_srv) + "\n(" + code + ")");
+                }
+            });
+        }
+
+        @Override
+        public boolean hasError(ClientHttpResponse response) throws IOException {
+            boolean hasError = false;
+            Log.i("ResponseErrorHandler", "hasError: " + String.valueOf(response.getRawStatusCode()));
+            int rawStatusCode = response.getRawStatusCode();
+            if (rawStatusCode != 200) {
+                hasError = true;
+            }
+            return hasError;
+        }
     }
 }

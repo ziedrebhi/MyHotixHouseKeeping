@@ -45,7 +45,7 @@ public class ViewPanneActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return authoriseImage;
+        return false;
     }
 
     @Override

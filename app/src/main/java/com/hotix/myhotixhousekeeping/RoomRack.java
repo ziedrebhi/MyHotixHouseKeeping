@@ -2,10 +2,14 @@ package com.hotix.myhotixhousekeeping;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,126 +19,121 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hotix.myhotixhousekeeping.adapter.CustomFilter;
+import com.hotix.myhotixhousekeeping.adapter.CustomAdapterSpinnerEtage;
 import com.hotix.myhotixhousekeeping.adapter.CustomGrid;
-import com.hotix.myhotixhousekeeping.model.Etage;
-import com.hotix.myhotixhousekeeping.model.Room;
+import com.hotix.myhotixhousekeeping.entities.Etage;
+import com.hotix.myhotixhousekeeping.entities.Guest;
+import com.hotix.myhotixhousekeeping.entities.RackModel;
+import com.hotix.myhotixhousekeeping.entities.RackRoomData;
+import com.hotix.myhotixhousekeeping.entities.SuccessModel;
 import com.hotix.myhotixhousekeeping.utils.CustomProgressDialog;
+import com.hotix.myhotixhousekeeping.utils.UserInfoModel;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
-import java.net.SocketTimeoutException;
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RoomRack extends Activity {
 
     static CustomProgressDialog progressDialog;
-    static Room CHB;
-    static int roomNb, idStatutNew, etatCBX = 0;
-    static String commentHS = "";
+    static RackRoomData CHB;
+    static int idStatutNew;
+    static String commentHS = "", roomNb;
     public final String NAMESPACE = "http://tempuri.org/";
     public final String SOAP_ACTION = "http://tempuri.org/GetListEtatChambres";
     public final String METHOD_NAME = "GetListEtatChambres";
     public final String SOAP_ACTION2 = "http://tempuri.org/ChangerProduitStaut";
     public final String METHOD_NAME2 = "ChangerProduitStaut";
-    public final String SOAP_ACTION3 = "http://tempuri.org/GetListEtagesHotel";
-    public final String METHOD_NAME3 = "GetListEtagesHotel";
-    public final String TAG = "RoomRack";
-    AlertDialog.Builder builderMenu, legende, builderMenuEtat, builderHS;
+
+
+    AlertDialog.Builder builderMenu, legende, builderMenuEtat, builderHS, builderMenuGuests, builderMenuEtatLieu;
     TextView header, room_number;
     View v;
-    GridView grid, gridFilter;
-    ArrayList<Room> listRoom, listRoomFiltre;
+    GridView grid;
+    List<RackRoomData> listRoom;
     RadioButton radioEtat, radioReclamer, vac_clean, vac_dirty, occ_clean,
-            occ_dirty, out_of_order;
-    Boolean changed = false;
+            occ_dirty, out_of_order, radioGuest;
     String login;
     EditText hsComment;
     Boolean b = true;
-    Button refresh;
-    ArrayList<Etage> listEtage;
-    String strlistEtage;
 
-    private static void openProg() {
-        progressDialog.setCancelable(true);
-        progressDialog.show();
-    }
+    Spinner listEtagesSpin;
+    List<com.hotix.myhotixhousekeeping.entities.Etage> etages;
+    ListView listGuests;
+    /*
+    Menus
+     */
+    RadioButton radioEtatLieu;
+    Boolean etatTv = true, etatBar = true, etatServ = true;
+    /*
+    * Get RackRoom
+    */
+    String TAG = this.getClass().getSimpleName();
+    String EtageId = "-1";
+    ProgressDialog pd;
+    private CustomAdapterSpinnerEtage adapterEtages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_rack);
+        // overridePendingTransition(R.anim.move_left_out_activity, R.anim.move_right_in_activity);
+        pd = new ProgressDialog(RoomRack.this);
+
+        /* Grid View for RoomRack */
         grid = (GridView) findViewById(R.id.grid);
-        gridFilter = (GridView) findViewById(R.id.gridFilter);
         float scalefactor = getResources().getDisplayMetrics().density * 100;
         int number = getWindowManager().getDefaultDisplay().getWidth();
         int columns = (int) ((float) number / (float) scalefactor);
         grid.setNumColumns(columns);
-        refresh = (Button) findViewById(R.id.refresh_room_rack);
-        if ((listEtage == null)) {
-            strlistEtage = ";-1;";
-        }
-    }
+        listRoom = new ArrayList<RackRoomData>();
+        etages = new ArrayList<Etage>();
+        etages.add(new Etage(-1, getResources().getString(R.string.all)));
+        etages.addAll(UserInfoModel.getInstance().getUser().getData().getEtages());
 
-    @Override
-    protected void onResume() {
-        listRoomFiltre = new ArrayList<Room>();
-        CHB = new Room();
-        progressDialog = new CustomProgressDialog(this, R.drawable.loading);
-        Bundle extras = getIntent().getExtras();
-        login = extras.getString("login");
+        /* Etages Filter*/
+        //etages = UserInfoModel.getInstance().getUser().getData().getEtages();
+        listEtagesSpin = (Spinner) findViewById(R.id.listEtages);
+        adapterEtages = new CustomAdapterSpinnerEtage(RoomRack.this,
+                android.R.layout.simple_dropdown_item_1line, etages);
+        listEtagesSpin.setAdapter(adapterEtages);
 
-        grid.setOnItemLongClickListener(new OnItemLongClickListener() {
-
+        listEtagesSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                           int position, long id) {
-                CHB = listRoom.get(position);
-                roomNb = CHB.getNumChb();
-                showRoomMenu();
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
 
-                return false;
+                com.hotix.myhotixhousekeeping.entities.Etage etage = adapterEtages.getItem(position);
+                EtageId = String.valueOf(etage.getId());
+                listRoom = new ArrayList<RackRoomData>();
+                if (isConnected())
+                    new HttpRequestTaskRackRoom().execute();
+                else ShowAlert(getResources().getString(R.string.msg_acces_denied));
+
             }
 
-        });
-
-        refresh.setOnClickListener(new OnClickListener() {
-
             @Override
-            public void onClick(View v) {
-                strlistEtage = ";-1;";
-                for (int i = 0; i < listEtage.size(); i++) {
-                    if (listEtage.get(i).getCHECKED() == true) {
-                        strlistEtage = strlistEtage
-                                + listEtage.get(i).getIDETAGE() + ";";
-                    }
-                }
-
-                AsyncCallWS task = new AsyncCallWS();
-                task.execute();
-
+            public void onNothingSelected(AdapterView<?> adapter) {
             }
         });
 
-        AsyncFilterWS ws = new AsyncFilterWS();
-        ws.execute();
-
-        super.onResume();
     }
 
     @Override
@@ -143,12 +142,17 @@ public class RoomRack extends Activity {
         i.putExtra("login", login);
         startActivity(i);
         finish();
+        overridePendingTransition(R.anim.move_left_in_activity, R.anim.move_right_out_activity);
         super.onBackPressed();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.rack, menu);
+        if (UserInfoModel.getInstance().getUser().getData().getProfileId() == 16) {
+            MenuItem item = menu.findItem(R.id.mouchard_rack);
+            item.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -158,83 +162,115 @@ public class RoomRack extends Activity {
             case R.id.infos_rack:
                 showLegend();
                 break;
+            case R.id.mouchard_rack:
+                showMouchard();
+                break;
         }
         return super.onMenuItemSelected(featureId, item);
     }
 
-    private void MessageErreurServeur() {
-        Toast t = Toast
-                .makeText(
-                        getApplicationContext(),
-                        "Erreur de connexion au serveur ! \n Veuillez réessayer s'il vous plait.",
-                        Toast.LENGTH_LONG);
-        t.setGravity(Gravity.CENTER, 0, 0);
-        t.show();
-    }
+    @Override
+    protected void onResume() {
 
-    public void ShowEtatMessage(Boolean b) {
+        CHB = new RackRoomData();
 
-        if (b) {
-            LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.custom_toast,
-                    (ViewGroup) findViewById(R.id.custom_toast_layout_id));
-
-            TextView text = (TextView) layout.findViewById(R.id.textResult);
-            text.setText(getResources()
-                    .getString(R.string.succes_change_status));
-
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
-            Intent i = new Intent(getApplicationContext(), RoomRack.class);
-            i.putExtra("login", login);
-            startActivity(i);
-            finish();
-        } else {
-            LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.custom_error,
-                    (ViewGroup) findViewById(R.id.custom_toast_echec));
-
-            TextView text = (TextView) layout.findViewById(R.id.textError);
-            text.setText(getResources().getString(R.string.error_change_status));
-
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
-
-        }
-    }
-
-    public String getURL() {
-        String URL = null;
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        URL = sp.getString("serveur", "");
-        URL = "http://" + URL + "/hngwebsetup/WebService/HNGHousekeeping.asmx";
-        return URL;
-    }
-
-    private void showLegend() {
-        legende = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        v = inflater.inflate(R.layout.custom, null);
-        legende.setView(v);
-        header = (TextView) v.findViewById(R.id.textHeader);
-
-        Typeface font = Typeface.createFromAsset(getAssets(), "thirsty.otf");
-        header.setTypeface(font);
-
-        legende.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CHB = listRoom.get(position);
+                roomNb = CHB.getNumChb();
+                showRoomMenu();
+
+
             }
         });
 
-        legende.show();
+        super.onResume();
+    }
+
+    public void showMouchard() {
+        Intent i = new Intent(getApplicationContext(),
+                MouchardRackListActivity.class);
+
+        startActivity(i);
+    }
+
+    private void showRoomMenu() {
+
+        builderMenu = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        v = inflater.inflate(R.layout.menu_chambre, null);
+        builderMenu.setView(v);
+
+
+        header = (TextView) v.findViewById(R.id.textHeader);
+
+        radioEtat = (RadioButton) v.findViewById(R.id.radioEtat);
+        radioReclamer = (RadioButton) v.findViewById(R.id.radioComplaint);
+        radioGuest = (RadioButton) v.findViewById(R.id.radioCViewGuests);
+        radioEtatLieu = (RadioButton) v.findViewById(R.id.radioEtatLieu);
+
+        if (!(CHB.getStatutId() == 1
+                || CHB.getStatutId() == 2
+                || CHB.getStatutId() == 3
+                || CHB.getStatutId() == 4
+                || CHB.getStatutId() == 7)) {
+            radioEtat.setVisibility(View.GONE);
+
+        }
+
+        if (CHB.getStatutId() == 1 || CHB.getStatutId() == 2 || CHB.getStatutId() == 7) {
+            radioEtatLieu.setVisibility(View.GONE);
+        }
+        if (CHB.getGuests().size() == 0) {
+            radioGuest.setVisibility(View.GONE);
+            radioEtat.setChecked(true);
+        }
+        room_number = (TextView) v.findViewById(R.id.chb_menu);
+        Typeface font = Typeface.createFromAsset(getAssets(), "thirsty.otf");
+        header.setTypeface(font);
+        room_number.setText("" + roomNb);
+        builderMenu.setPositiveButton(getResources().getString(R.string.OK),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            if (radioEtat.isChecked()) {
+                                if (CHB.getStatutId() == 1
+                                        || CHB.getStatutId() == 2
+                                        || CHB.getStatutId() == 3
+                                        || CHB.getStatutId() == 4
+                                        || CHB.getStatutId() == 7) {
+                                    showMenuEtat();
+                                } else {
+                                    ShowAlert(getResources().getString(R.string.msg_change_etat_cannot));
+                                }
+                            } else if (radioReclamer.isChecked()) {
+                                Intent i = new Intent(getApplicationContext(),
+                                        DeclarationPanne.class);
+                                i.putExtra("prod_id", CHB.getProdId());
+                                i.putExtra("num_chb", CHB.getNumChb());
+                                i.putExtra("login", login);
+                                i.putExtra("room", true);
+                                startActivity(i);
+                                //finish();
+                            } else if (radioGuest.isChecked()) {
+                                showMenuGuests();
+
+                            } else if (radioEtatLieu.isChecked()) {
+                                showMenuEtatLieu();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).setNegativeButton(getResources().getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        builderMenu.show();
     }
 
     private void showMenuEtat() {
@@ -271,7 +307,7 @@ public class RoomRack extends Activity {
                 break;
         }
 
-        builderMenuEtat.setPositiveButton("OK",
+        builderMenuEtat.setPositiveButton(getResources().getString(R.string.OK),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -292,15 +328,17 @@ public class RoomRack extends Activity {
                                 if (AllowChange()) {
                                     setCommentHS();
                                 } else {
-                                    showToast("Impossible d'effectuer ce changement .");
+                                    ShowAlert(getResources().getString(R.string.msg_change_etat_error));
                                 }
                             } else {
                                 if (AllowChange()) {
-                                    AsyncChangeEtatWS ws = new AsyncChangeEtatWS();
-                                    ws.execute();
+                                    if (isConnected())
+                                        new HttpRequestTaskUpdateStatutRoom().execute();
+                                    else
+                                        ShowAlert(getResources().getString(R.string.msg_acces_denied));
 
                                 } else {
-                                    showToast("Impossible d'effectuer ce changement .");
+                                    ShowAlert(getResources().getString(R.string.msg_change_etat_error));
                                 }
                             }
 
@@ -308,69 +346,107 @@ public class RoomRack extends Activity {
                             e.printStackTrace();
                         }
                     }
-                }).setNegativeButton("Annuler",
+                }).setNegativeButton(getResources().getString(R.string.cancel),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        showRoomMenu();
                     }
                 });
         builderMenuEtat.show();
     }
 
-    private void showRoomMenu() {
-        builderMenu = new AlertDialog.Builder(this);
+    private void showMenuGuests() {
+        builderMenuGuests = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        v = inflater.inflate(R.layout.menu_chambre, null);
-        builderMenu.setView(v);
+        v = inflater.inflate(R.layout.etat_view_guests, null);
+        builderMenuGuests.setView(v);
         header = (TextView) v.findViewById(R.id.textHeader);
-
-        radioEtat = (RadioButton) v.findViewById(R.id.radioEtat);
-        radioReclamer = (RadioButton) v.findViewById(R.id.radioComplaint);
-
-        room_number = (TextView) v.findViewById(R.id.chb_menu);
         Typeface font = Typeface.createFromAsset(getAssets(), "thirsty.otf");
         header.setTypeface(font);
+        room_number = (TextView) v.findViewById(R.id.chb_menu);
+        listGuests = (ListView) v.findViewById(R.id.listGuest);
         room_number.setText("" + roomNb);
-        builderMenu.setPositiveButton("OK",
+        String[] values = new String[CHB.getGuests().size()];
+        List<Guest> guests = CHB.getGuests();
+        for (int i = 0; i < CHB.getGuests().size(); i++) {
+            values[i] = guests.get(i).getName();
+
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        listGuests.setAdapter(adapter);
+        builderMenuGuests.setPositiveButton(getResources().getString(R.string.OK),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        try {
-                            if (radioEtat.isChecked()) {
-                                if (CHB.getStatutId() == 1
-                                        || CHB.getStatutId() == 2
-                                        || CHB.getStatutId() == 3
-                                        || CHB.getStatutId() == 4
-                                        || CHB.getStatutId() == 7) {
-                                    showMenuEtat();
-                                } else {
-                                    Toast t = Toast.makeText(
-                                            getApplicationContext(),
-                                            "Changement d'état non autorisé.",
-                                            Toast.LENGTH_LONG);
-                                    t.setGravity(Gravity.CENTER, 0, 0);
-                                    t.show();
-                                }
-                            } else if (radioReclamer.isChecked()) {
-                                Intent i = new Intent(getApplicationContext(),
-                                        DeclarationPanne.class);
-                                i.putExtra("prod_id", CHB.getProdId());
-                                i.putExtra("num_chb", CHB.getNumChb());
-                                i.putExtra("login", login);
-                                startActivity(i);
-                                finish();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).setNegativeButton("Annuler",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
 
+                        showRoomMenu();
                     }
                 });
-        builderMenu.show();
+        builderMenuGuests.show();
+    }
+
+    private void showMenuEtatLieu() {
+        builderMenuEtatLieu = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        v = inflater.inflate(R.layout.etat_view_lieu, null);
+        builderMenuEtatLieu.setView(v);
+        header = (TextView) v.findViewById(R.id.textHeader);
+        Typeface font = Typeface.createFromAsset(getAssets(), "thirsty.otf");
+        header.setTypeface(font);
+        room_number = (TextView) v.findViewById(R.id.chb_menu);
+        room_number.setText("" + roomNb);
+        final Switch tv = (Switch) v.findViewById(R.id.tv);
+        final Switch minibar = (Switch) v.findViewById(R.id.minibar);
+        final Switch serv = (Switch) v.findViewById(R.id.serviette);
+        tv.setTextOn(getResources().getString(R.string.etat_lieu_ok));
+        tv.setTextOff(getResources().getString(R.string.etat_lieu_ko));
+        minibar.setTextOn(getResources().getString(R.string.etat_lieu_ok));
+        minibar.setTextOff(getResources().getString(R.string.etat_lieu_ko));
+        serv.setTextOn(getResources().getString(R.string.etat_lieu_ok));
+        serv.setTextOff(getResources().getString(R.string.etat_lieu_ko));
+
+        serv.setChecked(CHB.isEtatServiette());
+        tv.setChecked(CHB.isEtatTV());
+        minibar.setChecked(CHB.isEtatBar());
+
+        builderMenuEtatLieu.setPositiveButton(getResources().getString(R.string.OK),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        etatBar = minibar.isChecked();
+                        etatTv = tv.isChecked();
+                        etatServ = serv.isChecked();
+
+                        new HttpRequestTaskUpdateEtatLieu().execute();
+                    }
+                }).setNegativeButton(getResources().getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showRoomMenu();
+                    }
+                });
+        builderMenuEtatLieu.show();
+    }
+
+    private void showLegend() {
+        legende = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        v = inflater.inflate(R.layout.custom, null);
+        legende.setView(v);
+        header = (TextView) v.findViewById(R.id.textHeader);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "thirsty.otf");
+        header.setTypeface(font);
+
+        legende.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        legende.show();
     }
 
     private Boolean AllowChange() {
@@ -409,21 +485,20 @@ public class RoomRack extends Activity {
         room_number = (TextView) v.findViewById(R.id.chb_menu);
         room_number.setText("" + roomNb);
         hsComment = (EditText) v.findViewById(R.id.comment_hs);
-        builderHS.setPositiveButton("OK",
+        builderHS.setPositiveButton(getResources().getString(R.string.OK),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         if (hsComment.getText().toString().trim().length() == 0) {
-                            showToast("Veuillez écrire un commentaire.");
+                            showToast(getResources().getString(R.string.comment_requis));
                             setCommentHS();
                         } else {
                             commentHS = hsComment.getText().toString();
-                            AsyncChangeEtatWS ws = new AsyncChangeEtatWS();
-                            ws.execute();
+                            new HttpRequestTaskUpdateStatutRoom().execute();
                         }
 
                     }
-                }).setNegativeButton("Annuler",
+                }).setNegativeButton(getResources().getString(R.string.cancel),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         commentHS = "";
@@ -434,306 +509,289 @@ public class RoomRack extends Activity {
 
     private void showToast(String s) {
         Toast t = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG);
-        t.setGravity(Gravity.CENTER, 0, 0);
+        t.setGravity(Gravity.BOTTOM, 0, 0);
         t.show();
     }
 
-    public class AsyncCallWS extends AsyncTask<String, String, ArrayList<Room>> {
-        SoapObject response = null;
-        HttpTransportSE androidHttpTransport;
+    public String getURLAPI() {
+        String URL = null;
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        URL = sp.getString("serveur", "");
+        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+        return URL;
+    }
+
+    private void showProgressDialog(int i) {
+        if (i == 1)
+            pd.setMessage(getResources().getString(R.string.msg_connecting));
+        else
+            pd.setMessage(getResources().getString(R.string.msg_loading));
+        pd.setCancelable(false);
+        pd.show();
+    }
+
+    private void ShowAlert(String s) {
+        AlertDialog.Builder adConnexion = new AlertDialog.Builder(this);
+        // adConnexion.setTitle(getResources().getString(R.string.acces_denied));
+        adConnexion.setMessage(s);
+        //adConnexion.setIcon(R.drawable.offline);
+        adConnexion.setNeutralButton(getResources().getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        adConnexion.show();
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
+    private class HttpRequestTaskRackRoom extends AsyncTask<Void, Void, RackModel> {
+        RackModel response = null;
+        String etageId;
 
         @Override
         protected void onPreExecute() {
-            listRoom = new ArrayList<Room>();
-            openProg();
             super.onPreExecute();
+            showProgressDialog(2);
+
+            etageId = EtageId;
+
+
         }
 
-        protected void onPostExecute(ArrayList<Room> listRoom) {
-            grid.setAdapter(new CustomGrid(RoomRack.this, listRoom));
-            progressDialog.dismiss();
-            androidHttpTransport.reset();
-            super.onPostExecute(listRoom);
-        }
-
-        protected ArrayList<Room> doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-
-            PropertyInfo pi_strlistEtage = new PropertyInfo();
-            pi_strlistEtage.setName("strlistEtage");
-            pi_strlistEtage.setValue(strlistEtage);
-            pi_strlistEtage.setType(String.class);
-            request.addProperty(pi_strlistEtage);
-
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
+        @Override
+        protected RackModel doInBackground(Void... params) {
             try {
+                final String url = getURLAPI() + "GetEtatRackRoom?etage=" + etageId;
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.setErrorHandler(new MyErrorHandler());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 try {
-                    androidHttpTransport.call(SOAP_ACTION, envelope);
-                    response = (SoapObject) envelope.getResponse();
+                    response = restTemplate.getForObject(url, RackModel.class);
                     Log.i(TAG, response.toString());
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
+                } catch (IOError error) {
+                    Log.e(TAG + " IOError", error.getMessage(), error);
+                } catch (Exception ex) {
+                    Log.e(TAG + " Exception 1", ex.getMessage(), ex);
 
                 }
-                if (response != null) {
-                    progressDialog.dismiss();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
 
-                            Room room;
-                            SoapObject Rooms = new SoapObject();
-                            SoapObject Rooom = new SoapObject();
-
-                            Rooms = (SoapObject) response.getProperty(0);
-                            if (Rooms.toString().equals("anyType{}")) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Impossible de charger les chambres  ! ",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                            for (int i = 0; i < Rooms.getPropertyCount(); i++) {
-
-                                Rooom = (SoapObject) Rooms.getProperty(i);
-
-                                room = new Room();
-                                room.setProdId(Integer.parseInt(Rooom
-                                        .getProperty("prodId").toString()));
-                                room.setIdTypeHeb(Integer.parseInt(Rooom
-                                        .getProperty("idTypeHeb").toString()));
-                                room.setIdTypeProd(Integer.parseInt(Rooom
-                                        .getProperty("IdTypeProd").toString()));
-                                room.setLblTypeProd(Rooom.getProperty(
-                                        "lblTypeProd").toString());
-                                room.setStatutId(Integer.parseInt(Rooom
-                                        .getProperty("StatutId").toString()));
-                                room.setLblStatut(Rooom
-                                        .getProperty("lblStatut").toString());
-                                room.setNumChb(Integer.parseInt(Rooom
-                                        .getProperty("NumChb").toString()));
-                                room.setAttributed(Boolean.parseBoolean(Rooom
-                                        .getProperty("lblAttributed")
-                                        .toString()));
-
-                                listRoom.add(room);
-                            }
-                        }
-                    });
-                }
+                return response;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(RackModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    // Ok
+                    grid.setAdapter(new CustomGrid(RoomRack.this, response.getData()));
+                    listRoom = response.getData();
+                } else {
+                    // Error
+                    ShowAlert(getResources().getString(R.string.msg_loading_error));
+                }
+
+            } else
+
+            {
+                ShowAlert(getResources().getString(R.string.msg_loading_error));
             }
 
-            return listRoom;
+
         }
     }
 
-    public class AsyncChangeEtatWS extends AsyncTask<String, String, String> {
-        HttpTransportSE androidHttpTransport;
-        String result = "False";
+    /*
+    Update Status Room
+    */
+    private class HttpRequestTaskUpdateStatutRoom extends AsyncTask<Void, Void, SuccessModel> {
+        SuccessModel response = null;
+        String etageId;
 
         @Override
         protected void onPreExecute() {
-            openProg();
             super.onPreExecute();
+            showProgressDialog(2);
+
+
+            etageId = EtageId;
+
+
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            progressDialog.dismiss();
-            super.onPostExecute(result);
-        }
-
-        protected String doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME2);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-
-            PropertyInfo user = new PropertyInfo();
-            user.setName("user");
-            user.setValue(login);
-            user.setType(String.class);
-            request.addProperty(user);
-
-            PropertyInfo prodId = new PropertyInfo();
-            prodId.setName("prodId");
-            prodId.setValue(CHB.getProdId());
-            prodId.setType(Integer.class);
-            request.addProperty(prodId);
-
-            PropertyInfo pi_typeHebId = new PropertyInfo();
-            pi_typeHebId.setName("typeHebId");
-            pi_typeHebId.setValue(CHB.getIdTypeHeb());
-            pi_typeHebId.setType(Integer.class);
-            request.addProperty(pi_typeHebId);
-
-            PropertyInfo pi_typeProdId = new PropertyInfo();
-            pi_typeProdId.setName("typeProdId");
-            pi_typeProdId.setValue(CHB.getIdTypeProd());
-            pi_typeProdId.setType(Integer.class);
-            request.addProperty(pi_typeProdId);
-
-            PropertyInfo pi_statut = new PropertyInfo();
-            pi_statut.setName("statut");
-            pi_statut.setValue(idStatutNew);
-            pi_statut.setType(Integer.class);
-            request.addProperty(pi_statut);
-
-            PropertyInfo pi_oldStatut = new PropertyInfo();
-            pi_oldStatut.setName("oldStatut");
-            pi_oldStatut.setValue(CHB.getStatutId());
-            pi_oldStatut.setType(Integer.class);
-            request.addProperty(pi_oldStatut);
-
-            PropertyInfo pi_comment = new PropertyInfo();
-            pi_comment.setName("comment");
-            pi_comment.setValue(commentHS);
-            pi_comment.setType(String.class);
-            request.addProperty(pi_comment);
-
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
+        protected SuccessModel doInBackground(Void... params) {
             try {
+                final String url = getURLAPI() + "ChangerProduitStaut?user=" + UserInfoModel.getInstance().getLogin() +
+                        "&prodId=" + CHB.getProdId() +
+                        "&typeHebId=" + CHB.getTypeHebergement() +
+                        "&typeProdId=" + CHB.getTypeProduitId() +
+                        "&statut=" + idStatutNew +
+                        "&oldStatut=" + CHB.getStatutId() +
+                        "&comment=" + commentHS;
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.setErrorHandler(new MyErrorHandler());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 try {
-                    androidHttpTransport.call(SOAP_ACTION2, envelope);
-                    result = envelope.getResponse().toString();
-                    Log.i(TAG, result.toString());
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
+                    response = restTemplate.getForObject(url, SuccessModel.class);
+                    Log.i(TAG, response.toString());
+                } catch (IOError error) {
+                    Log.e(TAG + " IOError", error.getMessage(), error);
+                } catch (Exception ex) {
+                    Log.e(TAG + " Exception 1", ex.getMessage(), ex);
 
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ShowEtatMessage(Boolean.parseBoolean(result));
-                    }
-                });
-
+                return response;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
+
             }
 
             return null;
         }
+
+        @Override
+        protected void onPostExecute(SuccessModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    // Ok
+                    // showToast("Ok");
+                    new HttpRequestTaskRackRoom().execute();
+
+                } else {
+                    // Error
+                    ShowAlert(getResources().getString(R.string.msg_change_etat_error_srv));
+                }
+
+            } else
+
+            {
+                ShowAlert(getResources().getString(R.string.msg_connecting_error));
+            }
+
+
+        }
     }
 
-    public class AsyncFilterWS extends
-            AsyncTask<String, String, ArrayList<Etage>> {
-        SoapObject response = null;
-        HttpTransportSE androidHttpTransport;
+    /*
+    Update Etat Lieu
+    */
+    private class HttpRequestTaskUpdateEtatLieu extends AsyncTask<Void, Void, SuccessModel> {
+        SuccessModel response = null;
+        String etageId;
+        int bar = 1, tv = 1, serv = 1;
 
         @Override
         protected void onPreExecute() {
-            openProg();
-            listEtage = new ArrayList<Etage>();
             super.onPreExecute();
+            showProgressDialog(2);
+            if (!etatBar)
+                bar = 0;
+            if (!etatServ)
+                serv = 0;
+            if (!etatTv)
+                tv = 0;
         }
 
-        protected void onPostExecute(ArrayList<Etage> listEtage) {
-            progressDialog.dismiss();
-            gridFilter.setAdapter(new CustomFilter(RoomRack.this, listEtage));
-            strlistEtage = ";-1;";
-            for (int i = 0; i < listEtage.size(); i++) {
-                if (listEtage.get(i).getCHECKED() == true) {
-                    strlistEtage = strlistEtage
-                            + listEtage.get(i).getIDETAGE() + ";";
-                }
-            }
-
-            AsyncCallWS task = new AsyncCallWS();
-            task.execute();
-            super.onPostExecute(listEtage);
-        }
-
-        protected ArrayList<Etage> doInBackground(String... params) {
-
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME3);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            androidHttpTransport = new HttpTransportSE(getURL(), 30000);
+        @Override
+        protected SuccessModel doInBackground(Void... params) {
             try {
+                final String url = getURLAPI() + "UpdateEtatLieu?" +
+                        "&prodId=" + CHB.getProdId() +
+                        "&etatTv=" + tv +
+                        "&etatBar=" + bar +
+                        "&etatSer=" + serv;
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.setErrorHandler(new MyErrorHandler());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 try {
-                    androidHttpTransport.call(SOAP_ACTION3, envelope);
-                    response = (SoapObject) envelope.getResponse();
+                    response = restTemplate.getForObject(url, SuccessModel.class);
                     Log.i(TAG, response.toString());
-                } catch (SocketTimeoutException e) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            MessageErreurServeur();
-                            androidHttpTransport.reset();
-                        }
-                    });
+                } catch (IOError error) {
+                    Log.e(TAG + " IOError", error.getMessage(), error);
+                } catch (Exception ex) {
+                    Log.e(TAG + " Exception 1", ex.getMessage(), ex);
 
                 }
-                if (response != null) {
-                    progressDialog.dismiss();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i("Reponse:", response.toString());
-                            Etage etage;
-                            SoapObject Etages = new SoapObject();
-                            SoapObject oneetage = new SoapObject();
 
-                            Etages = (SoapObject) response.getProperty(0);
-                            if (Etages.toString().equals("anyType{}")) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Impossible de charger les étages ! ",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                            for (int i = 0; i < Etages.getPropertyCount(); i++) {
-
-                                oneetage = (SoapObject) Etages.getProperty(i);
-
-                                etage = new Etage();
-                                etage.setBLOC(Integer.parseInt(oneetage
-                                        .getProperty("BLOC").toString()));
-                                etage.setIDETAGE(Integer.parseInt(oneetage
-                                        .getProperty("IDETAGE").toString()));
-                                etage.setLBLETAGE(oneetage.getProperty(
-                                        "LBLETAGE").toString());
-                                etage.setCHECKED(false);
-                                listEtage.add(etage);
-                            }
-                            listEtage.get(0).setCHECKED(true);
-                        }
-                    });
-                }
+                return response;
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
+
             }
 
-            return listEtage;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(SuccessModel greeting) {
+            pd.dismiss();
+            if (response != null) {
+                if (response.isStatus()) {
+                    // Ok
+                    // showToast("Ok");
+                    //ShowAlert(getResources().getString(R.string.etat_lieu_update_ok));
+                    new HttpRequestTaskRackRoom().execute();
+                } else {
+                    // Error
+                    ShowAlert(getResources().getString(R.string.etat_lieu_update_ko));
+                }
+
+            } else
+
+            {
+                ShowAlert(getResources().getString(R.string.msg_connecting_error));
+            }
+
+
         }
     }
 
+
+    public class MyErrorHandler implements ResponseErrorHandler {
+        @Override
+        public void handleError(ClientHttpResponse response) throws IOException {
+            // your error handling here
+            final String code = String.valueOf(response.getRawStatusCode());
+            Log.i("ResponseErrorHandler", "handleError: " + String.valueOf(response.getRawStatusCode()));
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    ShowAlert(getResources().getString(R.string.msg_connecting_error_srv) + "\n(" + code + ")");
+                }
+            });
+        }
+
+        @Override
+        public boolean hasError(ClientHttpResponse response) throws IOException {
+            boolean hasError = false;
+            Log.i("ResponseErrorHandler", "hasError: " + String.valueOf(response.getRawStatusCode()));
+            int rawStatusCode = response.getRawStatusCode();
+            if (rawStatusCode != 200) {
+                hasError = true;
+            }
+            return hasError;
+        }
+    }
 }
+
+

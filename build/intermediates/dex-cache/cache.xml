@@ -3,12 +3,39 @@
 
     <item
         is-multidex="false"
-        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.0\jars\libs\internal_impl-22.2.0.jar"
+        jar="E:\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.2.0\support-annotations-22.2.0.jar"
         jumboMode="false"
         optimize="true"
-        revision="23.0.1"
+        revision="25.0.0"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\support-annotations-22.2.0_96376f10e7ffeff93884ca587ee327d651d1653c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\ziedrebhi\.gradle\caches\modules-2\files-2.1\com.github.PhilJay\MPAndroidChart\v3.0.2\5d4eb08a326bdbd7fbbddc769666898c9936b282\MPAndroidChart-v3.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="5d4eb08a326bdbd7fbbddc769666898c9936b282">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\MPAndroidChart-v3.0.2_65e341bf3a5b275bdf894722340c9e5da90e8442.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies_95d61df95e942710316d6fcfbb653c5a74f9df31.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\ziedrebhi\.android\build-cache\48f77fb3b603732e9ce0d2790577a054a33dd1e0\output\jars\libs\internal_impl-22.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
         sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.0_340f4c29a9c9a9c959134206ac2264363a69acd1.jar" />
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.0_7977533da42386a5fcfc416ede7270afbbc1219d.jar" />
     </item>
     <item
         is-multidex="false"
@@ -21,12 +48,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.1.0\jars\classes.jar"
+        jar="C:\Users\ziedrebhi\.android\build-cache\5fbd1bda5aec041cd4b0c6612921d6b3068aaaa3\output\jars\classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="23.0.1"
-        sha1="4477ea44f5ec5ad064022a22691732d7638ff197">
-        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appindexing-8.1.0_892ee2d95f396a5724fae323504cc3371ee28aee.jar" />
+        revision="25.0.0"
+        sha1="d0dda274b703dd9c5bb056867649d22b4171ae7d">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\classes_0a66feaba1438e93e35e75b8f02901bd5013962e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\android-async-http-1.4.4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3bae85a076241828810bf8fbcc12e5891d5fc34c">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.4_4be27437cd68c12ffadbff876124adc151a1e46f.jar" />
     </item>
     <item
         is-multidex="false"
@@ -39,12 +75,30 @@
     </item>
     <item
         is-multidex="false"
-        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.1.0\jars\classes.jar"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\gson-2.6.2.jar"
         jumboMode="false"
         optimize="true"
-        revision="23.0.1"
-        sha1="d0dda274b703dd9c5bb056867649d22b4171ae7d">
-        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.1.0_dab370e608ddf10be24c5a5a8a9a7e0c5a60e41c.jar" />
+        revision="25.0.0"
+        sha1="f1bc476cc167b18e66c297df599b2377131a8947">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\gson-2.6.2_1c6564042a0eca7e5f401b4853e6418deed43447.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\ziedrebhi\.android\build-cache\1506affc545db54357a599ef4bc5c433793e0bcc\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e84b30031d4bab89a2b5c45af4eb9213828524dd">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\classes_1aace3eb2b8f94a33d828c6e1ee2a9068d2ba750.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\ziedrebhi\.android\build-cache\48f77fb3b603732e9ce0d2790577a054a33dd1e0\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\classes_8dfc34ccfd13da97c12e0bd8746455a4bce20d6d.jar" />
     </item>
     <item
         is-multidex="false"
@@ -57,12 +111,12 @@
     </item>
     <item
         is-multidex="false"
-        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.0\jars\classes.jar"
+        jar="C:\Users\ziedrebhi\.android\build-cache\ac81c0f0cdb30bdd94743ffaa2eeb32aa85adf3d\output\jars\classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="23.0.1"
-        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
-        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-22.2.0_cfb69180d3a9b900aa36cd42376378e712d57979.jar" />
+        revision="25.0.0"
+        sha1="4477ea44f5ec5ad064022a22691732d7638ff197">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\classes_5339785b26d51f6369202585dc39ee7fb6d80c45.jar" />
     </item>
     <item
         is-multidex="false"

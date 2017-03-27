@@ -12,46 +12,11 @@
         android:background="@drawable/back_obj_trouve"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <Spinner
+
+            android:id="@+id/listEtages"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="0.5"
-            android:background="@drawable/back_obj_trouve"
-            android:orientation="vertical">
-
-            <GridView
-                android:id="@+id/gridFilter"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:numColumns="2"></GridView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-
-            <Button
-                android:id="@+id/refresh_room_rack"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:background="@drawable/blue_btn_drawable"
-                android:drawableTop="@drawable/sync"
-                android:padding="2dp"
-                android:text="@string/refresh"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
