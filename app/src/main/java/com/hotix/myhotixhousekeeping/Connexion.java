@@ -461,6 +461,7 @@ public class Connexion extends Activity implements
         protected void onPreExecute() {
             super.onPreExecute();
             showProgressDialog();
+            Log.i("Login", "Start");
             Login = login.getText().toString().trim();
             Password = password.getText().toString().trim();
 

@@ -145,7 +145,8 @@ public class ObjetsTrouveListActivity extends Activity {
         actualiser = (ImageButton) findViewById(R.id.refresh_liste);
         create = (ImageButton) findViewById(R.id.refresh_liste2);
         spEtats = (Spinner) findViewById(R.id.spinnerEtat);
-
+        if (!UserInfoModel.getInstance().getUser().getData().isHasAddObjet())
+            create.setVisibility(View.GONE);
         emptyMsg.setVisibility(View.GONE);
 
         etats = new ArrayList<TypesPanne>();
@@ -273,8 +274,8 @@ public class ObjetsTrouveListActivity extends Activity {
                 R.drawable.view));
 
         mQuickActionEncours = new QuickAction(this);
-        // mQuickAction.addActionItem(updateItem);
-        mQuickActionEncours.addActionItem(clotureItem);
+        if (UserInfoModel.getInstance().getUser().getData().isHasCloseObjet())
+            mQuickActionEncours.addActionItem(clotureItem);
         mQuickActionEncours.addActionItem(viewItem);
 
         // setup the action item click listener
@@ -296,7 +297,7 @@ public class ObjetsTrouveListActivity extends Activity {
                                         .getCommentaire(), lisObjetTrouves
                                         .get(mSelectedRow).getDescription());
                             } catch (Exception ex) {
-                                Log.e("Excetiion", ex.toString());
+                                Log.e("Excetiion 1111", ex.toString());
                             }
                         } else if (actionId == ID_CLOTURE) {
                             idObjT = lisObjetTrouves.get(mSelectedRow).getId();
@@ -314,7 +315,7 @@ public class ObjetsTrouveListActivity extends Activity {
                                         .getPrenomrendu(), lisObjetTrouves.get(mSelectedRow)
                                         .getCommentaire(), lisObjetTrouves
                                         .get(mSelectedRow).getDescription(), (getAuthoriseImageSend() ? lisObjetTrouves
-                                        .get(mSelectedRow).getImage() : null));
+                                        .get(mSelectedRow).getImage() : ""));
                             } catch (Exception ex) {
                                 Log.e("Excetiion", ex.toString());
                             }
@@ -370,7 +371,7 @@ public class ObjetsTrouveListActivity extends Activity {
                                         .getPrenomrendu(), lisObjetTrouves.get(mSelectedRow)
                                         .getCommentaire(), lisObjetTrouves
                                         .get(mSelectedRow).getDescription(), (getAuthoriseImageSend() ? lisObjetTrouves
-                                        .get(mSelectedRow).getImage() : null));
+                                        .get(mSelectedRow).getImage() : ""));
                             } catch (Exception ex) {
                                 Log.e("Excetiion", ex.toString());
                             }

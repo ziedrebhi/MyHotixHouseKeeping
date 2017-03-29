@@ -166,6 +166,9 @@ public class PannesListActivity extends Activity {
 
         emptyMsg.setVisibility(View.GONE);
 
+        if (!UserInfoModel.getInstance().getUser().getData().isHasAddPanne())
+            create.setVisibility(View.GONE);
+
         etats = new ArrayList<TypesPanne>();
         etats.add(new TypesPanne(1, "En cours"));
         etats.add(new TypesPanne(2, "Colturée"));
@@ -290,9 +293,12 @@ public class PannesListActivity extends Activity {
                 .getString(R.string.cloture), getResources().getDrawable(R.drawable.cloture));
         ActionItem viewItem = new ActionItem(ID_VIEW, getResources()
                 .getString(R.string.view), getResources().getDrawable(R.drawable.view));
-        mQuickActionEncours = new QuickAction(this);
 
-        mQuickActionEncours.addActionItem(clotureItem);
+        mQuickActionEncours = new QuickAction(this);
+        if (UserInfoModel.getInstance().getUser().getData().isHasClosePanne())
+            mQuickActionEncours.addActionItem(clotureItem);
+
+
         mQuickActionEncours.addActionItem(viewItem);
 
         // setup the action item click listener
@@ -313,6 +319,7 @@ public class PannesListActivity extends Activity {
                             i.putExtra("prenom", listPanne.get(mSelectedRow).getPrenom());
                             i.putExtra("type", listPanne.get(mSelectedRow).getType());
                             i.putExtra("urgent", listPanne.get(mSelectedRow).isUrgent());
+                            i.putExtra("technicien", listPanne.get(mSelectedRow).getTechnicien());
 
                             if (listPanne.get(mSelectedRow).getImage() != "") {
                                 i.putExtra("image", scaleDownBitmap(getImageFromString(listPanne.get(mSelectedRow).getImage()), 100, getApplicationContext()));
@@ -364,6 +371,7 @@ public class PannesListActivity extends Activity {
                             i.putExtra("prenom", listPanne.get(mSelectedRow).getPrenom());
                             i.putExtra("type", listPanne.get(mSelectedRow).getType());
                             i.putExtra("urgent", listPanne.get(mSelectedRow).isUrgent());
+                            i.putExtra("technicien", listPanne.get(mSelectedRow).getTechnicien());
 
                             if (listPanne.get(mSelectedRow).getImage() != "") {
                                 i.putExtra("image", scaleDownBitmap(getImageFromString(listPanne.get(mSelectedRow).getImage()), 100, getApplicationContext()));

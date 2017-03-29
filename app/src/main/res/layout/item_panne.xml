@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/lieu_objet"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/lieu_objet"
         android:layout_marginTop="1dip"
+        android:layout_toLeftOf="@+id/imageView1"
         android:layout_toRightOf="@+id/thumbnail"
         android:text="Description"
         android:textColor="#040404"
@@ -52,6 +53,14 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/arrow" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:id="@+id/date_objet"

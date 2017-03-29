@@ -21,30 +21,12 @@
     </item>
     <item
         is-multidex="false"
-        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
-        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies_95d61df95e942710316d6fcfbb653c5a74f9df31.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\ziedrebhi\.android\build-cache\48f77fb3b603732e9ce0d2790577a054a33dd1e0\output\jars\libs\internal_impl-22.2.0.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.0"
         sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
         <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.0_7977533da42386a5fcfc416ede7270afbbc1219d.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.1"
-        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
-        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies_95d61df95e942710316d6fcfbb653c5a74f9df31.jar" />
     </item>
     <item
         is-multidex="false"
@@ -72,6 +54,15 @@
         revision="23.0.1"
         sha1="3bae85a076241828810bf8fbcc12e5891d5fc34c">
         <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.4_4be27437cd68c12ffadbff876124adc151a1e46f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="E:\HotixDevAndroid\MyHotixHouseKeeping\app\libs\android-viewbadger.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f1303b50d535716ca7601c5014357b8435658313">
+        <dex dex="E:\HotixDevAndroid\MyHotixHouseKeeping\app\build\intermediates\pre-dexed\debug\android-viewbadger_5f537d2516db86918314a05db7e2f39a8a5c9f6f.jar" />
     </item>
     <item
         is-multidex="false"

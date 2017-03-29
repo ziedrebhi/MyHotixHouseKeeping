@@ -7,5 +7,10 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="" />
-
+    <item
+        android:id="@+id/config"
+        android:icon="@drawable/setting"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="" />
 </menu>

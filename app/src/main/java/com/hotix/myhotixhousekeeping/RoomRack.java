@@ -56,13 +56,6 @@ public class RoomRack extends Activity {
     static RackRoomData CHB;
     static int idStatutNew;
     static String commentHS = "", roomNb;
-    public final String NAMESPACE = "http://tempuri.org/";
-    public final String SOAP_ACTION = "http://tempuri.org/GetListEtatChambres";
-    public final String METHOD_NAME = "GetListEtatChambres";
-    public final String SOAP_ACTION2 = "http://tempuri.org/ChangerProduitStaut";
-    public final String METHOD_NAME2 = "ChangerProduitStaut";
-
-
     AlertDialog.Builder builderMenu, legende, builderMenuEtat, builderHS, builderMenuGuests, builderMenuEtatLieu;
     TextView header, room_number;
     View v;
@@ -149,7 +142,7 @@ public class RoomRack extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.rack, menu);
-        if (UserInfoModel.getInstance().getUser().getData().getProfileId() == 16) {
+        if (!UserInfoModel.getInstance().getUser().getData().isHasMouchard()) {
             MenuItem item = menu.findItem(R.id.mouchard_rack);
             item.setVisible(false);
         }
@@ -179,6 +172,11 @@ public class RoomRack extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CHB = listRoom.get(position);
                 roomNb = CHB.getNumChb();
+                if (UserInfoModel.getInstance().getUser().getData().isHasChangeStatut()
+                        || UserInfoModel.getInstance().getUser().getData().isHasEtatLieu()
+                        || UserInfoModel.getInstance().getUser().getData().isHasViewClient()
+                        || UserInfoModel.getInstance().getUser().getData().isHasAddPanne()
+                        )
                 showRoomMenu();
 
 
@@ -209,6 +207,15 @@ public class RoomRack extends Activity {
         radioReclamer = (RadioButton) v.findViewById(R.id.radioComplaint);
         radioGuest = (RadioButton) v.findViewById(R.id.radioCViewGuests);
         radioEtatLieu = (RadioButton) v.findViewById(R.id.radioEtatLieu);
+
+        if (!UserInfoModel.getInstance().getUser().getData().isHasChangeStatut())
+            radioEtat.setVisibility(View.GONE);
+        if (!UserInfoModel.getInstance().getUser().getData().isHasAddPanne())
+            radioReclamer.setVisibility(View.GONE);
+        if (!UserInfoModel.getInstance().getUser().getData().isHasViewClient())
+            radioGuest.setVisibility(View.GONE);
+        if (!UserInfoModel.getInstance().getUser().getData().isHasEtatLieu())
+            radioEtatLieu.setVisibility(View.GONE);
 
         if (!(CHB.getStatutId() == 1
                 || CHB.getStatutId() == 2

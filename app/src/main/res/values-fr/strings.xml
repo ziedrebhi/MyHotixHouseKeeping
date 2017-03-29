@@ -42,13 +42,13 @@
     <string name="tab3">Déclarer</string>
     <string name="tab4">Liste Pannes</string>
     <string name="update">Mise à jour</string>
-    <string name="cloture">Cloture</string>
+    <string name="cloture">Clôturer</string>
     <string name="declare_ok">Déclaration d\'objet trouvé envoyée avec succès.</string>
     <string name="daclare_not_ok">Erreur d\'envoi de déclaration d\'objet trouvé.</string>
     <string name="update_ok">Mise à jour d\'objet trouvé avec succès.</string>
     <string name="update_not_ok">Erreur d\'envoi de mise à jour d\'objet trouvé.</string>
-    <string name="cloture_ok">Cloture d\'objet trouvé avec succès.</string>
-    <string name="cloture_not_ok">Erreur de cloture d\'objet trouvé.</string>
+    <string name="cloture_ok">Clôture d\'objet trouvé avec succès.</string>
+    <string name="cloture_not_ok">Erreur de Clôture d\'objet trouvé.</string>
     <string name="comment">Commentaire</string>
     <string name="duree_trait">Durée Traitement :   </string>
     <string name="hour">   Heure(s)</string>
@@ -176,6 +176,18 @@
     <string name="pax">Pax</string>
     <string name="taux_occ">Taux Occupation</string>
     <string name="total">Total</string>
+    <string name="cloture_par">Clôturé par</string>
     <string name="lit">Lit(s)</string>
+    <string name="title_activity_settings">Configuration</string>
 
+    <string name="has_config">Configuration</string>
+    <string name="has_fm">Femmes de ménage</string>
+    <string name="has_add_panne">Déclarer Panne</string>
+    <string name="has_close_panne">Clôture Panne</string>
+    <string name="has_add_objet">Déclarer Objet trouvé</string>
+    <string name="has_close_objet">Clôture Objet trouvé</string>
+    <string name="has_mouchard_room">Voir Mouchard Etat Chambres</string>
+    <string name="has_change_statut">Changer État Chambre</string>
+    <string name="has_etat_lieu">Changer Etat Lieu</string>
+    <string name="has_view_client">Voir Clients</string>
 </resources>

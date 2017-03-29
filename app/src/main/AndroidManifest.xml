@@ -87,6 +87,9 @@
         <activity
             android:name=".prevision.PrevisionTableActivity"
             android:label="@string/title_activity_prevision" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
     </application>
 
 </manifest>

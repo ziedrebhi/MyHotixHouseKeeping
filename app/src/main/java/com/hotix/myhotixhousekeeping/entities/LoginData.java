@@ -1,9 +1,5 @@
 package com.hotix.myhotixhousekeeping.entities;
 
-/**
- * Created by ziedrebhi on 21/03/2017.
- */
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,11 +22,21 @@ import java.util.Map;
         "Techniciens",
         "TypesPanne",
         "FemmesMenage",
-        "Error"
+        "Error",
+        "HasConfig",
+        "HasAddPanne",
+        "HasAddObjet",
+        "HasClosePanne",
+        "HasCloseObjet",
+        "HasMouchard",
+        "HasChangeStatut",
+        "HasEtatLieu",
+        "HasViewClient",
+        "HasFM"
 })
 public class LoginData implements Serializable {
 
-    private final static long serialVersionUID = 35355859151924552L;
+    private final static long serialVersionUID = 4640700996945518763L;
     @JsonProperty("Id")
     private int id;
     @JsonProperty("ProfileId")
@@ -49,27 +55,59 @@ public class LoginData implements Serializable {
     private List<FemmesMenage> femmesMenage = null;
     @JsonProperty("Error")
     private int error;
+    @JsonProperty("HasConfig")
+    private boolean hasConfig;
+    @JsonProperty("HasAddPanne")
+    private boolean hasAddPanne;
+    @JsonProperty("HasAddObjet")
+    private boolean hasAddObjet;
+    @JsonProperty("HasClosePanne")
+    private boolean hasClosePanne;
+    @JsonProperty("HasCloseObjet")
+    private boolean hasCloseObjet;
+    @JsonProperty("HasMouchard")
+    private boolean hasMouchard;
+    @JsonProperty("HasChangeStatut")
+    private boolean hasChangeStatut;
+    @JsonProperty("HasEtatLieu")
+    private boolean hasEtatLieu;
+    @JsonProperty("HasViewClient")
+    private boolean hasViewClient;
+    @JsonProperty("HasFM")
+    private boolean hasFM;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * No args constructor for use in serialization
+     *
      */
     public LoginData() {
     }
 
     /**
+     *
      * @param etages
+     * @param hasFM
+     * @param error
+     * @param hasViewClient
+     * @param hasEtatLieu
+     * @param femmesMenage
+     * @param hasClosePanne
+     * @param typesPanne
+     * @param hasConfig
+     * @param hasMouchard
+     * @param hasAddPanne
+     * @param hasAddObjet
      * @param id
      * @param techniciens
-     * @param error
+     * @param hasChangeStatut
      * @param profileId
-     * @param dateFront
+     * @param hasCloseObjet
      * @param fullName
-     * @param femmesMenage
-     * @param typesPanne
+     * @param dateFront
      */
-    public LoginData(int id, int profileId, String fullName, String dateFront, List<Etage> etages, List<Technicien> techniciens, List<TypesPanne> typesPanne, List<FemmesMenage> femmesMenage, int error) {
+    public LoginData(int id, int profileId, String fullName, String dateFront, List<Etage> etages, List<Technicien> techniciens, List<TypesPanne> typesPanne, List<FemmesMenage> femmesMenage, int error, boolean hasConfig, boolean hasAddPanne, boolean hasAddObjet, boolean hasClosePanne, boolean hasCloseObjet, boolean hasMouchard, boolean hasChangeStatut, boolean hasEtatLieu, boolean hasViewClient, boolean hasFM) {
         super();
         this.id = id;
         this.profileId = profileId;
@@ -80,6 +118,16 @@ public class LoginData implements Serializable {
         this.typesPanne = typesPanne;
         this.femmesMenage = femmesMenage;
         this.error = error;
+        this.hasConfig = hasConfig;
+        this.hasAddPanne = hasAddPanne;
+        this.hasAddObjet = hasAddObjet;
+        this.hasClosePanne = hasClosePanne;
+        this.hasCloseObjet = hasCloseObjet;
+        this.hasMouchard = hasMouchard;
+        this.hasChangeStatut = hasChangeStatut;
+        this.hasEtatLieu = hasEtatLieu;
+        this.hasViewClient = hasViewClient;
+        this.hasFM = hasFM;
     }
 
     @JsonProperty("Id")
@@ -214,6 +262,156 @@ public class LoginData implements Serializable {
 
     public LoginData withError(int error) {
         this.error = error;
+        return this;
+    }
+
+    @JsonProperty("HasConfig")
+    public boolean isHasConfig() {
+        return hasConfig;
+    }
+
+    @JsonProperty("HasConfig")
+    public void setHasConfig(boolean hasConfig) {
+        this.hasConfig = hasConfig;
+    }
+
+    public LoginData withHasConfig(boolean hasConfig) {
+        this.hasConfig = hasConfig;
+        return this;
+    }
+
+    @JsonProperty("HasAddPanne")
+    public boolean isHasAddPanne() {
+        return hasAddPanne;
+    }
+
+    @JsonProperty("HasAddPanne")
+    public void setHasAddPanne(boolean hasAddPanne) {
+        this.hasAddPanne = hasAddPanne;
+    }
+
+    public LoginData withHasAddPanne(boolean hasAddPanne) {
+        this.hasAddPanne = hasAddPanne;
+        return this;
+    }
+
+    @JsonProperty("HasAddObjet")
+    public boolean isHasAddObjet() {
+        return hasAddObjet;
+    }
+
+    @JsonProperty("HasAddObjet")
+    public void setHasAddObjet(boolean hasAddObjet) {
+        this.hasAddObjet = hasAddObjet;
+    }
+
+    public LoginData withHasAddObjet(boolean hasAddObjet) {
+        this.hasAddObjet = hasAddObjet;
+        return this;
+    }
+
+    @JsonProperty("HasClosePanne")
+    public boolean isHasClosePanne() {
+        return hasClosePanne;
+    }
+
+    @JsonProperty("HasClosePanne")
+    public void setHasClosePanne(boolean hasClosePanne) {
+        this.hasClosePanne = hasClosePanne;
+    }
+
+    public LoginData withHasClosePanne(boolean hasClosePanne) {
+        this.hasClosePanne = hasClosePanne;
+        return this;
+    }
+
+    @JsonProperty("HasCloseObjet")
+    public boolean isHasCloseObjet() {
+        return hasCloseObjet;
+    }
+
+    @JsonProperty("HasCloseObjet")
+    public void setHasCloseObjet(boolean hasCloseObjet) {
+        this.hasCloseObjet = hasCloseObjet;
+    }
+
+    public LoginData withHasCloseObjet(boolean hasCloseObjet) {
+        this.hasCloseObjet = hasCloseObjet;
+        return this;
+    }
+
+    @JsonProperty("HasMouchard")
+    public boolean isHasMouchard() {
+        return hasMouchard;
+    }
+
+    @JsonProperty("HasMouchard")
+    public void setHasMouchard(boolean hasMouchard) {
+        this.hasMouchard = hasMouchard;
+    }
+
+    public LoginData withHasMouchard(boolean hasMouchard) {
+        this.hasMouchard = hasMouchard;
+        return this;
+    }
+
+    @JsonProperty("HasChangeStatut")
+    public boolean isHasChangeStatut() {
+        return hasChangeStatut;
+    }
+
+    @JsonProperty("HasChangeStatut")
+    public void setHasChangeStatut(boolean hasChangeStatut) {
+        this.hasChangeStatut = hasChangeStatut;
+    }
+
+    public LoginData withHasChangeStatut(boolean hasChangeStatut) {
+        this.hasChangeStatut = hasChangeStatut;
+        return this;
+    }
+
+    @JsonProperty("HasEtatLieu")
+    public boolean isHasEtatLieu() {
+        return hasEtatLieu;
+    }
+
+    @JsonProperty("HasEtatLieu")
+    public void setHasEtatLieu(boolean hasEtatLieu) {
+        this.hasEtatLieu = hasEtatLieu;
+    }
+
+    public LoginData withHasEtatLieu(boolean hasEtatLieu) {
+        this.hasEtatLieu = hasEtatLieu;
+        return this;
+    }
+
+    @JsonProperty("HasViewClient")
+    public boolean isHasViewClient() {
+        return hasViewClient;
+    }
+
+    @JsonProperty("HasViewClient")
+    public void setHasViewClient(boolean hasViewClient) {
+        this.hasViewClient = hasViewClient;
+    }
+
+    public LoginData withHasViewClient(boolean hasViewClient) {
+        this.hasViewClient = hasViewClient;
+        return this;
+    }
+
+    @JsonProperty("HasFM")
+    public boolean isHasFM() {
+        return hasFM;
+    }
+
+    @JsonProperty("HasFM")
+    public void setHasFM(boolean hasFM) {
+        this.hasFM = hasFM;
+    }
+
+    public LoginData withHasFM(boolean hasFM) {
+        this.hasFM = hasFM;
         return this;
     }
 

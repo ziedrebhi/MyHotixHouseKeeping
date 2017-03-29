@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,15 +24,15 @@ import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 
 public class ViewPanneActivity extends Activity {
-    EditText desc, nom, prenom, duree;
-    TextView type, lieu, imgView;
+    TextView desc, nom, prenom, duree;
+    TextView type, lieu, imgView, tech;
     Button close;
     CheckBox urg;
-    String lieuP, Nom, Prenom, typeP, description, image;
-    int dureeP;
+    String lieuP, Nom, Prenom, typeP, description, image, technicien;
+    String dureeP;
     Boolean isUrgent = false;
     Bitmap bitmap;
-    LinearLayout linearImage;
+    LinearLayout linearImage, linearCloture;
 
     public boolean getAuthoriseImageSend() {
         boolean authoriseImage = false;
@@ -52,12 +51,14 @@ public class ViewPanneActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_panne);
-        desc = (EditText) findViewById(R.id.comment);
-        nom = (EditText) findViewById(R.id.nom);
-        prenom = (EditText) findViewById(R.id.prenom);
-        duree = (EditText) findViewById(R.id.dureeT);
+        desc = (TextView) findViewById(R.id.comment);
+        nom = (TextView) findViewById(R.id.nom);
+        prenom = (TextView) findViewById(R.id.prenom);
+        duree = (TextView) findViewById(R.id.dureeT);
         urg = (CheckBox) findViewById(R.id.cbxUrgent);
         linearImage = (LinearLayout) findViewById(R.id.LinearLayoutImage);
+
+        linearCloture = (LinearLayout) findViewById(R.id.LinearLayoutCloture);
         duree.setEnabled(false);
         nom.setEnabled(false);
         prenom.setEnabled(false);
@@ -66,6 +67,7 @@ public class ViewPanneActivity extends Activity {
 
         type = (TextView) findViewById(R.id.spTypePanne);
         lieu = (TextView) findViewById(R.id.lieu);
+        tech = (TextView) findViewById(R.id.textViewImaage2);
         imgView = (TextView) findViewById(R.id.textViewImaage);
 
         close = (Button) findViewById(R.id.btn_update);
@@ -154,12 +156,17 @@ public class ViewPanneActivity extends Activity {
         Nom = extras.getString("nom");
         Prenom = extras.getString("prenom");
         description = extras.getString("description");
-        //image = extras.getString("image");
-        dureeP = extras.getInt("duree", 0);
+        technicien = extras.getString("technicien");
+        dureeP = extras.getString("duree", "");
         isUrgent = extras.getBoolean("urgent", false);
         bitmap = getIntent().getParcelableExtra("image");
         Log.i("DUREE", String.valueOf(dureeP));
         typeP = extras.getString("type");
+        if (!technicien.equals("")) {
+            linearCloture.setVisibility(View.VISIBLE);
+            tech.setText(technicien);
+        }
+
         nom.setText(Nom);
         prenom.setText(Prenom);
         duree.setText(String.valueOf(dureeP));

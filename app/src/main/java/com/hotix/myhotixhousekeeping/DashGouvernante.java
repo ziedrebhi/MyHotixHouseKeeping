@@ -70,10 +70,14 @@ public class DashGouvernante extends Activity implements OnClickListener {
                 break;
 
             case R.id.team_manage:
-                Intent i1 = new Intent(this, FemmeMenage.class);
-                i1.putExtra("login", login);
-                i1.putExtra("dateFront", dateFront);
-                this.startActivity(i1);
+                if (UserInfoModel.getInstance().getUser().getData().isHasFM()) {
+                    Intent i1 = new Intent(this, FemmeMenage.class);
+                    i1.putExtra("login", login);
+                    i1.putExtra("dateFront", dateFront);
+                    this.startActivity(i1);
+                } else {
+                    ShowAlert(getResources().getString(R.string.msg_connecting_not_authorised));
+                }
                 break;
 
             case R.id.objTrouves:
@@ -106,9 +110,28 @@ public class DashGouvernante extends Activity implements OnClickListener {
         }
     }
 
+    private void ShowAlert(String s) {
+        AlertDialog.Builder adConnexion = new AlertDialog.Builder(this);
+        // adConnexion.setTitle(getResources().getString(R.string.acces_denied));
+        adConnexion.setMessage(s);
+        //adConnexion.setIcon(R.drawable.offline);
+        adConnexion.setNeutralButton(getResources().getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        adConnexion.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dash, menu);
+        if (!UserInfoModel.getInstance().getUser().getData().isHasConfig()) {
+            MenuItem item = menu.findItem(R.id.config);
+            item.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -118,6 +141,13 @@ public class DashGouvernante extends Activity implements OnClickListener {
             case R.id.close:
 
                 openDialogConnexion();
+                //finish();
+                break;
+            case R.id.config:
+
+                Intent i5 = new Intent(this, SettingsActivity.class);
+                this.startActivity(i5);
+
                 //finish();
                 break;
         }

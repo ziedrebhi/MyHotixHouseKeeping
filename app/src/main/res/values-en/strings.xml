@@ -172,6 +172,21 @@
     <string name="prev_taux_lit">Rate Occupancy per Pax</string>
     <string name="capactite">Capacité</string>
     <string name="chb">Room</string>
+    <string name="cloture_par">Repaired by</string>
     <string name="pax">PAX</string>
     <string name="total">Total</string>
+    <string name="title_activity_settings">Configuration</string>
+
+    <string name="has_config">Configuration</string>
+    <string name="has_fm">See Housekeepers</string>
+    <string name="has_add_panne">Declare Issues</string>
+    <string name="has_close_panne">Close Issues</string>
+    <string name="has_add_objet">Declare Object found</string>
+    <string name="has_close_objet">Close Object found</string>
+    <string name="has_mouchard_room">View Histo State Room</string>
+    <string name="has_change_statut">Change State Room</string>
+    <string name="has_etat_lieu">Change State Location</string>
+    <string name="has_view_client">View Guests</string>
+    <string name="taux_occ">Occupation Rate</string>
+    <string name="lit">Beds</string>
 </resources>

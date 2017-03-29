@@ -1,9 +1,5 @@
 package com.hotix.myhotixhousekeeping.entities;
 
-/**
- * Created by ziedrebhi on 21/03/2017.
- */
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,11 +22,12 @@ import java.util.Map;
         "Prenom",
         "Image",
         "Description",
-        "Date"
+        "Date",
+        "Technicien"
 })
 public class PanneData implements Serializable {
 
-    private final static long serialVersionUID = 5314773151029893227L;
+    private final static long serialVersionUID = 5511356741685695671L;
     @JsonProperty("Id")
     private int id;
     @JsonProperty("Lieu")
@@ -51,16 +48,20 @@ public class PanneData implements Serializable {
     private String description;
     @JsonProperty("Date")
     private String date;
+    @JsonProperty("Technicien")
+    private String technicien;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * No args constructor for use in serialization
+     *
      */
     public PanneData() {
     }
 
     /**
+     *
      * @param prenom
      * @param id
      * @param lieu
@@ -70,9 +71,10 @@ public class PanneData implements Serializable {
      * @param duree
      * @param date
      * @param type
+     * @param technicien
      * @param nom
      */
-    public PanneData(int id, String lieu, String type, String duree, boolean urgent, String nom, String prenom, String image, String description, String date) {
+    public PanneData(int id, String lieu, String type, String duree, boolean urgent, String nom, String prenom, String image, String description, String date, String technicien) {
         super();
         this.id = id;
         this.lieu = lieu;
@@ -84,6 +86,7 @@ public class PanneData implements Serializable {
         this.image = image;
         this.description = description;
         this.date = date;
+        this.technicien = technicien;
     }
 
     @JsonProperty("Id")
@@ -236,6 +239,20 @@ public class PanneData implements Serializable {
         return this;
     }
 
+    @JsonProperty("Technicien")
+    public String getTechnicien() {
+        return technicien;
+    }
+
+    @JsonProperty("Technicien")
+    public void setTechnicien(String technicien) {
+        this.technicien = technicien;
+    }
+
+    public PanneData withTechnicien(String technicien) {
+        this.technicien = technicien;
+        return this;
+    }
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
