@@ -3,7 +3,6 @@ package com.hotix.myhotixhousekeeping.entities;
 /**
  * Created by ziedrebhi on 21/03/2017.
  */
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,12 +16,15 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "BlocId",
         "Id",
         "Name"
 })
 public class Etage implements Serializable {
 
-    private final static long serialVersionUID = 3998589888728072620L;
+    private final static long serialVersionUID = 3813561247730180110L;
+    @JsonProperty("BlocId")
+    private int blocId;
     @JsonProperty("Id")
     private int id;
     @JsonProperty("Name")
@@ -32,18 +34,37 @@ public class Etage implements Serializable {
 
     /**
      * No args constructor for use in serialization
+     *
      */
     public Etage() {
     }
 
     /**
+     *
      * @param id
+     * @param blocId
      * @param name
      */
-    public Etage(int id, String name) {
+    public Etage(int blocId, int id, String name) {
         super();
+        this.blocId = blocId;
         this.id = id;
         this.name = name;
+    }
+
+    @JsonProperty("BlocId")
+    public int getBlocId() {
+        return blocId;
+    }
+
+    @JsonProperty("BlocId")
+    public void setBlocId(int blocId) {
+        this.blocId = blocId;
+    }
+
+    public Etage withBlocId(int blocId) {
+        this.blocId = blocId;
+        return this;
     }
 
     @JsonProperty("Id")
@@ -91,8 +112,4 @@ public class Etage implements Serializable {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 }

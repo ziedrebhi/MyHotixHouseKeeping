@@ -79,7 +79,7 @@ public class RoomRack extends Activity {
     * Get RackRoom
     */
     String TAG = this.getClass().getSimpleName();
-    String EtageId = "-1";
+    String EtageId = "-1", BlocId = "-1";
     ProgressDialog pd;
     private CustomAdapterSpinnerEtage adapterEtages;
 
@@ -98,8 +98,9 @@ public class RoomRack extends Activity {
         grid.setNumColumns(columns);
         listRoom = new ArrayList<RackRoomData>();
         etages = new ArrayList<Etage>();
-        etages.add(new Etage(-1, getResources().getString(R.string.all)));
+
         etages.addAll(UserInfoModel.getInstance().getUser().getData().getEtages());
+        etages.add(new Etage(-1, -1, getResources().getString(R.string.all)));
 
         /* Etages Filter*/
         //etages = UserInfoModel.getInstance().getUser().getData().getEtages();
@@ -115,6 +116,7 @@ public class RoomRack extends Activity {
 
                 com.hotix.myhotixhousekeeping.entities.Etage etage = adapterEtages.getItem(position);
                 EtageId = String.valueOf(etage.getId());
+                BlocId = String.valueOf(etage.getBlocId());
                 listRoom = new ArrayList<RackRoomData>();
                 if (isConnected())
                     new HttpRequestTaskRackRoom().execute();
@@ -177,7 +179,7 @@ public class RoomRack extends Activity {
                         || UserInfoModel.getInstance().getUser().getData().isHasViewClient()
                         || UserInfoModel.getInstance().getUser().getData().isHasAddPanne()
                         )
-                showRoomMenu();
+                    showRoomMenu();
 
 
             }
@@ -564,7 +566,7 @@ public class RoomRack extends Activity {
 
     private class HttpRequestTaskRackRoom extends AsyncTask<Void, Void, RackModel> {
         RackModel response = null;
-        String etageId;
+        String etageId, blocId;
 
         @Override
         protected void onPreExecute() {
@@ -572,6 +574,7 @@ public class RoomRack extends Activity {
             showProgressDialog(2);
 
             etageId = EtageId;
+            blocId = BlocId;
 
 
         }
@@ -579,7 +582,7 @@ public class RoomRack extends Activity {
         @Override
         protected RackModel doInBackground(Void... params) {
             try {
-                final String url = getURLAPI() + "GetEtatRackRoom?etage=" + etageId;
+                final String url = getURLAPI() + "GetEtatRackRoom?etage=" + etageId + "&bloc=" + blocId;
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.setErrorHandler(new MyErrorHandler());
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

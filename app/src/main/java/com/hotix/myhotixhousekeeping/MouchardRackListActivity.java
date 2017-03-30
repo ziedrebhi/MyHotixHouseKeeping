@@ -57,7 +57,7 @@ public class MouchardRackListActivity extends Activity {
     TabHost view;
     EditText dateDebut, dateFin;
     ImageButton actualiser;
-    String login, comment, EtatId = "1";
+    String login, comment, EtatId = "-1", BlocId = "-1";
     ListView lvOT;
     List<MouchardRackData> lisObjetTrouves;
     TextView emptyMsg;
@@ -120,7 +120,7 @@ public class MouchardRackListActivity extends Activity {
         emptyMsg.setVisibility(View.GONE);
 
         etats = new ArrayList<Etage>();
-        etats.add(new Etage(-1, getResources().getString(R.string.all)));
+        etats.add(new Etage(-1, -1, getResources().getString(R.string.all)));
         etats.addAll(UserInfoModel.getInstance().getUser().getData().getEtages());
 
         adapterEtats = new CustomAdapterSpinnerEtage(MouchardRackListActivity.this,
@@ -133,7 +133,7 @@ public class MouchardRackListActivity extends Activity {
 
                 Etage etage = adapterEtats.getItem(position);
                 EtatId = String.valueOf(etage.getId());
-
+                BlocId = String.valueOf(etage.getBlocId());
                 if (ControleDate()) {
                     if (isConnected())
                         new HttpRequestTaskMouchard().execute();
@@ -365,6 +365,7 @@ public class MouchardRackListActivity extends Activity {
             try {
                 final String url = getURLAPI() + "GetMouchardRackRoom?" +
                         "etage=" + EtatId +
+                        "&bloc=" + BlocId +
                         "&datedeb=" + DateDeb +
                         "&datefin=" + DateFin;
                 Log.i(TAG, url.toString());

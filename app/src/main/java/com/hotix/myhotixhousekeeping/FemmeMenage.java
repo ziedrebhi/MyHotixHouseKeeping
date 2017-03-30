@@ -60,7 +60,7 @@ public class FemmeMenage extends FragmentActivity {
  * Get RackRoom
  */
     String TAG = this.getClass().getSimpleName();
-    String EtageId = "-1";
+    String EtageId = "-1", BlocId = "-1";
     ProgressDialog pd;
 
     @Override
@@ -327,7 +327,7 @@ public class FemmeMenage extends FragmentActivity {
 
     private class HttpRequestTaskRackRoom extends AsyncTask<Void, Void, AffectationFMModel> {
         AffectationFMModel response = null;
-        String etageId;
+        String etageId, blocId;
 
         @Override
         protected void onPreExecute() {
