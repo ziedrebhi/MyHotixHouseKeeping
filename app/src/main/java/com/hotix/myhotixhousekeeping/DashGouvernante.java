@@ -29,8 +29,8 @@ public class DashGouvernante extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dash_gouvernante);
 
+        setContentView(R.layout.activity_dash_gouvernante);
         room = (Button) findViewById(R.id.btn_rack);
         team = (Button) findViewById(R.id.team_manage);
         complaint = (Button) findViewById(R.id.objTrouves);
@@ -45,6 +45,11 @@ public class DashGouvernante extends Activity implements OnClickListener {
             complaint.setVisibility(View.INVISIBLE);
             team.setVisibility(View.INVISIBLE);
         }
+        String hotelName = UserInfoModel.getInstance().getUser().getData().getHotel();
+        if (!hotelName.equals("")) {
+            setTitle(hotelName);
+        }
+
     }
 
     @Override

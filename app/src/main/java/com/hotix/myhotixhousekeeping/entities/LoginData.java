@@ -1,5 +1,4 @@
 package com.hotix.myhotixhousekeeping.entities;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,11 +31,12 @@ import java.util.Map;
         "HasChangeStatut",
         "HasEtatLieu",
         "HasViewClient",
-        "HasFM"
+        "HasFM",
+        "Hotel"
 })
 public class LoginData implements Serializable {
 
-    private final static long serialVersionUID = 4640700996945518763L;
+    private final static long serialVersionUID = 7088294697518229912L;
     @JsonProperty("Id")
     private int id;
     @JsonProperty("ProfileId")
@@ -75,6 +75,8 @@ public class LoginData implements Serializable {
     private boolean hasViewClient;
     @JsonProperty("HasFM")
     private boolean hasFM;
+    @JsonProperty("Hotel")
+    private String hotel;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -104,10 +106,11 @@ public class LoginData implements Serializable {
      * @param hasChangeStatut
      * @param profileId
      * @param hasCloseObjet
+     * @param hotel
      * @param fullName
      * @param dateFront
      */
-    public LoginData(int id, int profileId, String fullName, String dateFront, List<Etage> etages, List<Technicien> techniciens, List<TypesPanne> typesPanne, List<FemmesMenage> femmesMenage, int error, boolean hasConfig, boolean hasAddPanne, boolean hasAddObjet, boolean hasClosePanne, boolean hasCloseObjet, boolean hasMouchard, boolean hasChangeStatut, boolean hasEtatLieu, boolean hasViewClient, boolean hasFM) {
+    public LoginData(int id, int profileId, String fullName, String dateFront, List<Etage> etages, List<Technicien> techniciens, List<TypesPanne> typesPanne, List<FemmesMenage> femmesMenage, int error, boolean hasConfig, boolean hasAddPanne, boolean hasAddObjet, boolean hasClosePanne, boolean hasCloseObjet, boolean hasMouchard, boolean hasChangeStatut, boolean hasEtatLieu, boolean hasViewClient, boolean hasFM, String hotel) {
         super();
         this.id = id;
         this.profileId = profileId;
@@ -128,6 +131,7 @@ public class LoginData implements Serializable {
         this.hasEtatLieu = hasEtatLieu;
         this.hasViewClient = hasViewClient;
         this.hasFM = hasFM;
+        this.hotel = hotel;
     }
 
     @JsonProperty("Id")
@@ -412,6 +416,21 @@ public class LoginData implements Serializable {
 
     public LoginData withHasFM(boolean hasFM) {
         this.hasFM = hasFM;
+        return this;
+    }
+
+    @JsonProperty("Hotel")
+    public String getHotel() {
+        return hotel;
+    }
+
+    @JsonProperty("Hotel")
+    public void setHotel(String hotel) {
+        this.hotel = hotel;
+    }
+
+    public LoginData withHotel(String hotel) {
+        this.hotel = hotel;
         return this;
     }
 

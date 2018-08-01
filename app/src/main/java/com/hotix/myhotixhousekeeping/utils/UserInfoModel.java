@@ -14,6 +14,7 @@ public class UserInfoModel {
     private LoginModel User;
 
     public static UserInfoModel getInstance() {
+
         return holder;
     }
 

@@ -8,7 +8,7 @@
     <string name="passwd">Password</string>
     <string name="ip_serv">Server IP Aderess</string>
     <string name="creer">Create</string>
-    <string name="pas_pannes">No Pannes ! Excellent </string>
+    <string name="pas_pannes">No Maintenance Orders ! Excellent </string>
     <string name="pas_ob">No Items found !</string>
     <string name="libreP">Vacant Clean</string>
     <string name="libreS">Vacant Dirty</string>
@@ -25,7 +25,7 @@
     <string name="objets">Lost and found</string>
     <string name="clientsA">Expected Check In list</string>
     <string name="exit">Exit</string>
-    <string name="maintenance">Pannes</string>
+    <string name="maintenance">Maintenance Orders</string>
     <string name="close_app">Do you really want to quit ?</string>
     <string name="oui">Yes</string>
     <string name="cancel">Cancel</string>
@@ -37,13 +37,13 @@
     <string name="legend">Legend</string>
     <string name="choix_chb">Select an option</string>
     <string name="switch_state">Change Status</string>
-    <string name="panne">Claim failure</string>
+    <string name="panne">Claim maintenance order</string>
     <string name="take_photo">Take photo</string>
     <string name="menu_etat">Change Status</string>
     <string name="error_change_status">Failure to change status of the room.</string>
     <string name="succes_change_status">Status of room changed with success.</string>
-    <string name="succes_panne">Claim of failure successfully sent.</string>
-    <string name="error_panne">Error sending claim of failure.</string>
+    <string name="succes_panne">Claim of maintenance order successfully sent.</string>
+    <string name="error_panne">Error sending maintenance order of failure.</string>
     <string name="panne_h1">Place</string>
     <string name="panne_h2">Type out of service</string>
     <string name="panne_h3">Declared by</string>
@@ -53,9 +53,9 @@
     <string name="tab1">Declare</string>
     <string name="tab2">List</string>
     <string name="tab3">Declare</string>
-    <string name="tab4">List Pannes</string>
+    <string name="tab4">List Maintenance Orders</string>
     <string name="update">Update</string>
-    <string name="cloture">Closure</string>
+    <string name="cloture">Fence</string>
     <string name="updating">Downloading ..</string>
     <string name="declare_ok">Declaration of found object successfully sent.</string>
     <string name="daclare_not_ok">Error sending declaration of object declaration found.</string>
@@ -65,8 +65,8 @@
     <string name="last_version_no">Your application is outdate. Clic "UPDATE" to get and install the last version</string>
     <string name="autoupdate">Auto Update</string>
     <string name="version">Version</string>
-    <string name="cloture_ok">Closure object found with success .</string>
-    <string name="cloture_not_ok">Error of closure object found.</string>
+    <string name="cloture_ok">Object found fenced with success .</string>
+    <string name="cloture_not_ok">Error of fencing object found.</string>
     <string name="comment">Comment</string>
     <string name="duree_trait">Treatment Time :   </string>
     <string name="hour">   Hour(s)</string>
@@ -110,7 +110,7 @@
         <item>@drawable/info_legende</item>
         <item>@drawable/log_out</item>
     </array>
-    <string name="title_activity_view_panne">Details Panne</string>
+    <string name="title_activity_view_panne">Details Maintenance Order</string>
     <string name="title_activity_view_objet">Details Item found</string>
     <string name="OK">OK</string>
     <string name="configurer">Configure</string>
@@ -132,24 +132,25 @@
     <string name="msg_error_date">Wrong Dates! Check interval</string>
     <string name="msg_loading">Loading ...</string>
     <string name="msg_loading_error">Error Loading Data!</string>
-    <string name="msg_objet_cloture_error">Problem of closing of the found object!</string>
+    <string name="msg_objet_cloture_error">Problem of fencing of the found object!</string>
     <string name="title_activity_update_objet_trouve">Update Object Found</string>
     <string name="title_activity_room_rack">Room Rack</string>
     <string name="title_activity_prevision">Occupancy Rate</string>
+    <string name="forecasts">Forecasts</string>
     <string name="title_activity_objets_trouves">Lost &amp; Found List</string>
-    <string name="msg_objet_cloture_ok">Successfully closed object</string>
+    <string name="msg_objet_cloture_ok">Successfully fenced object</string>
     <string name="msg_objet_create_error">Problem creating the object!</string>
     <string name="msg_objet_create_ok">Object successfully created</string>
-    <string name="msg_panne_cloture_error">Problem of closing the breakdown!</string>
-    <string name="msg_panne_cloture_ok">Successfully closed</string>
-    <string name="msg_panne_create_error">Problem of creating the breakdown!</string>
-    <string name="msg_panne_create_ok">Breakdown successfully created</string>
+    <string name="msg_panne_cloture_error">Problem of fencing the Maintenance Order!</string>
+    <string name="msg_panne_cloture_ok">Successfully fenced</string>
+    <string name="msg_panne_create_error">Problem of creating the maintenance order!</string>
+    <string name="msg_panne_create_ok">Maintenance Order successfully created</string>
     <string name="msg_srv_configuration">Server not configured!</string>
     <string name="title_activity_connexion">Log In</string>
     <string name="title_activity_dash_gouvernante">Home</string>
-    <string name="title_activity_declaration_panne">Create Breakdown</string>
+    <string name="title_activity_declaration_panne">Create Maintenance Order</string>
     <string name="title_activity_femme_menage">Assignment of Housekeepers</string>
-    <string name="title_activity_list_pannes">List of Failures</string>
+    <string name="title_activity_list_pannes">List of Maintenance Orders</string>
     <string name="title_activity_liste_clients_ap">List of scheduled Arrivals</string>
     <string name="prev_arrivee">Arrivals</string>
     <string name="prev_depart">Departures</string>
@@ -176,17 +177,21 @@
     <string name="pax">PAX</string>
     <string name="total">Total</string>
     <string name="title_activity_settings">Configuration</string>
-
+    <string name="error">Error</string>
     <string name="has_config">Configuration</string>
     <string name="has_fm">See Housekeepers</string>
-    <string name="has_add_panne">Declare Issues</string>
-    <string name="has_close_panne">Close Issues</string>
+    <string name="has_add_panne">Declare Maintenance Orders</string>
+    <string name="has_close_panne">Close Maintenance Orders</string>
     <string name="has_add_objet">Declare Object found</string>
     <string name="has_close_objet">Close Object found</string>
-    <string name="has_mouchard_room">View Histo State Room</string>
+    <string name="has_mouchard_room">View room status Trace</string>
     <string name="has_change_statut">Change State Room</string>
     <string name="has_etat_lieu">Change State Location</string>
     <string name="has_view_client">View Guests</string>
     <string name="taux_occ">Occupation Rate</string>
     <string name="lit">Beds</string>
+    <string name="nom_prenom">Full Name</string>
+    <string name="place">Place</string>
+    <string name="etat_encours">Outstanding</string>
+    <string name="etat_ecloturer">Fenced</string>
 </resources>

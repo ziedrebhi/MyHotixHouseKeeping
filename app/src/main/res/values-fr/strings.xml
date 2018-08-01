@@ -73,6 +73,8 @@
     <string name="etatHS">Hors service</string>
     <string name="listeFM">Liste des femmes \n de ménage</string>
     <string name="reessayer">Réessayer</string>
+    <string name="etat_encours">En cours</string>
+    <string name="etat_ecloturer">Clôturée</string>
     <string name="foundBy">Trouvé par</string>
     <string name="renduA">Rendu à</string>
     <string name="declarer">Déclarer</string>
@@ -122,12 +124,14 @@
     <string name="DayUse">Day Use</string>
     <string name="att">Attribuée</string>
     <string name="hs">Hors Service</string>
+    <string name="error">Erreur</string>
     <string name="msg_loading">Chargement ...</string>
     <string name="msg_connecting">Connexion ...</string>
     <string name="msg_change_etat_error">Impossible d\'effectuer ce changement .</string>
     <string name="msg_change_etat_error_srv">Erreur de changement du statut !</string>
     <string name="msg_change_etat_cannot">Changement d\'état non autorisé.</string>
     <string name="OK">OK </string>
+    <string name="nom_prenom">Nom et Prénom</string>
     <string name="msg_connecting_not_authorised">Utilisateur Non autorisé</string>
     <string name="msg_connecting_wrong_pwd">Mot de passe erronée</string>
     <string name="msg_connecting_not_found">Utilisateur inexistant</string>
@@ -169,7 +173,7 @@
     <string name="etat_lieu_update_ok">Opération réussis !</string>
     <string name="etat_lieu_update_ko">Opération échoué !</string>
     <string name="pas_mouchard">Pas d\'Événements! </string>
-
+    <string name="forecasts">Prévisionnel</string>
     <string name="date">Date</string>
     <string name="capactite">Capacité</string>
     <string name="chb">Chb</string>
@@ -179,7 +183,7 @@
     <string name="cloture_par">Clôturé par</string>
     <string name="lit">Lit(s)</string>
     <string name="title_activity_settings">Configuration</string>
-
+    <string name="place">Lieu</string>
     <string name="has_config">Configuration</string>
     <string name="has_fm">Femmes de ménage</string>
     <string name="has_add_panne">Déclarer Panne</string>

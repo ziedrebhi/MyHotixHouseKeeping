@@ -29,10 +29,10 @@
         android:id="@+id/nom_resident"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/thumbnail"
+        android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="Amine touahria"
-        android:textColor="@color/colorPrimaryHeader"
+        android:text="ZIED REBHI"
+        android:textColor="@android:color/black"
         android:textSize="15dip"
         android:textStyle="bold"
         android:typeface="sans" />
@@ -41,10 +41,22 @@
         android:id="@+id/num_chb_resident"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_below="@+id/nom_resident"
         android:layout_toRightOf="@+id/thumbnail"
         android:text="TextView"
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/num_chb_resident"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:inputType="textMultiLine"
+        android:text="Comment"
+        android:textColor="@android:color/black" />
 
 </RelativeLayout>

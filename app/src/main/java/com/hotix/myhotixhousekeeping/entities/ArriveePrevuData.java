@@ -22,7 +22,8 @@ import java.util.Map;
         "Client",
         "DateArrive",
         "DateDepart",
-        "Room"
+        "Room",
+        "Comment"
 })
 public class ArriveePrevuData implements Serializable {
 
@@ -39,6 +40,8 @@ public class ArriveePrevuData implements Serializable {
     private String dateDepart;
     @JsonProperty("Room")
     private String room;
+    @JsonProperty("Comment")
+    private String Comment;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -55,8 +58,9 @@ public class ArriveePrevuData implements Serializable {
      * @param room
      * @param resa
      * @param socId
+     * @param comment
      */
-    public ArriveePrevuData(int socId, int resa, String client, String dateArrive, String dateDepart, String room) {
+    public ArriveePrevuData(int socId, int resa, String client, String dateArrive, String dateDepart, String room, String comment) {
         super();
         this.socId = socId;
         this.resa = resa;
@@ -64,6 +68,7 @@ public class ArriveePrevuData implements Serializable {
         this.dateArrive = dateArrive;
         this.dateDepart = dateDepart;
         this.room = room;
+        this.Comment = comment;
     }
 
     @JsonProperty("SocId")
@@ -106,10 +111,22 @@ public class ArriveePrevuData implements Serializable {
         this.client = client;
     }
 
+    @JsonProperty("Comment")
+    public String getComment() {
+        return Comment;
+    }
+
+    @JsonProperty("Comment")
+    public void setComment(String Comment) {
+        this.Comment = Comment;
+    }
+
+
     public ArriveePrevuData withClient(String client) {
         this.client = client;
         return this;
     }
+
 
     @JsonProperty("DateArrive")
     public String getDateArrive() {

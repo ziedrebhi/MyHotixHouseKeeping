@@ -295,6 +295,7 @@ public class Connexion extends Activity implements
             pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String serveur = (pref.getString("serveur", ""));
             if (!serveur.equals("")) {
+                serveur = serveur.split("/")[0];
                 Log.i("serveur", "http://" + serveur + "/Android/versionHouseKeeping.txt");
                 checker.checkForUpdateByVersionCode("http://" + serveur + "/Android/versionHouseKeeping.txt");
 
@@ -316,6 +317,7 @@ public class Connexion extends Activity implements
         try {
             String serveur = (pref.getString("serveur", ""));
             if (!serveur.equals("")) {
+                serveur = serveur.split("/")[0];
                 Log.i("serveur", "http://" + serveur + "/Android/appHouseKeeping.apk");
                 checker.downloadAndInstall("http://" + serveur + "/Android/appHouseKeeping.apk");
             }
@@ -410,7 +412,13 @@ public class Connexion extends Activity implements
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(this);
         URL = sp.getString("serveur", "");
-        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+
+        String urlStr = "HNGAPI";
+        boolean exist = URL.toLowerCase().matches(urlStr.toLowerCase());
+        if (!exist)
+            URL = URL + "/HNGAPI";
+
+        URL = "http://" + URL + "/api/MyHotixHouseKeeping/";
         return URL;
     }
 

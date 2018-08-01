@@ -300,7 +300,12 @@ public class MouchardRackListActivity extends Activity {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(this);
         URL = sp.getString("serveur", "");
-        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+        String urlStr = "HNGAPI";
+        boolean exist = URL.toLowerCase().matches(urlStr.toLowerCase());
+        if (!exist)
+            URL = URL + "/HNGAPI";
+
+        URL = "http://" + URL + "/api/MyHotixHouseKeeping/";
         return URL;
     }
 

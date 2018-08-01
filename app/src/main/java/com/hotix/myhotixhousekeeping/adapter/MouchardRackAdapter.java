@@ -16,9 +16,11 @@ import java.util.List;
 public class MouchardRackAdapter extends BaseAdapter {
     List<MouchardRackData> listOC;
     LayoutInflater layoutInflater;
+    Context ctx;
 
     public MouchardRackAdapter(Context context, List<MouchardRackData> listOC) {
         this.listOC = listOC;
+        ctx = context;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -53,7 +55,7 @@ public class MouchardRackAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.lieuView.setText("Lieu : " + listOC.get(position).getRoom());
+        holder.lieuView.setText(ctx.getResources().getString(R.string.place) + " : " + listOC.get(position).getRoom());
         holder.actionView.setText(listOC.get(position).getOperation());
         holder.dateView.setText("Date : " + listOC.get(position).getDate());
         holder.userView.setText("Login : " + listOC.get(position).getUser());

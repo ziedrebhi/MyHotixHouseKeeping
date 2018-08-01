@@ -57,7 +57,7 @@ public class PanneAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.lieuView.setText("Lieu : " + listOC.get(position).getLieu());
+        holder.lieuView.setText(ctx.getResources().getString(R.string.place) + " : " + listOC.get(position).getLieu());
         holder.descView.setText("Description : " + listOC.get(position).getDescription());
         holder.dateView.setText("Date : " + listOC.get(position).getDate());
         if (listOC.get(position).isUrgent()) {

@@ -178,14 +178,24 @@ public class RoomRack extends Activity {
                         || UserInfoModel.getInstance().getUser().getData().isHasEtatLieu()
                         || UserInfoModel.getInstance().getUser().getData().isHasViewClient()
                         || UserInfoModel.getInstance().getUser().getData().isHasAddPanne()
-                        )
+                        ) {
+
                     showRoomMenu();
+                }
 
 
             }
         });
 
         super.onResume();
+    }
+
+    public boolean HasOnlyView() {
+        return (!UserInfoModel.getInstance().getUser().getData().isHasChangeStatut()
+                && !UserInfoModel.getInstance().getUser().getData().isHasEtatLieu()
+                && UserInfoModel.getInstance().getUser().getData().isHasViewClient()
+                && !UserInfoModel.getInstance().getUser().getData().isHasAddPanne()
+        );
     }
 
     public void showMouchard() {
@@ -279,7 +289,10 @@ public class RoomRack extends Activity {
 
                     }
                 });
-        builderMenu.show();
+        if (!(HasOnlyView() && (CHB.getStatutId() == 7 || CHB.getStatutId() == 1 || CHB.getStatutId() == 2))) {
+            builderMenu.show();
+        }
+
     }
 
     private void showMenuEtat() {
@@ -527,7 +540,12 @@ public class RoomRack extends Activity {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(this);
         URL = sp.getString("serveur", "");
-        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+        String urlStr = "HNGAPI";
+        boolean exist = URL.toLowerCase().matches(urlStr.toLowerCase());
+        if (!exist)
+            URL = URL + "/HNGAPI";
+
+        URL = "http://" + URL + "/api/MyHotixHouseKeeping/";
         return URL;
     }
 

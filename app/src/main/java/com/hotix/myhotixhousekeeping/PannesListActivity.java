@@ -170,8 +170,8 @@ public class PannesListActivity extends Activity {
             create.setVisibility(View.GONE);
 
         etats = new ArrayList<TypesPanne>();
-        etats.add(new TypesPanne(1, "En cours"));
-        etats.add(new TypesPanne(2, "Colturée"));
+        etats.add(new TypesPanne(1, getResources().getString(R.string.etat_encours)));
+        etats.add(new TypesPanne(2, getResources().getString(R.string.etat_ecloturer)));
 
         adapterEtats = new CustomAdapterSpinnerTypePanne(PannesListActivity.this,
                 android.R.layout.simple_dropdown_item_1line, etats);
@@ -568,7 +568,12 @@ public class PannesListActivity extends Activity {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(this);
         URL = sp.getString("serveur", "");
-        URL = "http://" + URL + "/HNGAPI/api/MyHotixHouseKeeping/";
+        String urlStr = "HNGAPI";
+        boolean exist = URL.toLowerCase().matches(urlStr.toLowerCase());
+        if (!exist)
+            URL = URL + "/HNGAPI";
+
+        URL = "http://" + URL + "/api/MyHotixHouseKeeping/";
         return URL;
     }
 

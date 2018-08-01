@@ -15,10 +15,12 @@ import java.util.List;
 public class ArriveesPrevuesAdapter extends BaseAdapter {
     List<ArriveePrevuData> listCP;
     LayoutInflater layoutInflater;
+    Context ctx;
 
     public ArriveesPrevuesAdapter(Context context,
                                   List<ArriveePrevuData> listCP) {
         this.listCP = listCP;
+        ctx = context;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -48,17 +50,21 @@ public class ArriveesPrevuesAdapter extends BaseAdapter {
                     .findViewById(R.id.nom_resident);
             holder.roomView = (TextView) convertView
                     .findViewById(R.id.num_chb_resident);
+            holder.commentView = (TextView) convertView
+                    .findViewById(R.id.txt_comment);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.nomView.setText(listCP.get(position).getClient());
-        holder.roomView.setText("Chambre : " + listCP.get(position).getRoom());
+        holder.roomView.setText(ctx.getResources().getString(R.string.chambre) + " : " + listCP.get(position).getRoom());
+        holder.commentView.setText(listCP.get(position).getComment());
         return convertView;
     }
 
     static class ViewHolder {
         TextView nomView;
         TextView roomView;
+        TextView commentView;
     }
 }

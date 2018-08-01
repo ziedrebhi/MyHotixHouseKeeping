@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="NOM &amp; PRENOM"
+        android:text="@string/nom_prenom"
         android:textColor="#040404"
         android:textStyle="bold" />
 

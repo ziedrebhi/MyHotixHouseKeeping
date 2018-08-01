@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="Lieu"
+        android:text="@string/place"
         android:textColor="#2c7dff"
         android:textSize="15dip"
         android:textStyle="bold"

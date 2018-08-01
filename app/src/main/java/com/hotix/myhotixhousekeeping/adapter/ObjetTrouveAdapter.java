@@ -15,9 +15,11 @@ import java.util.List;
 public class ObjetTrouveAdapter extends BaseAdapter {
     List<ObjetTrouveData> listOC;
     LayoutInflater layoutInflater;
+    Context ctx;
 
     public ObjetTrouveAdapter(Context context, List<ObjetTrouveData> listOC) {
         this.listOC = listOC;
+        ctx = context;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -50,7 +52,7 @@ public class ObjetTrouveAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.lieuView.setText("Lieu : " + listOC.get(position).getLieu());
+        holder.lieuView.setText(ctx.getResources().getString(R.string.place) + " : " + listOC.get(position).getLieu());
         holder.descView.setText("Description : " + listOC.get(position).getDescription());
         holder.dateView.setText("Date : " + listOC.get(position).getDate());
         return convertView;
