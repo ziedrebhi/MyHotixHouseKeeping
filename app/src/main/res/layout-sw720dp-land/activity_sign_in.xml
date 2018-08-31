@@ -10,9 +10,10 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/splashPic"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/pic_royal_1">
+            android:background="@drawable/royal">
 
             <View
                 android:id="@+id/title"

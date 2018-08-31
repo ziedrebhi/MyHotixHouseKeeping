@@ -6,6 +6,11 @@
         android:key="serveur"
         android:summary="Not Configured"
         android:title="IP serveur"></EditTextPreference>
+    <EditTextPreference
+
+        android:key="hotel"
+        android:summary=""
+        android:title="Code Hotel"></EditTextPreference>
     <com.hotix.myhotixhousekeeping.utils.Pref
         android:defaultValue="false"
         android:key="image"

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="list_item_title">#fff</color>
-    <color name="list_background">#303030</color>
+    <color name="list_background">#fff</color>
     <color name="list_background_pressed">#992416</color>
     <color name="list_divider">#272727</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
 
-    <color name="colorPrimary">#07bfca</color>
-    <color name="colorPrimaryDark">#0d9ca4</color>
+    <color name="colorPrimary">#1ab394</color> <!---#07bfca-->
+    <color name="colorPrimaryDark">#18a689</color> <!---#0d9ca4-->
 
-    <color name="colorAccent">#045f64</color>
-    <color name="colorPrimaryLeger">#0ed8e4</color>
+    <color name="colorAccent">#ff001e</color> <!---#045f64-->
+    <color name="colorPrimaryLeger">#e4cb0e</color><!---#0ed8e4-->
     <color name="colorWhite">#ffffff</color>
     <color name="colorGrey">#e4e4e4</color>
     <color name="colorPrimaryHeader">#ff1271</color>
-    <color name="blue_pressed">#07bfca</color>
+    <color name="blue_pressed">#1a4f94</color>
     <color name="blue_normal">#07858c</color>
     <color name="colorHint">#999999</color>
     <color name="spinner_base_color">#44000000</color>

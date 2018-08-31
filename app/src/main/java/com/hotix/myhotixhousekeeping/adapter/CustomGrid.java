@@ -94,10 +94,14 @@ public class CustomGrid extends BaseAdapter {
                 break;
             case 5:
                 if (listRoom.get(position).isIsAttributed()) {
-                    if (listRoom.get(position).getStatutId() == 1)
+                    if (listRoom.get(position).getStatutId() == 5) {
                         textView.setBackgroundResource(R.drawable.attributed);
-                    else
+                        textView.setText(String.valueOf(listRoom.get(position).getNumChb()) + "\n (D.A)");
+
+                    } else {
                         textView.setBackgroundResource(R.drawable.attributed_sale);
+                        textView.setText(String.valueOf(listRoom.get(position).getNumChb()) + "\n (D.A)");
+                    }
                 } else {
                     textView.setBackgroundResource(R.drawable.expect_dep);
                 }

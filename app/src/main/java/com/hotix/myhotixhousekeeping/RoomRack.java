@@ -233,7 +233,10 @@ public class RoomRack extends Activity {
                 || CHB.getStatutId() == 2
                 || CHB.getStatutId() == 3
                 || CHB.getStatutId() == 4
-                || CHB.getStatutId() == 7)) {
+                || CHB.getStatutId() == 5
+                || CHB.getStatutId() == 6
+                || CHB.getStatutId() == 7
+                || CHB.getStatutId() == 8)) {
             radioEtat.setVisibility(View.GONE);
 
         }
@@ -259,7 +262,10 @@ public class RoomRack extends Activity {
                                         || CHB.getStatutId() == 2
                                         || CHB.getStatutId() == 3
                                         || CHB.getStatutId() == 4
-                                        || CHB.getStatutId() == 7) {
+                                        || CHB.getStatutId() == 5
+                                        || CHB.getStatutId() == 6
+                                        || CHB.getStatutId() == 7
+                                        || CHB.getStatutId() == 8) {
                                     showMenuEtat();
                                 } else {
                                     ShowAlert(getResources().getString(R.string.msg_change_etat_cannot));
@@ -546,6 +552,8 @@ public class RoomRack extends Activity {
             URL = URL + "/HNGAPI";
 
         URL = "http://" + URL + "/api/MyHotixHouseKeeping/";
+
+        Log.i("URL", URL.toString());
         return URL;
     }
 
@@ -601,6 +609,7 @@ public class RoomRack extends Activity {
         protected RackModel doInBackground(Void... params) {
             try {
                 final String url = getURLAPI() + "GetEtatRackRoom?etage=" + etageId + "&bloc=" + blocId;
+                Log.i("URL", url.toString());
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.setErrorHandler(new MyErrorHandler());
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

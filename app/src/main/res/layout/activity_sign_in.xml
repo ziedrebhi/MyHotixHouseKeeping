@@ -10,9 +10,10 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/splashPic"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/pic_royal_1">
+            android:background="@drawable/royal">
 
             <View
                 android:id="@+id/title"
@@ -30,8 +31,7 @@
                 android:layout_alignRight="@+id/motdp"
                 android:layout_marginBottom="94dp"
                 android:background="@drawable/blue_btn_drawable"
-                android:text="@string/cnx"
-                android:textColor="@android:color/white" />
+                android:text="@string/cnx" />
 
             <EditText
                 android:id="@+id/login"

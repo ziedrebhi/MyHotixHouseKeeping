@@ -11,7 +11,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -29,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hotix.myhotixhousekeeping.adapter.NavDrawerListAdapter;
@@ -46,6 +52,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOError;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,6 +89,7 @@ public class Connexion extends Activity implements
     private TypedArray navMenuIcons;
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+    private RelativeLayout back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +103,25 @@ public class Connexion extends Activity implements
         login = (EditText) findViewById(R.id.login);
         password = (EditText) findViewById(R.id.motdp);
         connexion = (Button) findViewById(R.id.connect);
+        back = (RelativeLayout) findViewById((R.id.splashPic));
 
+
+        //back.setBackgroundResource(R.drawable.hambra);
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String serveur = (pref.getString("serveur", ""));
+        if (!serveur.equals("")) {
+            serveur = serveur.split("/")[0];
+
+            Bitmap myImage = getBitmapFromURL("http://" + serveur + "/Android/background.jpg");
+            Log.i("BackGround", (myImage != null) ? "ok" : "NO");
+            //BitmapDrawable(obj) convert Bitmap object into drawable object.
+            if (myImage != null) {
+                Drawable dr = new BitmapDrawable(myImage);
+                back.setBackgroundDrawable(dr);
+            }
+        }
         connexion.setOnClickListener(this);
-
+        connexion.setTextColor(Color.parseColor("white"));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
@@ -136,6 +162,21 @@ public class Connexion extends Activity implements
         pd = new ProgressDialog(Connexion.this);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         checker = new UpdateChecker(this, true);
+    }
+
+    public Bitmap getBitmapFromURL(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
