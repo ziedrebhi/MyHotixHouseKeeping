@@ -7,14 +7,17 @@ android {
         applicationId "com.hotix.myhotixhousekeeping"
         minSdkVersion 14
         targetSdkVersion 14
-        versionCode 12
-        versionName '4.1.0'
+        versionCode 11
+        versionName '4.0.1'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+    lintOptions {
+        disable "ResourceType"
     }
     packagingOptions {
         exclude 'META-INF/ASL2.0'
